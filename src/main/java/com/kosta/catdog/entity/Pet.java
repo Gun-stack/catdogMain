@@ -37,11 +37,11 @@ public class Pet {
 	
 	private Boolean neuter; // 중성화 여
 	
-	private String petNode; // 펫 특이사항 
+	private String petNote; // 펫 특이사항 
 	
 	private Integer oNum; // 주인(유저) 번호 
 	
-	@Column( precision = 4, scale =2)
+	@Column//( precision = 4, scale =2)
 	private BigDecimal weight; // 몸무게 
 	
 	private Integer age; // 나이

@@ -28,11 +28,11 @@ public class Reservation {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer num; // 고유번호
 	@Column
-	private String user_id; // 예약자 아이디
+	private String userId; // 예약자 아이디
     @Column
-    private String des_id;
+    private String desId;
     @Column
-    private String s_id;
+    private String sId;
     @Column
     private Date date; // 예약 날짜
     @Column

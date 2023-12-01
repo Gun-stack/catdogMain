@@ -35,7 +35,7 @@ public class User {
 	@Column
 	private String tel;
 	@Column(unique=true)
-	private String emali ;  // 이메일
+	private String email ;  // 이메일
 	@Column
 	private String kId; // 카카오 연동시 사용될 컬럼 
 	@Column

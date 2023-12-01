@@ -34,9 +34,9 @@ public class Designer {
 	private String id;
 	@Column
 	private String name;
-	@Column
+	@Column(unique=true)
 	private String nickname;
-	@Column
+	@Column(unique=true) 
 	private String email;
 	@Column
 	private String password;

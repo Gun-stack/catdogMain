@@ -60,9 +60,9 @@ public class Shop {
 	private String profImg; // 프로필 이미지
 	@Column
 	private String bgImg; // 배경 이미지
-	@Column
+	@Column( precision = 9, scale =6)
 	private BigDecimal lat; // 위도
-	@Column
+	@Column( precision = 9, scale =6)
 	private BigDecimal lon; // 경도
 	@Column
 	private BigDecimal star; // 별점

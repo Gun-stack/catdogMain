@@ -23,3 +23,4 @@ public interface UserService {
 	User findPassword() throws Exception;
 	// 회원탈퇴
 	void withdrawalUser(User user) throws Exception;
+}

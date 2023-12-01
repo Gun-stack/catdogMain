@@ -25,23 +25,23 @@ public class User {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer num; // 회원 번호 
 	@Column
-	private String name;  // 회원 이름 
+	private String name;  // 회원 이름
 	@Column(unique=true)
 	private String id ;  // 로그인시 필요한 Id
 	@Column(unique=true)
-	private String nickname ;  // 닉네임 
+	private String nickname ;  // 닉네임
 	@Column
 	private String password ;  // 비밀번호
 	@Column
 	private String tel;
 	@Column(unique=true)
-	private String emali ;  // 이메일
+	private String email ;  // 이메일
 	@Column
-	private String kid; // 카카오 연동시 사용될 컬럼 
+	private String kId; // 카카오 연동시 사용될 컬럼 
 	@Column
 	private String state; // 회원 상태 사용 유저 - true , 탈퇴 - false
 	@Column
-	private String role; // ROLE_USER
+	private String roles; // ROLE_USER
 	
 	
 //	@CreationTimestamp

@@ -1,7 +1,6 @@
 package com.kosta.catdog.entity;
 
-import java.sql.Time;
-import java.util.Date;
+import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,29 +23,28 @@ import lombok.NoArgsConstructor;
 @DynamicInsert
 @DynamicUpdate
 @Builder
-public class Reservation {	
+public class Pet {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer num; // 고유번호
-	@Column
-	private String userId; // 예약자 아이디
-    @Column
-    private String desId;
-    @Column
-    private String sId;
-    @Column
-    private Date date; // 예약 날짜
-    @Column
-    private Time time; // 예약 시간
-    @Column
-    private String status; // 예약 상태
-    @Column
-    private String refImg;
-    @Column
-    private String reftext;
-    @Column
-    private String notice;
-    @Column
-    private Integer isReview;
+	private Integer num; 
 	
+	private String img; // 사진 이미지 파일 경로
 	
+	private Boolean dogOrCat; // 강아지 고양이 구분 
+	
+	private String bread; // 품종
+	
+	private Boolean gender; // 성별 
+	
+	private Boolean neuter; // 중성화 여
+	
+	private String petNote; // 펫 특이사항 
+	
+	private Integer oNum; // 주인(유저) 번호 
+	
+	@Column//( precision = 4, scale =2)
+	private BigDecimal weight; // 몸무게 
+	
+	private Integer age; // 나이
+	
+	private String vaccine; // 백신 
 }

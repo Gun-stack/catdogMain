@@ -29,7 +29,14 @@ public class UserDslRepository {
 	public User findByNickname(String nickname){
 		QUser user = QUser.user;
 		return jpaQueryFactory.selectFrom(user)
-				.where(user.nickName.eq(nickname)).fetchOne();
+				.where(user.nickname.eq(nickname)).fetchOne();
+	}
+
+
+	public User findById_AndPassword(String id, String password){
+		QUser user = QUser.user;
+		return jpaQueryFactory.selectFrom(user)
+				.where(user.id.eq(id).and(user.password.eq(password))).fetchOne();
 	}
 
 

@@ -42,6 +42,9 @@ public class User {
 	private String state; // 회원 상태 사용 유저 - true , 탈퇴 - false
 	@Column
 	private String roles; // ROLE_USER
+	//OAuth를 위해 구성한 추가 필드 2개
+	private String provider;
+	private String providerId;
 	
 	
 //	@CreationTimestamp

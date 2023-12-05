@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.kosta.catdog.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,9 +25,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	
 	private UserDslRepository userDslRepository;
 
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserDslRepository userDslRepository) {
+	private final UserRepository userRepository;
+
+	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
 		super(authenticationManager);
-		this.userDslRepository = userDslRepository;
+		this.userRepository = userRepository;
 	}
 	
 	@Override
@@ -44,10 +47,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		String token=request.getHeader(JwtProperties.HEADER_STRING).replace(JwtProperties.TOKEN_PREFIX,"");
 		
 		// 토큰 검증
-		String name = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token).getClaim("username").asString();
+		String id = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token).getClaim("id").asString();
 		
-		if(name!=null) {
-			User user = userDslRepository.findByName(name);
+		if(id!=null) {
+			User user = userDslRepository.findById(id);
 			
 			PrincipalDetails principalDetails = new PrincipalDetails(user);
 			Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());

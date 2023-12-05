@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import com.kosta.catdog.entity.User;
 
@@ -17,11 +18,17 @@ import lombok.Data;
 //Authentication안에 User 정보를 넣어야 한다.
 //그 User 오브젝트 타입은 UserDetails 타입이어야 한다.
 @Data
-public class PrincipalDetails implements UserDetails {
+public class PrincipalDetails implements UserDetails, OAuth2User {
 	private User user;
-	
+	private Map<String, Object> attributes;
+
 	public PrincipalDetails(User user) {
 		this.user=user;
+	}
+
+	public PrincipalDetails(User user, Map<String, Object> attributes) {
+		this.user=user;
+		this.attributes=attributes;
 	}
 
 	@Override
@@ -43,7 +50,7 @@ public class PrincipalDetails implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return user.getName();
+		return user.getId();
 	}
 
 	@Override
@@ -64,5 +71,15 @@ public class PrincipalDetails implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	@Override
+	public Map<String, Object> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public String getName() {
+		return user.getId()+"";
 	}
 }

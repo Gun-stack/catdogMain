@@ -10,7 +10,7 @@ import com.kosta.catdog.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	@Autowired
 	private UserDslRepository userDslRepository;
 	@Autowired
@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserInfoById(String id) throws Exception {
+
 		return userDslRepository.findById(id);
 	}
 

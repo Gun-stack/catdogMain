@@ -42,13 +42,12 @@ public class UserDslRepository {
 				.where(user.nickname.eq(nickname)).fetchOne();
 	}
 
-	public User findUserByIdAndPassword(String id, String password) {
+	public User findById_AndPassword(String id, String password){
 		QUser user = QUser.user;
 		return jpaQueryFactory.selectFrom(user)
-				.where(user.id.eq(id).and(user.password.eq(password)))
-				.fetchOne();
+				.where(user.id.eq(id).and(user.password.eq(password))).fetchOne();
 	}
-	
+
 	// DesGallery
 	public DesGallery findDesGalleryByDesigner(Integer num) {
 		QDesGallery desGallery = QDesGallery.desGallery;

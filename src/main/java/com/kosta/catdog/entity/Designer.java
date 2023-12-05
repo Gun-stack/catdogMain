@@ -1,6 +1,5 @@
 package com.kosta.catdog.entity;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -55,7 +54,7 @@ public class Designer {
 	@Column
 	private String info;
 	@Column
-	private String status; // 회원유지: true, 탈퇴: false
+	private String state; // 회원유지: true, 탈퇴: false
 	@Column(unique=true)
 	private String kId; // 카카오톡 아이디 연동
 	@Column

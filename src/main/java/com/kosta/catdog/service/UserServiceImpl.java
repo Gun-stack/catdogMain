@@ -9,7 +9,7 @@ import com.kosta.catdog.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	@Autowired
 	private UserRepository userRepository;
 
@@ -20,8 +20,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Boolean login(String id, String password) throws Exception {
-		User user = userRepository.findUserByUserIdAndPassword(id,password);
-		return user==null? false:true;
+		return true;
 	}
 
 	@Override
@@ -44,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserInfoById(String id) throws Exception {
-		return userRepository.findUserById(id);
+		return null;
 	}
 
 	@Override
@@ -64,3 +63,4 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 
 	}
+}

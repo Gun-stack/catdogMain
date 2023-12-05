@@ -1,9 +1,19 @@
 package com.kosta.catdog.controller;
 
+import com.kosta.catdog.config.auth.PrincipalDetails;
+import com.kosta.catdog.config.jwt.JwtProperties;
+import com.kosta.catdog.dto.LoginRequestDto;
 import com.kosta.catdog.entity.User;
 import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +28,20 @@ public class UserController {
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	private final UserRepository userRepository;
+
+	private final AuthenticationManager authenticationManager;
+
+
+
+	@GetMapping("/user")
+	public ResponseEntity<User> user(Authentication authentication) {
+		PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
+		System.out.println(principalDetails.getUser().getId());
+		System.out.println(principalDetails.getUser().getName());
+		System.out.println(principalDetails.getUser().getPassword());
+		System.out.println(principalDetails.getUser().getRoles());
+		return new ResponseEntity<User>(principalDetails.getUser(), HttpStatus.OK);
+	}
 
 
 	// 회원가입

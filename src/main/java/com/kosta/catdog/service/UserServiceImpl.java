@@ -5,11 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kosta.catdog.entity.User;
+import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.repository.UserRepository;
 
 @Service
 public class UserServiceImpl implements UserService {
 	
+	@Autowired
+	private UserDslRepository userDslRepository;
 	@Autowired
 	private UserRepository userRepository;
 
@@ -20,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Boolean login(String id, String password) throws Exception {
-		User user = userRepository.findUserByUserIdAndPassword(id,password);
+		User user = userDslRepository.findUserByIdAndPassword(id,password);
 		return user==null? false:true;
 	}
 
@@ -44,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserInfoById(String id) throws Exception {
-		return userRepository.findUserById(id);
+		return userDslRepository.findById(id);
 	}
 
 	@Override
@@ -64,3 +67,4 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 
 	}
+}

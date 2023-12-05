@@ -55,7 +55,7 @@ public class Shop {
 	@Column
 	private String menu; // 가격표
 	@Column
-	private String status; // 회원유지: true, 탈퇴: false
+	private String state; // 회원유지: true, 탈퇴: false
 	@Column
 	private String profImg; // 프로필 이미지
 	@Column

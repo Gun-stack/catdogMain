@@ -30,7 +30,7 @@ public class Reservation {
 	@Column
 	private String userId; // 예약자 아이디
     @Column
-    private String desId;
+    private String desId; // 디자이너 id
     @Column
     private String sId;
     @Column
@@ -40,9 +40,9 @@ public class Reservation {
     @Column
     private String status; // 예약 상태
     @Column
-    private String refImg;
+    private String refImg; // 스타일 이미지
     @Column
-    private String reftext;
+    private String refText; // 스타일 내용
     @Column
     private String notice;
     @Column

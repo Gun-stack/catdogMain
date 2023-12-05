@@ -27,6 +27,8 @@ public class Review {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer	num;
 	@Column
+    private String desId; // 디자이너 id
+	@Column
 	private Integer	resNum;
 	@Column
 	private String	userId;

@@ -23,14 +23,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Boolean login(String id, String password) throws Exception {
-		User user = userDslRepository.findUserByIdAndPassword(id,password);
+		User user = userDslRepository.findById_AndPassword(id,password);
 		return user==null? false:true;
-	}
-
-	@Override
-	public void updateUserInfo(User user) throws Exception {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -47,25 +41,40 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User getUserInfoById(String id) throws Exception {
-
 		return userDslRepository.findById(id);
 	}
 
 	@Override
 	public User findId() throws Exception {
-		// TODO Auto-generated method stub
+		// tel, password
 		return null;
 	}
 
 	@Override
 	public User findPassword() throws Exception {
-		// TODO Auto-generated method stub
+		// email
 		return null;
 	}
 
 	@Override
 	public void withdrawalUser(User user) throws Exception {
-		// TODO Auto-generated method stub
-
+		// 작성 보류
 	}
+
+	@Override
+	public void updateNickname(Integer num, String nickname) throws Exception {
+		userDslRepository.updateNickname(num, nickname);
+	}
+
+	@Override
+	public void updateTel(Integer num, String tel) throws Exception {
+		userDslRepository.updateTel(num, tel);
+	}
+
+	@Override
+	public void updatePassword(Integer num, String password) throws Exception {
+		userDslRepository.updatePassword(num, password);
+	}
+	
+	
 }

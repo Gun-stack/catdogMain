@@ -3,6 +3,9 @@ package com.kosta.catdog.repository;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +25,8 @@ public class UserDslRepository {
 
 	@Autowired
 	private JPAQueryFactory jpaQueryFactory;
+	@Autowired
+	EntityManager entityManager;
 
 	// User
 	public User findByName(String name) {
@@ -46,6 +51,39 @@ public class UserDslRepository {
 		QUser user = QUser.user;
 		return jpaQueryFactory.selectFrom(user)
 				.where(user.id.eq(id).and(user.password.eq(password))).fetchOne();
+	}
+	
+	@Transactional
+	public void updateNickname(Integer num, String nickname) {
+		QUser user = QUser.user;
+		jpaQueryFactory.update(user)
+			.set(user.nickname, nickname)
+			.where(user.num.eq(num))
+			.execute();
+		entityManager.flush();
+		entityManager.clear();
+	}
+	
+	@Transactional
+	public void updateTel(Integer num, String tel) {
+		QUser user = QUser.user;
+		jpaQueryFactory.update(user)
+			.set(user.tel, tel)
+			.where(user.num.eq(num))
+			.execute();
+		entityManager.flush();
+		entityManager.clear();
+	}
+	
+	@Transactional
+	public void updatePassword(Integer num, String password) {
+		QUser user = QUser.user;
+		jpaQueryFactory.update(user)
+			.set(user.password, password)
+			.where(user.num.eq(num))
+			.execute();
+		entityManager.flush();
+		entityManager.clear();
 	}
 
 	// DesGallery
@@ -82,7 +120,7 @@ public class UserDslRepository {
 	}
 
 	// Reservation
-	public List<Reservation> findReservationListByDesignerAndDate(Integer num, Date date) {
+	public List<Reservation> findReservationListByDesigner_AndDate(Integer num, Date date) {
 		QReservation reservation = QReservation.reservation;
 		QDesigner designer = QDesigner.designer;
 		return jpaQueryFactory.selectFrom(reservation)

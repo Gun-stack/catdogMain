@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.kosta.catdog.entity.Reservation;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
-	Reservation findReservation(Integer num);
+	Reservation findReservationByNum(Integer num);
 
 }

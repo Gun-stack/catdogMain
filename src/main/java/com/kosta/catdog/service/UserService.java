@@ -15,7 +15,7 @@ public interface UserService {
 	// 아이디로 회원정보 가져오기
 	User getUserInfoById(String id) throws Exception;
 	// 아이디 찾기
-	User findId() throws Exception;
+	String findId(String email) throws Exception;
 	// 비밀번호 찾기
 	User findPassword() throws Exception;
 	// 회원탈퇴

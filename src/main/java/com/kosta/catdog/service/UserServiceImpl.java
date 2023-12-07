@@ -54,9 +54,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findId() throws Exception {
-		// tel, password
-		return null;
+	public String findId(String email) throws Exception {
+		return userDslRepository.findIdByEmail(email);
 	}
 
 	@Override

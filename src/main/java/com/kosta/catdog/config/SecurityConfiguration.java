@@ -29,7 +29,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	private CorsConfig corsConfig;
 
 	@Autowired
-	private UserRepository userRepository;
+//	private UserRepository userRepository;
+	private UserDslRepository userDslRepository;
 
 	@Autowired
 	private PrincipalOauth2UserService principalOauth2UserService;
@@ -44,6 +45,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
+
+		System.out.println("SecurityConfiguration 기본 로그인 =================");
 		http
 			.addFilter(corsConfig.corsFilter())  // 다른 도메인 접근 허용
 			.csrf().disable()  //csrf 공격 비활성화 
@@ -53,6 +56,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 			.formLogin().disable()  // 로그인 폼 사용 비활성화 
 			.httpBasic().disable()  // httpBasic은 header에 username, password를 암호화하지 않은 상태로 주고 받는다. 이를 사용하지 않겠다.
 			.addFilter(new JwtAuthenticationFilter(authenticationManager())); // UsernamePasswordAuthenticationFilter
+
+
+		System.out.println("SecurityConfiguration 소셜 로그인 =================");
 
 		//oauth2Login
 		http
@@ -65,9 +71,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 				.and()
 				.successHandler(oAuth2LoginSuccessHandler);
 
+
+		System.out.println("SecurityConfiguration Role =================");
+
 		// 로그인 이후 권한처리
 		http
-				.addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository)) //BasicAuthenticationFilter
+				.addFilter(new JwtAuthorizationFilter(authenticationManager(), userDslRepository)) //BasicAuthenticationFilter
 				.authorizeRequests()
 				.antMatchers("/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 				.antMatchers("/manager/**").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")

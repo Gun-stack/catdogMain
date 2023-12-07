@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.kosta.catdog.entity.User;
 import com.kosta.catdog.repository.UserDslRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	
 
 	private final AuthenticationManager authenticationManager;
+	private ObjectMapper om = new ObjectMapper();
 
 
 	
@@ -41,7 +43,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		
 		System.out.println("Authentication : 진입 ");
 		//request에 있는 username과 password를 파싱해서 자바 Object로 받기 
-		ObjectMapper om = new ObjectMapper();
+
 		LoginRequestDto loginRequestDto = null;
 		try {
 		 
@@ -77,9 +79,20 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 							 .withSubject(principalDetails.getUsername())
 							 .withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
 							 .withClaim("id", principalDetails.getUser().getId())
-							 .withClaim("username", principalDetails.getUser().getName())
+							 .withClaim("nickname", principalDetails.getUser().getNickname())
 							 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
-		
+
+		User user = principalDetails.getUser();
+
+		try{
+			String userJson = om.writeValueAsString(user);
+			response.getWriter().write(userJson);
+//			System.out.println("User Object To JSON !!!!!!");
+//			System.out.println(userJson);
+		} catch( Exception e) {
+			e.printStackTrace();
+		}
+
 		response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);
 	}
 	

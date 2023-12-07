@@ -35,11 +35,11 @@ public class UserController {
 
 	@GetMapping("/user")
 	public ResponseEntity<User> user(Authentication authentication) {
+		System.out.println("User Controller ===========");
 		PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
-		System.out.println(principalDetails.getUser().getId());
-		System.out.println(principalDetails.getUser().getName());
-		System.out.println(principalDetails.getUser().getPassword());
-		System.out.println(principalDetails.getUser().getRoles());
+		System.out.println("User Id  : " + principalDetails.getUser().getId());
+		System.out.println("User Nickname : " + principalDetails.getUser().getNickname());
+		System.out.println("User Role : " + principalDetails.getUser().getRoles());
 		return new ResponseEntity<User>(principalDetails.getUser(), HttpStatus.OK);
 	}
 

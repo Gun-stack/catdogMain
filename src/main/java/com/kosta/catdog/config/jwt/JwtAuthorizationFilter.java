@@ -25,17 +25,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 	
 	private UserDslRepository userDslRepository;
 
-	private final UserRepository userRepository;
+//	private final UserRepository userRepository;
 
-	public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) {
+	public  JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserDslRepository userDslRepository) {
 		super(authenticationManager);
-		this.userRepository = userRepository;
+		this.userDslRepository = userDslRepository;
 	}
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request,
 									HttpServletResponse response,
 									FilterChain chain) throws IOException, ServletException {
+		System.out.println("JwtAuthorizationFilter doFilterInternal ===========");
 		String header = request.getHeader(JwtProperties.HEADER_STRING);
 		System.out.println("header Authrization : " +header);
 		
@@ -48,6 +49,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		
 		// 토큰 검증
 		String id = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token).getClaim("id").asString();
+		System.out.println(" Id : " + id );
 		
 		if(id!=null) {
 			User user = userDslRepository.findById(id);

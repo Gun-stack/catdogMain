@@ -25,7 +25,7 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Override
 	public Reservation findReservation(Integer num) throws Exception {
-		return reservationRepository.findReservation(num);
+		return reservationRepository.findReservationByNum(num);
 	}
 	
 	@Override

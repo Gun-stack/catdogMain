@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Boolean login(String id, String password) throws Exception {
-		User user = userDslRepository.findUserByIdAndPassword(id,password);
+		User user = userDslRepository.findById_AndPassword(id,password);
 		return user==null? false:true;
 	}
 

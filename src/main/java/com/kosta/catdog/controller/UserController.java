@@ -32,18 +32,33 @@ public class UserController {
 	private final AuthenticationManager authenticationManager;
 
 
+//
+//	@GetMapping("/user")
+//	public ResponseEntity<User> user(Authentication authentication) {
+//		PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
+//		System.out.println(principalDetails.getUser().getId());
+//		System.out.println(principalDetails.getUser().getName());
+//		System.out.println(principalDetails.getUser().getPassword());
+//		System.out.println(principalDetails.getUser().getRoles());
+//		return new ResponseEntity<User>(principalDetails.getUser(), HttpStatus.OK);
+//	}
 
-	@GetMapping("/user")
-	public ResponseEntity<User> user(Authentication authentication) {
-		PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
-		System.out.println(principalDetails.getUser().getId());
-		System.out.println(principalDetails.getUser().getName());
-		System.out.println(principalDetails.getUser().getPassword());
-		System.out.println(principalDetails.getUser().getRoles());
-		return new ResponseEntity<User>(principalDetails.getUser(), HttpStatus.OK);
+	//로컬 로그인시 정보 가져오기
+	@GetMapping("/userinfo")
+	public ResponseEntity<User> userInfo(@RequestParam String id) {
+		System.out.println(id);
+		User user = userDslRepository.findById(id);
+		if (user != null) {
+	        return new ResponseEntity<>(user, HttpStatus.OK);
+	    } else {
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
 	}
-
-
+	
+	
+	
+	
+	
 	// 회원가입
 	@PostMapping("/userjoin")
 	public String join(@RequestBody User user) {

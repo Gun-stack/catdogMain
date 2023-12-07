@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kosta.catdog.entity.DesGallery;
+import com.kosta.catdog.entity.Pet;
 import com.kosta.catdog.entity.QDesGallery;
 import com.kosta.catdog.entity.QDesigner;
+import com.kosta.catdog.entity.QPet;
 import com.kosta.catdog.entity.QReservation;
 import com.kosta.catdog.entity.QReview;
 import com.kosta.catdog.entity.QUser;
@@ -91,9 +93,26 @@ public class UserDslRepository {
 				.where(designer.num.eq(num).and(reservation.date.eq(date)))
 				.fetch();
 				
-			
-				
-				
 	}
+	
+	public List<Reservation> findReservationListByUserId(String userId) {
+		QReservation reservation = QReservation.reservation;
+		return jpaQueryFactory.selectFrom(reservation)
+				.where(reservation.userId.eq(userId))
+				.fetch();
+	}
+	
+
+	//pet
+	public List<Pet> findPetsByUserID(String userId){
+	QUser user = QUser.user;
+	QPet pet = QPet.pet;
+	return jpaQueryFactory.selectFrom(pet)
+			.join(user)
+			.on(pet.UserNum.eq(user.num))
+			.where(user.id.eq(userId))
+			.fetch();
+	}
+	
 	
 }

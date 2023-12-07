@@ -1,7 +1,7 @@
 package com.kosta.catdog.entity;
 
 import java.sql.Time;
-import java.util.Date;
+import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +32,11 @@ public class Reservation {
     @Column
     private String desId; // 디자이너 id
     @Column
+    private String petName;
+    @Column
     private String sId;
+    @Column
+    private String shopName;
     @Column
     private Date date; // 예약 날짜
     @Column

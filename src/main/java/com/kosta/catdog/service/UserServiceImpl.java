@@ -18,25 +18,34 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void join(User user) throws Exception {
+		user.setRoles("ROLE_USER");
 		userRepository.save(user);
 	}
 
 	@Override
+
 	public Boolean login(String id, String password) throws Exception {
+
 		User user = userDslRepository.findById_AndPassword(id,password);
 		return user==null? false:true;
 	}
 
 	@Override
-	public boolean isUserIdDuplicate(String id) throws Exception {
-		User findUserId = userRepository.findById(id);
-		return findUserId != null; // 중복=true, 중복 아니면=false 반환
+	public String isUserIdDuplicate(String id) throws Exception {
+		User user = userDslRepository.findById(id);
+		if(user != null ) {
+			return "fail";
+		}
+		else return "success";
 	}
 
 	@Override
-	public boolean isNicknameDuplicate(String nickname) throws Exception {
-		User findUserNickname = userRepository.findById(nickname);
-		return findUserNickname != null; // 중복=true, 중복 아니면=false 반환
+	public String isNicknameDuplicate(String nickname) throws Exception {
+		User user = userDslRepository.findByNickname(nickname);
+		if(user != null ) {
+			return "fail";
+		}
+		else return "success";
 	}
 
 	@Override

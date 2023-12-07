@@ -3,9 +3,13 @@ package com.kosta.catdog.controller;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -13,12 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kosta.catdog.entity.Pet;
+import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.service.PetService;
 
 @RestController
 public class PetController {
 	@Autowired
 	private PetService petService;
+	@Autowired 
+	private UserDslRepository userDslRepository;
 	
 	
 	@PostMapping("/petreg")
@@ -57,11 +64,34 @@ public class PetController {
 			return new ResponseEntity<Boolean>(false,HttpStatus.BAD_REQUEST);
 		}
 	}
-	// 등록한 반려동물 조회
-	public List<Pet> selectpet(Integer num){
-		System.out.println("selectPet !!");
-		return null;
+	
+	@GetMapping("/petimg/{num}")
+	public void ImageView(@PathVariable Integer num, HttpServletResponse response) {
+		try {
+			petService.fileView(num, response.getOutputStream());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
+	
+	// 등록한 반려동물 조회
+	@GetMapping("/petinfo")
+	public ResponseEntity<List<Pet>> selectPets(@RequestParam String userId){
+		System.out.println(userId);
+		List<Pet> petList= userDslRepository.findPetsByUserID(userId);
+		System.out.println(petList);
+		
+		try {
+			return new ResponseEntity<List<Pet>> (petList , HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<Pet>> (HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+
 	// 반려동물 정보 수정
 	public void modipet(Pet pet) {
 		System.out.println("modiPet !!");

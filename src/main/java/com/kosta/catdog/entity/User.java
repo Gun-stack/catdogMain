@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -39,6 +40,7 @@ public class User {
 	@Column
 	private String kId; // 카카오 연동시 사용될 컬럼 
 	@Column
+	@ColumnDefault("true") // default
 	private String state; // 회원 상태 사용 유저 - true , 탈퇴 - false
 	@Column
 	private String roles; // ROLE_USER

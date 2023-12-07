@@ -18,25 +18,32 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void join(User user) throws Exception {
+		user.setRoles("ROLE_USER");
 		userRepository.save(user);
 	}
 
 	@Override
-	public Boolean login(String id, String password) throws Exception {
+	public boolean login(String id, String password) throws Exception {
 		User user = userDslRepository.findById_AndPassword(id,password);
 		return user==null? false:true;
 	}
 
 	@Override
-	public boolean isUserIdDuplicate(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+	public String isUserIdDuplicate(String id) throws Exception {
+		User user = userDslRepository.findById(id);
+		if(user != null ) {
+			return "fail";
+		}
+		else return "success";
 	}
 
 	@Override
-	public boolean isNicknameDuplicate(String nickname) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+	public String isNicknameDuplicate(String nickname) throws Exception {
+		User user = userDslRepository.findByNickname(nickname);
+		if(user != null ) {
+			return "fail";
+		}
+		else return "success";
 	}
 
 	@Override

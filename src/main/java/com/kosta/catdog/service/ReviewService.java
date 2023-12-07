@@ -9,4 +9,6 @@ public interface ReviewService {
 	Review findReview(Integer num) throws Exception;
 	// 리뷰 수정
 	void modifyReveiw(Review review) throws Exception;
+	// 리뷰 삭제
+	void deleteReview(Integer num) throws Exception;
 }

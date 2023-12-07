@@ -18,54 +18,72 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void join(User user) throws Exception {
+		user.setRoles("ROLE_USER");
 		userRepository.save(user);
 	}
 
 	@Override
+
 	public Boolean login(String id, String password) throws Exception {
+
 		User user = userDslRepository.findById_AndPassword(id,password);
 		return user==null? false:true;
 	}
 
 	@Override
-	public void updateUserInfo(User user) throws Exception {
-		// TODO Auto-generated method stub
-
+	public String isUserIdDuplicate(String id) throws Exception {
+		User user = userDslRepository.findById(id);
+		if(user != null ) {
+			return "fail";
+		}
+		else return "success";
 	}
 
 	@Override
-	public boolean isUserIdDuplicate(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isNicknameDuplicate(String nickname) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+	public String isNicknameDuplicate(String nickname) throws Exception {
+		User user = userDslRepository.findByNickname(nickname);
+		if(user != null ) {
+			return "fail";
+		}
+		else return "success";
 	}
 
 	@Override
 	public User getUserInfoById(String id) throws Exception {
-
 		return userDslRepository.findById(id);
 	}
 
 	@Override
 	public User findId() throws Exception {
-		// TODO Auto-generated method stub
+		// tel, password
 		return null;
 	}
 
 	@Override
 	public User findPassword() throws Exception {
-		// TODO Auto-generated method stub
+		// email
 		return null;
 	}
 
 	@Override
 	public void withdrawalUser(User user) throws Exception {
-		// TODO Auto-generated method stub
-
+		// 작성 보류
 	}
+
+	@Override
+	public void modifyNickname(Integer num, String nickname) throws Exception {
+		userDslRepository.modifyNickname(num, nickname);
+	}
+
+	@Override
+	public void modifyTel(Integer num, String tel) throws Exception {
+		userDslRepository.modifyTel(num, tel);
+	}
+
+	@Override
+	public void modifyPassword(Integer num, String password) throws Exception {
+		userDslRepository.modifyPassword(num, password);
+	}
+	
+	
 }

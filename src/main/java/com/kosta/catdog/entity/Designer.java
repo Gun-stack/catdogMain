@@ -34,7 +34,7 @@ public class Designer {
 	@Column
 	private String name;
 	@Column(unique=true)
-	private String nickname;
+	private String desNickname; // 디자이너 닉네임
 	@Column(unique=true) 
 	private String email;
 	@Column
@@ -44,7 +44,7 @@ public class Designer {
 	@Column
 	private String profImg;
 	@Column
-	private Date workTime; // 근무시간
+	private String workTime; // 근무시간
 	@Column
 	private Integer reviewCnt;
 	@Column
@@ -52,7 +52,7 @@ public class Designer {
 	@Column
 	private BigDecimal star; // 별점
 	@Column
-	private String info;
+	private String info; // 프로필 정보 등록
 	@Column
 	private String state; // 회원유지: true, 탈퇴: false
 	@Column(unique=true)

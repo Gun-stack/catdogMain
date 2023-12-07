@@ -30,7 +30,7 @@ public class ReservationServiceImpl implements ReservationService {
 	
 	@Override
 	public List<Reservation> reservationListByDesignerAndDate(Integer num, Date date) throws Exception {
-		return userDslRepository.findReservationListByDesignerAndDate(num, date);
+		return userDslRepository.findReservationListByDesigner_AndDate(num, date);
 	}
 
 	@Override

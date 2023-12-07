@@ -1,6 +1,5 @@
 package com.kosta.catdog.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.kosta.catdog.entity.DesGallery;
 import com.kosta.catdog.entity.Designer;
-import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.entity.Review;
 import com.kosta.catdog.repository.DesignerRepository;
 import com.kosta.catdog.repository.UserDslRepository;
@@ -23,8 +21,7 @@ public class DesignerServiceImpl implements DesignerService {
 
 	@Override
 	public void addDesignerInfo(Designer designer) throws Exception {
-		// TODO Auto-generated method stub
-
+		designerRepository.save(designer);
 	}
 	
 	@Override
@@ -38,16 +35,13 @@ public class DesignerServiceImpl implements DesignerService {
 	}
 
 	@Override
-	public Review reviewByDesigner(Integer num) throws Exception {
-		return userDslRepository.findReviewByDesigner(num);
+	public List<Review> reviewListByDesignerOrderByDateDesc(Integer num) throws Exception {
+		return userDslRepository.findReviewListByDesignerOrderByDateDesc(num);
 	}
 
 	@Override
-	public List<Review> reviewListByDesigner(Integer num) throws Exception {
-		return userDslRepository.findReviewListByDesigner(num);
+	public Double avgStarCountByDesigner(Integer num) throws Exception {
+		return userDslRepository.findAvgStarCountByDesigner(num);
 	}
 	
-	
-	
-
 }

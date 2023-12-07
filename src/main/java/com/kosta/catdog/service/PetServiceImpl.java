@@ -1,12 +1,16 @@
 package com.kosta.catdog.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kosta.catdog.entity.Pet;
@@ -53,7 +57,22 @@ public class PetServiceImpl implements PetService {
 		petRepository.save(pet);
 		return pet;
 	}
-	
+	@Override
+	public void fileView(Integer num, OutputStream out) throws Exception {
+		try {
+			Optional<PetFileVO> fileVoOptional  = petFileVORepository.findById(num);
+			PetFileVO fileVo = fileVoOptional.get();
+			
+			FileCopyUtils.copy(fileVo.getData(), out); //데이타 뿌려주기
+			FileInputStream fis = new FileInputStream(fileVo.getDir()+num);//폴더에서 가져오기 
+//			String dir= "c:kkw/upload/";
+//			FileInputStream fis = new FileInputStream(dir+num);
+			FileCopyUtils.copy(fis, out);
+			out.flush();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 }

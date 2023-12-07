@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-
     private final UserDslRepository userDslRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -121,4 +120,5 @@ public class UserController {
     public void exit(String id, String password) {
         System.out.println("EXIT !!");
     }
+
 }

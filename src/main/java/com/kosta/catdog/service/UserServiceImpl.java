@@ -23,7 +23,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean login(String id, String password) throws Exception {
+
+	public Boolean login(String id, String password) throws Exception {
+
 		User user = userDslRepository.findById_AndPassword(id,password);
 		return user==null? false:true;
 	}

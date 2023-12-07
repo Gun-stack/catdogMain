@@ -54,6 +54,14 @@ public class UserDslRepository {
 				.where(user.id.eq(id).and(user.password.eq(password))).fetchOne();
 	}
 	
+	public String findIdByEmail(String email) {
+		QUser user = QUser.user;
+		return jpaQueryFactory.select(user.id)
+				.from(user)
+				.where(user.email.eq(email))
+				.fetchOne();				
+	}
+	
 	@Transactional
 	public void modifyNickname(Integer num, String nickname) {
 		QUser user = QUser.user;

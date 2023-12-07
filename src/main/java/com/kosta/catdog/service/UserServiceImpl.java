@@ -29,14 +29,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public boolean isUserIdDuplicate(String id) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		User findUserId = userRepository.findById(id);
+		return findUserId != null; // 중복=true, 중복 아니면=false 반환
 	}
 
 	@Override
 	public boolean isNicknameDuplicate(String nickname) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+		User findUserNickname = userRepository.findById(nickname);
+		return findUserNickname != null; // 중복=true, 중복 아니면=false 반환
 	}
 
 	@Override
@@ -45,9 +45,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findId() throws Exception {
-		// tel, password
-		return null;
+	public String findId(String email) throws Exception {
+		return userDslRepository.findIdByEmail(email);
 	}
 
 	@Override

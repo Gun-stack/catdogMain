@@ -62,18 +62,18 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void updateNickname(Integer num, String nickname) throws Exception {
-		userDslRepository.updateNickname(num, nickname);
+	public void modifyNickname(Integer num, String nickname) throws Exception {
+		userDslRepository.modifyNickname(num, nickname);
 	}
 
 	@Override
-	public void updateTel(Integer num, String tel) throws Exception {
-		userDslRepository.updateTel(num, tel);
+	public void modifyTel(Integer num, String tel) throws Exception {
+		userDslRepository.modifyTel(num, tel);
 	}
 
 	@Override
-	public void updatePassword(Integer num, String password) throws Exception {
-		userDslRepository.updatePassword(num, password);
+	public void modifyPassword(Integer num, String password) throws Exception {
+		userDslRepository.modifyPassword(num, password);
 	}
 	
 	

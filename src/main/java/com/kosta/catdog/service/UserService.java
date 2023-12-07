@@ -20,10 +20,10 @@ public interface UserService {
 	User findPassword() throws Exception;
 	// 회원탈퇴
 	void withdrawalUser(User user) throws Exception;
-	//닉네임 변경
-	void updateNickname(Integer num, String nickname) throws Exception;
+	// 닉네임 변경
+	void modifyNickname(Integer num, String nickname) throws Exception;
 	// 전화번호 변경
-	void updateTel(Integer num, String tel) throws Exception;
+	void modifyTel(Integer num, String tel) throws Exception;
 	// 비밀번호 변경
-	void updatePassword(Integer num, String password) throws Exception;
+	void modifyPassword(Integer num, String password) throws Exception;
 }

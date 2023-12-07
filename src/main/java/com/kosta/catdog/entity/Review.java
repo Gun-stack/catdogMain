@@ -1,5 +1,6 @@
 package com.kosta.catdog.entity;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 import javax.persistence.Column;
@@ -39,7 +40,7 @@ public class Review {
 	@Column
 	private Date date;
 	@Column
-	private String	tag;
+	private String	tag; // 해시태그
 	@Column
-	private Integer	star;
+	private Integer star; // 별점
 }

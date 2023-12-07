@@ -14,6 +14,7 @@ import com.kosta.catdog.entity.QDesGallery;
 import com.kosta.catdog.entity.QDesigner;
 import com.kosta.catdog.entity.QReservation;
 import com.kosta.catdog.entity.QReview;
+import com.kosta.catdog.entity.QShop;
 import com.kosta.catdog.entity.QUser;
 import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.entity.Review;
@@ -54,7 +55,7 @@ public class UserDslRepository {
 	}
 	
 	@Transactional
-	public void updateNickname(Integer num, String nickname) {
+	public void modifyNickname(Integer num, String nickname) {
 		QUser user = QUser.user;
 		jpaQueryFactory.update(user)
 			.set(user.nickname, nickname)
@@ -65,7 +66,7 @@ public class UserDslRepository {
 	}
 	
 	@Transactional
-	public void updateTel(Integer num, String tel) {
+	public void modifyTel(Integer num, String tel) {
 		QUser user = QUser.user;
 		jpaQueryFactory.update(user)
 			.set(user.tel, tel)
@@ -76,7 +77,7 @@ public class UserDslRepository {
 	}
 	
 	@Transactional
-	public void updatePassword(Integer num, String password) {
+	public void modifyPassword(Integer num, String password) {
 		QUser user = QUser.user;
 		jpaQueryFactory.update(user)
 			.set(user.password, password)
@@ -102,20 +103,21 @@ public class UserDslRepository {
 	}
 	
 	// Review
-	public Review findReviewByDesigner(Integer num) {
+	public Review findReview(Integer num) {
 		QReview review = QReview.review;
 		return jpaQueryFactory.selectFrom(review)
 				.where(review.num.eq(num))
 				.fetchOne();
 	}
-
-	public List<Review> findReviewListByDesigner(Integer num) {
+	
+	public List<Review> findReviewListByDesignerOrderByDateDesc(Integer num) {
 		QReview review = QReview.review;
 		QDesigner designer = QDesigner.designer;
 		return jpaQueryFactory.selectFrom(review)
 				.join(designer)
 				.on(review.desId.eq(designer.id))
 				.where(designer.num.eq(num))
+				.orderBy(review.date.desc())
 				.fetch();
 	}
 
@@ -128,10 +130,35 @@ public class UserDslRepository {
 				.on(reservation.desId.eq(designer.id))
 				.where(designer.num.eq(num).and(reservation.date.eq(date)))
 				.fetch();
-				
-			
-				
-				
 	}
+	
+	// Designer
+	public Double findAvgStarCountByDesigner(Integer num) {
+	    QDesigner designer = QDesigner.designer;
+	    QReview review = QReview.review;
+
+	    List<Integer> starList = jpaQueryFactory.select(review.star)
+	            .from(review)
+	            .join(designer)
+	            .on(review.desId.eq(designer.id))
+	            .where(designer.num.eq(num))
+	            .fetch();
+
+	    Double avgStarCount = starList.stream()
+	            .mapToInt(Integer::intValue)
+	            .average()
+	            .orElse(0.0); // 리스트가 비어 있는 경우 기본값 0.0 반환
+
+	    return avgStarCount;
+	}
+	
+	// Shop
+//	@Transactional
+//	public void addDesignerToShop(String id, String position) {
+//		QDesigner designer = QDesigner.designer;
+//		QShop shop = QShop.shop;
+//		jpaQueryFactory.update(designer)
+//			.set(designer.sId, sId)
+//	}
 	
 }

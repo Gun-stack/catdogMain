@@ -1,6 +1,6 @@
 package com.kosta.catdog.repository;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -164,7 +164,7 @@ public class UserDslRepository {
 	}
 	
 
-	}
+	
 	
 	// Designer
 	public Double findAvgStarCountByDesigner(Integer num) {

@@ -37,7 +37,8 @@ public class PetController {
 			@RequestParam("weight") String weight,
 			@RequestParam("breed") String breed,
 			@RequestParam("gender") Boolean gender,
-			@RequestParam("neuter") Boolean neuter
+			@RequestParam("neuter") Boolean neuter,
+			@RequestParam("userNum") Integer userNum
 			) 
 	{
 		try {
@@ -49,6 +50,8 @@ public class PetController {
 		        pet.setBreed(breed);
 		        pet.setGender(gender);
 		        pet.setNeuter(neuter);
+		        pet.setUserNum(userNum);
+		        
 		        System.out.println(pet);
 		        System.out.println(file);
 		        

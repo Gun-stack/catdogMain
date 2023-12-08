@@ -7,7 +7,7 @@ public interface UserService {
 	// 회원가입
 	void join(User user) throws Exception;
 	// 로그인
-	boolean login(String id, String password) throws Exception;
+	Boolean login(String id, String password) throws Exception;
 	// 아이디 중복체크
 	String isUserIdDuplicate(String id) throws Exception;
 	// 닉네임 중복체크

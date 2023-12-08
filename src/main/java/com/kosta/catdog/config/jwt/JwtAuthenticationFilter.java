@@ -83,8 +83,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 							 .sign(Algorithm.HMAC512(JwtProperties.SECRET));
 
 		User user = principalDetails.getUser();
+		System.out.println(user.getName());
+		System.out.println(user.getNickname());
 
 		try{
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("application/json;charset=UTF-8");
 			String userJson = om.writeValueAsString(user);
 			response.getWriter().write(userJson);
 //			System.out.println("User Object To JSON !!!!!!");

@@ -1,6 +1,6 @@
 package com.kosta.catdog.service;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 import com.kosta.catdog.entity.Reservation;

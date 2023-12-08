@@ -1,6 +1,5 @@
 package com.kosta.catdog.entity;
 
-import java.math.BigDecimal;
 import java.sql.Date;
 
 import javax.persistence.Column;

@@ -70,19 +70,27 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void modifyNickname(Integer num, String nickname) throws Exception {
+	public String modifyNickname(Integer num, String nickname) throws Exception {
 		userDslRepository.modifyNickname(num, nickname);
+		return "success";
 	}
 
 	@Override
-	public void modifyTel(Integer num, String tel) throws Exception {
+	public String modifyTel(Integer num, String tel) throws Exception {
 		userDslRepository.modifyTel(num, tel);
+		return "success";
 	}
 
 	@Override
-	public void modifyPassword(Integer num, String password) throws Exception {
+	public String modifyPassword(Integer num, String password) throws Exception {
 		userDslRepository.modifyPassword(num, password);
+		return "success";
 	}
-	
-	
+
+	@Override
+	public User findByNum(Integer num) throws Exception {
+		return userDslRepository.findByNum(num);
+	}
+
+
 }

@@ -35,7 +35,7 @@ public class Pet {
 	
 	private Boolean dogOrCat; // 강아지 고양이 구분 
 	private Boolean gender; // 성별 
-	private Boolean neuter; // 중성화 여
+	private Boolean neuter; // 중성화 여부
 	
 	private String petNote; // 펫 특이사항 
 	

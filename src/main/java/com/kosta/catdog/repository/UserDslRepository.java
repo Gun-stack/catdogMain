@@ -50,6 +50,12 @@ public class UserDslRepository {
 				.where(user.nickname.eq(nickname)).fetchOne();
 	}
 
+	public User findByNum(Integer num) {
+		QUser user = QUser.user;
+		return jpaQueryFactory.selectFrom(user)
+				.where(user.num.eq(num)).fetchOne();
+	}
+
 	public User findById_AndPassword(String id, String password){
 		QUser user = QUser.user;
 		return jpaQueryFactory.selectFrom(user)
@@ -138,8 +144,9 @@ public class UserDslRepository {
 		return jpaQueryFactory.selectFrom(reservation)
 				.join(designer)
 				.on(reservation.desId.eq(designer.id))
-				.where(designer.num.eq(num).and(reservation.date.eq(date)))
+				.where(designer.num.eq(num).and(reservation.date.eq((date))))
 				.fetch();
+
 
 				
 	}
@@ -163,9 +170,6 @@ public class UserDslRepository {
 			.fetch();
 	}
 	
-
-	
-	
 	// Designer
 	public Double findAvgStarCountByDesigner(Integer num) {
 	    QDesigner designer = QDesigner.designer;
@@ -185,7 +189,9 @@ public class UserDslRepository {
 
 	    return avgStarCount;
 	}
-	
+
+
+
 	// Shop
 //	@Transactional
 //	public void addDesignerToShop(String id, String position) {

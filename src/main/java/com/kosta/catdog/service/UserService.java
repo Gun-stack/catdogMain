@@ -21,9 +21,12 @@ public interface UserService {
 	// 회원탈퇴
 	void withdrawalUser(User user) throws Exception;
 	// 닉네임 변경
-	void modifyNickname(Integer num, String nickname) throws Exception;
+	String modifyNickname(Integer num, String nickname) throws Exception;
 	// 전화번호 변경
-	void modifyTel(Integer num, String tel) throws Exception;
+	String modifyTel(Integer num, String tel) throws Exception;
 	// 비밀번호 변경
-	void modifyPassword(Integer num, String password) throws Exception;
+	String modifyPassword(Integer num, String password) throws Exception;
+
+	// 사용자 번호(PK)로 사용자 찾기
+	User findByNum(Integer num) throws Exception;
 }

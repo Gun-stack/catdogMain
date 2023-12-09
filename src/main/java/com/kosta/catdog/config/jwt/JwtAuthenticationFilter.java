@@ -74,7 +74,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			                                FilterChain chain, 
 			                                Authentication authentication) throws IOException, ServletException {
 		PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
-		
 		String jwtToken = JWT.create()
 							 .withSubject(principalDetails.getUsername())
 							 .withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
@@ -91,8 +90,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			response.setContentType("application/json;charset=UTF-8");
 			String userJson = om.writeValueAsString(user);
 			response.getWriter().write(userJson);
-//			System.out.println("User Object To JSON !!!!!!");
-//			System.out.println(userJson);
 		} catch( Exception e) {
 			e.printStackTrace();
 		}

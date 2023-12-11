@@ -1,6 +1,5 @@
 package com.kosta.catdog.repository;
 
-
 import java.sql.Date;
 import java.util.List;
 

@@ -54,7 +54,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		System.out.println("oAuth2UserInfo : " + oAuth2UserInfo);
 		System.out.println("Provider : "+ oAuth2UserInfo.getProvider());
 		System.out.println("ProviderId : "+oAuth2UserInfo.getProviderId());
-		System.out.println("Nickname : "+oAuth2UserInfo.getNickname());
+//		System.out.println("Nickname : "+oAuth2UserInfo.getNickname());
 //		System.out.println("Name : "+oAuth2UserInfo.getName());
 
 		Optional<User> userOptional =

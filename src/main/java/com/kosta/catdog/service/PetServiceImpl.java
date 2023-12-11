@@ -42,8 +42,8 @@ public class PetServiceImpl implements PetService {
 			fileVO.setName(file.getOriginalFilename());
 			fileVO.setSize(file.getSize());
 			fileVO.setType(file.getContentType());
-			fileVO.setData(file.getBytes());
 			fileVO.setDate(today);
+			//fileVO.setData(file.getBytes());
 			petFileVORepository.save(fileVO);
 			
 			File uploadFile= new File(dir+fileVO.getNum());
@@ -60,15 +60,17 @@ public class PetServiceImpl implements PetService {
 	@Override
 	public void fileView(Integer num, OutputStream out) throws Exception {
 		try {
-			Optional<PetFileVO> fileVoOptional  = petFileVORepository.findById(num);
-			PetFileVO fileVo = fileVoOptional.get();
+//			Optional<PetFileVO> fileVoOptional  = petFileVORepository.findById(num);
+//			PetFileVO fileVo = fileVoOptional.get();
 			
-			FileCopyUtils.copy(fileVo.getData(), out); //데이타 뿌려주기
-			FileInputStream fis = new FileInputStream(fileVo.getDir()+num);//폴더에서 가져오기 
-//			String dir= "c:kkw/upload/";
-//			FileInputStream fis = new FileInputStream(dir+num);
+//			FileCopyUtils.copy(fileVo.getData(), out); //데이타 뿌려주기
+//			FileInputStream fis = new FileInputStream(fileVo.getDir()+num);//폴더에서 가져오기 
+			
+			String dir = "c:/kkw/upload/pet";
+			FileInputStream fis = new FileInputStream(dir+num);
 			FileCopyUtils.copy(fis, out);
 			out.flush();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

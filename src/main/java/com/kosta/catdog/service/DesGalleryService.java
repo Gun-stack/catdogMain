@@ -17,7 +17,7 @@ public interface DesGalleryService {
 	// 디자이너 갤러리 확인
 	DesGallery findDesGallery(Integer num) throws Exception;
 	// 디자이너 갤러리 리스트(메인화면 -> 갤러리 구경하기)
-	List<DesGallery> desGalleryListMainPage(Integer num, int offset, int limit) throws Exception;
+	List<DesGallery> desGalleryListMainPage() throws Exception;
 	// 디자이너 갤러리 리스트(샵)
 	List<DesGallery> desGalleryListShopPage(Integer num, int offset, int limit) throws Exception;
 	// 디자이너 갤러리 리스트(디자이너)

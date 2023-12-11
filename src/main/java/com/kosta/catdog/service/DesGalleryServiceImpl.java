@@ -42,21 +42,18 @@ public class DesGalleryServiceImpl implements DesGalleryService {
 	}
 
 	@Override
-	public List<DesGallery> desGalleryListMainPage(Integer num, int offset, int limit) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<DesGallery> desGalleryListMainPage() throws Exception {
+		return desGalleryRepository.findAll();
 	}
 
 	@Override
 	public List<DesGallery> desGalleryListShopPage(Integer num, int offset, int limit) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return userDslRepository.findDesGalleryListShopPage(num, offset, limit);
 	}
 
 	@Override
 	public List<DesGallery> desGalleryListDesignerPage(Integer num, int offset, int limit) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return userDslRepository.findDesGalleryListDesignerPage(num, offset, limit);
 	}
 
 	@Override

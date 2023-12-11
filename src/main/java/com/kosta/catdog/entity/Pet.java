@@ -39,7 +39,7 @@ public class Pet {
 	
 	private String petNote; // 펫 특이사항 
 	
-	private Integer UserNum; // 주인(유저) 번호 
+	private Integer userNum; // 주인(유저) 번호 
 //	@Column//( precision = 4, scale =2)
 	private BigDecimal weight; // 몸무게 
 	private String vaccine; // 백신 

@@ -19,6 +19,5 @@ public interface ShopService {
 	void addShopNotice(String notice) throws Exception;
 	// 소속 디자이너 모아 보여주기
 	List<Designer> designerListByShop(Integer num) throws Exception;
-	// 고객 리뷰 모아 보여주기(최신 날짜순으로)
-	List<Review> reviewListByShopOrderByDateDesc(Integer num) throws Exception;
+	
 }

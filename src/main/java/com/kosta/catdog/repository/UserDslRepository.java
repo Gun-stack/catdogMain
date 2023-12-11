@@ -104,17 +104,33 @@ public class UserDslRepository {
 	}
 
 	// DesGallery
-	public DesGallery findDesGalleryByDesigner(Integer num) {
+	public List<DesGallery> findDesGalleryListShopPage(Integer num, int offset, int limit) {
 		QDesGallery desGallery = QDesGallery.desGallery;
+		QDesigner designer = QDesigner.designer;
+		QShop shop = QShop.shop;
 		return jpaQueryFactory.selectFrom(desGallery)
-				.where(desGallery.num.eq(num))
-				.fetchOne();
-	}
-
-	public List<DesGallery> findDesGalleryListByDesigner(String desId) {
+				.from(desGallery)
+				.join(designer)
+				.on(desGallery.desId.eq(designer.id))
+				.join(shop)
+				.on(designer.sId.eq(shop.sId))
+				.where(shop.num.eq(shop.num))
+				.orderBy(desGallery.date.desc())
+				.offset(offset)
+				.limit(limit)
+				.fetch();
+	}	
+	
+	public List<DesGallery> findDesGalleryListDesignerPage(Integer num, int offset, int limit) {
 		QDesGallery desGallery = QDesGallery.desGallery;
+		QDesigner designer = QDesigner.designer;
 		return jpaQueryFactory.selectFrom(desGallery)
-				.where(desGallery.desId.eq(desId))
+				.from(desGallery)
+				.on(desGallery.desId.eq(designer.id))
+				.where(designer.num.eq(num))
+				.orderBy(desGallery.date.desc())
+				.offset(offset)
+				.limit(limit)
 				.fetch();
 	}
 	
@@ -153,7 +169,7 @@ public class UserDslRepository {
 				.orderBy(review.date.desc())
 				.offset(offset)
 				.limit(limit)
-				.fetch();				
+				.fetch();
 	}
 
 	// Reservation

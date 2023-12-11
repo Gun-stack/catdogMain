@@ -1,6 +1,5 @@
 package com.kosta.catdog.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.kosta.catdog.entity.Pet;
 import com.kosta.catdog.entity.Review;
 import com.kosta.catdog.service.ReviewService;
 
@@ -65,5 +63,9 @@ public class ReviewController {
 		}
 	}
 	
+	// 디자이너별 리뷰 모아보기(한번에 3개씩 호출)
+	// List<Review> reviewList = findReviewListByDesignerOrderByDateDesc(num, 0, 3);
+	// 샵별 리뷰 모아보기(한번에 3개씩 호출)
+	// List<Review> reviewList = findReviewListByShopOrderByDateDesc(num, 0, 3);
 	
 }

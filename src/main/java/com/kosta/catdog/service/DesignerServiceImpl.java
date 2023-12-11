@@ -35,11 +35,6 @@ public class DesignerServiceImpl implements DesignerService {
 	}
 
 	@Override
-	public List<Review> reviewListByDesignerOrderByDateDesc(Integer num) throws Exception {
-		return userDslRepository.findReviewListByDesignerOrderByDateDesc(num);
-	}
-
-	@Override
 	public Double avgStarCountByDesigner(Integer num) throws Exception {
 		return userDslRepository.findAvgStarCountByDesigner(num);
 	}

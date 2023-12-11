@@ -125,8 +125,8 @@ public class UserDslRepository {
 				.where(review.num.eq(num))
 				.fetchOne();
 	}
-	
-	public List<Review> findReviewListByDesignerOrderByDateDesc(Integer num) {
+		
+	public List<Review> findReviewListByDesignerOrderByDateDesc(Integer num, int offset, int limit) {
 		QReview review = QReview.review;
 		QDesigner designer = QDesigner.designer;
 		return jpaQueryFactory.selectFrom(review)
@@ -134,7 +134,26 @@ public class UserDslRepository {
 				.on(review.desId.eq(designer.id))
 				.where(designer.num.eq(num))
 				.orderBy(review.date.desc())
+				.offset(offset)
+				.limit(limit)
 				.fetch();
+	}
+	
+	public List<Review> findReviewListByShopOrderByDateDesc(Integer num, int offset, int limit) {
+		QReview review = QReview.review;
+		QDesigner designer = QDesigner.designer;
+		QShop shop = QShop.shop;
+		return jpaQueryFactory.selectFrom(review)
+				.from(review)
+				.join(designer)
+				.on(review.desId.eq(designer.id))
+				.join(shop)
+				.on(designer.sId.eq(shop.sId))
+				.where(shop.num.eq(num))
+				.orderBy(review.date.desc())
+				.offset(offset)
+				.limit(limit)
+				.fetch();				
 	}
 
 	// Reservation
@@ -146,9 +165,6 @@ public class UserDslRepository {
 				.on(reservation.desId.eq(designer.id))
 				.where(designer.num.eq(num).and(reservation.date.eq((date))))
 				.fetch();
-
-
-				
 	}
 	
 	public List<Reservation> findReservationListByUserId(String userId) {
@@ -156,8 +172,7 @@ public class UserDslRepository {
 		return jpaQueryFactory.selectFrom(reservation)
 				.where(reservation.userId.eq(userId))
 				.fetch();
-	}
-	
+	}	
 
 	//pet
 	public List<Pet> findPetsByUserID(String userId){
@@ -165,7 +180,7 @@ public class UserDslRepository {
 	QPet pet = QPet.pet;
 	return jpaQueryFactory.selectFrom(pet)
 			.join(user)
-			.on(pet.UserNum.eq(user.num))
+			.on(pet.userNum.eq(user.num))
 			.where(user.id.eq(userId))
 			.fetch();
 	}

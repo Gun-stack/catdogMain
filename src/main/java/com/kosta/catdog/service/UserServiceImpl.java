@@ -1,6 +1,8 @@
 package com.kosta.catdog.service;
 
 
+import com.kosta.catdog.entity.Designer;
+import com.kosta.catdog.repository.DesignerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +17,21 @@ public class UserServiceImpl implements UserService {
 	private UserDslRepository userDslRepository;
 	@Autowired
 	private UserRepository userRepository;
-
+	@Autowired
+	private DesignerRepository designerRepository;
 	@Override
 	public void join(User user) throws Exception {
-		user.setRoles("ROLE_USER");
 		userRepository.save(user);
+		System.out.println("Get Roles : " + user.getRoles());
+		if(user.getRoles().equals("ROLE_DES")){
+			System.out.println("IF ROLE_DES !!!");
+			String id = user.getId();
+			Designer des = new Designer(id);
+			System.out.println(des.getId());
+			designerRepository.save(des);
+		}
+
+
 	}
 
 	@Override

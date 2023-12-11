@@ -1,13 +1,15 @@
 package com.kosta.catdog.controller;
 
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.kosta.catdog.entity.Designer;
 import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.entity.Review;
 import com.kosta.catdog.entity.Shop;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class ShopController {
@@ -58,8 +60,21 @@ public class ShopController {
 		return null;
 	}
 	// 샵 등록
-	public void shopreg(Shop shop) {
+	@PostMapping("/shopreg")
+	public void shopreg(@RequestPart(value="file", required = false) List<MultipartFile> file,
+						@RequestParam("name") String name,
+						@RequestParam("address_road") String address_road,
+						@RequestParam("address_detail") String address_detail,
+						@RequestParam("latitude") String latitude,
+						@RequestParam("longitude") String longitude
+						) {
 		System.out.println("shopReg !!");
+		System.out.println("Shop Name : " + name);
+		System.out.println("Shop addressRoad : " + address_road);
+		System.out.println("Shop addressDetail : " + address_detail);
+		System.out.println("Shop latitude(위도) : " + latitude);
+		System.out.println("Shop longitude(경도) : " + longitude);
+		System.out.println("Shop profImg : " + file);
 	}
 	// 공지사항 등록
 	public void regshopnotice(String notice) {

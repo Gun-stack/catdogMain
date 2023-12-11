@@ -11,4 +11,6 @@ public interface PetService {
 
 	Pet petReg(Pet pet ,List<MultipartFile> files) throws Exception;
 	void fileView(Integer num, OutputStream out) throws Exception ;
+	Pet petModi(Pet pet , List<MultipartFile> files) throws Exception;
+	
 }

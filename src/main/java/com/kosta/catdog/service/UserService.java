@@ -7,7 +7,7 @@ public interface UserService {
 	// 회원가입
 	void join(User user) throws Exception;
 	// 로그인
-	Boolean login(String id, String password) throws Exception;
+	boolean login(String id, String password) throws Exception;
 	// 아이디 중복체크
 	String isUserIdDuplicate(String id) throws Exception;
 	// 닉네임 중복체크
@@ -21,12 +21,9 @@ public interface UserService {
 	// 회원탈퇴
 	void withdrawalUser(User user) throws Exception;
 	// 닉네임 변경
-	String modifyNickname(Integer num, String nickname) throws Exception;
+	void modifyNickname(Integer num, String nickname) throws Exception;
 	// 전화번호 변경
-	String modifyTel(Integer num, String tel) throws Exception;
+	void modifyTel(Integer num, String tel) throws Exception;
 	// 비밀번호 변경
-	String modifyPassword(Integer num, String password) throws Exception;
-
-	// 사용자 번호(PK)로 사용자 찾기
-	User findByNum(Integer num) throws Exception;
+	void modifyPassword(Integer num, String password) throws Exception;
 }

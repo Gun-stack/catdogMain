@@ -26,7 +26,8 @@ public class UserServiceImpl implements UserService {
 		if(user.getRoles().equals("ROLE_DES")){
 			System.out.println("IF ROLE_DES !!!");
 			String id = user.getId();
-			Designer des = new Designer(id);
+			Designer des = new Designer();
+			des.setId(id);
 			System.out.println(des.getId());
 			designerRepository.save(des);
 		}
@@ -35,6 +36,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+
 public boolean login(String id, String password) {
     try {
         User user = userDslRepository.findById_AndPassword(id, password);
@@ -47,6 +49,7 @@ public boolean login(String id, String password) {
 }
 
 	@Override
+
 	public String isUserIdDuplicate(String id) throws Exception {
 		User user = userDslRepository.findById(id);
 		if(user != null ) {
@@ -98,6 +101,19 @@ public boolean login(String id, String password) {
 	@Override
 	public void modifyPassword(Integer num, String password) throws Exception {
 		userDslRepository.modifyPassword(num, password);
+
+		return "success";
+	}
+
+	@Override
+	public void modifyRole(String id) throws Exception {
+		userDslRepository.modifyRole(id);
+	}
+
+	@Override
+	public User findByNum(Integer num) throws Exception {
+		return userDslRepository.findByNum(num);
+
 	}
 	
 	

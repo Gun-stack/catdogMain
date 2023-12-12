@@ -1,12 +1,12 @@
 package com.kosta.catdog.service;
 
 
-import com.kosta.catdog.entity.Designer;
-import com.kosta.catdog.repository.DesignerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kosta.catdog.entity.Designer;
 import com.kosta.catdog.entity.User;
+import com.kosta.catdog.repository.DesignerRepository;
 import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.repository.UserRepository;
 
@@ -99,7 +99,7 @@ public boolean login(String id, String password) {
 	}
 
 	@Override
-	public void modifyPassword(Integer num, String password) throws Exception {
+	public String modifyPassword(Integer num, String password) throws Exception {
 		userDslRepository.modifyPassword(num, password);
 
 		return "success";
@@ -112,7 +112,7 @@ public boolean login(String id, String password) {
 
 	@Override
 	public User findByNum(Integer num) throws Exception {
-		return userDslRepository.findByNum(num);
+		return null;
 
 	}
 	

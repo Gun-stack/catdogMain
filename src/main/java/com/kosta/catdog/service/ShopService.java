@@ -1,5 +1,6 @@
 package com.kosta.catdog.service;
 
+import java.io.OutputStream;
 import java.util.List;
 
 import com.kosta.catdog.entity.Designer;
@@ -22,4 +23,7 @@ public interface ShopService {
 	// 소속 디자이너 모아 보여주기
 	List<Designer> designerListByShop(Integer num) throws Exception;
 	
+	Shop addShopImg(Shop shop, MultipartFile file) throws Exception;
+	
+	public void fileView(Integer num, OutputStream out) throws Exception;
 }

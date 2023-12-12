@@ -98,6 +98,7 @@ public class UserDslRepository {
 		entityManager.flush();
 		entityManager.clear();
 	}
+
 	
 	@Transactional
 	public void updateReservationIsReview(Integer resNum) {
@@ -111,18 +112,48 @@ public class UserDslRepository {
 	
 	}
 
-	// DesGallery
-	public DesGallery findDesGalleryByDesigner(Integer num) {
-		QDesGallery desGallery = QDesGallery.desGallery;
-		return jpaQueryFactory.selectFrom(desGallery)
-				.where(desGallery.num.eq(num))
-				.fetchOne();
+	@Transactional
+	public void modifyRole(String id){
+		QUser user = QUser.user;
+		jpaQueryFactory.update(user)
+				.set(user.roles, user.roles)
+				.where(user.id.eq(id))
+				.execute();
+		entityManager.flush();
+		entityManager.clear();
 	}
 
-	public List<DesGallery> findDesGalleryListByDesigner(String desId) {
+
+
+
+	// DesGallery
+	public List<DesGallery> findDesGalleryListShopPage(Integer num, int offset, int limit) {
 		QDesGallery desGallery = QDesGallery.desGallery;
+		QDesigner designer = QDesigner.designer;
+		QShop shop = QShop.shop;
 		return jpaQueryFactory.selectFrom(desGallery)
-				.where(desGallery.desId.eq(desId))
+				.from(desGallery)
+				.join(designer)
+				.on(desGallery.desId.eq(designer.id))
+				.join(shop)
+				.on(designer.sId.eq(shop.sId))
+				.where(shop.num.eq(shop.num))
+				.orderBy(desGallery.date.desc())
+				.offset(offset)
+				.limit(limit)
+				.fetch();
+	}	
+	
+	public List<DesGallery> findDesGalleryListDesignerPage(Integer num, int offset, int limit) {
+		QDesGallery desGallery = QDesGallery.desGallery;
+		QDesigner designer = QDesigner.designer;
+		return jpaQueryFactory.selectFrom(desGallery)
+				.from(desGallery)
+				.on(desGallery.desId.eq(designer.id))
+				.where(designer.num.eq(num))
+				.orderBy(desGallery.date.desc())
+				.offset(offset)
+				.limit(limit)
 				.fetch();
 	}
 	
@@ -133,8 +164,8 @@ public class UserDslRepository {
 				.where(review.num.eq(num))
 				.fetchOne();
 	}
-	
-	public List<Review> findReviewListByDesignerOrderByDateDesc(Integer num) {
+		
+	public List<Review> findReviewListByDesignerOrderByDateDesc(Integer num, int offset, int limit) {
 		QReview review = QReview.review;
 		QDesigner designer = QDesigner.designer;
 		return jpaQueryFactory.selectFrom(review)
@@ -142,6 +173,25 @@ public class UserDslRepository {
 				.on(review.desId.eq(designer.id))
 				.where(designer.num.eq(num))
 				.orderBy(review.date.desc())
+				.offset(offset)
+				.limit(limit)
+				.fetch();
+	}
+	
+	public List<Review> findReviewListByShopOrderByDateDesc(Integer num, int offset, int limit) {
+		QReview review = QReview.review;
+		QDesigner designer = QDesigner.designer;
+		QShop shop = QShop.shop;
+		return jpaQueryFactory.selectFrom(review)
+				.from(review)
+				.join(designer)
+				.on(review.desId.eq(designer.id))
+				.join(shop)
+				.on(designer.sId.eq(shop.sId))
+				.where(shop.num.eq(num))
+				.orderBy(review.date.desc())
+				.offset(offset)
+				.limit(limit)
 				.fetch();
 	}
 
@@ -155,7 +205,6 @@ public class UserDslRepository {
 				.where(designer.num.eq(num).and(reservation.date.eq(date)))
 				.fetch();
 
-				
 	}
 	
 	public List<Reservation> findReservationListByUserId(String userId) {
@@ -163,8 +212,7 @@ public class UserDslRepository {
 		return jpaQueryFactory.selectFrom(reservation)
 				.where(reservation.userId.eq(userId))
 				.fetch();
-	}
-	
+	}	
 
 	//pet
 	public List<Pet> findPetsByUserID(String userId){
@@ -172,7 +220,7 @@ public class UserDslRepository {
 	QPet pet = QPet.pet;
 	return jpaQueryFactory.selectFrom(pet)
 			.join(user)
-			.on(pet.UserNum.eq(user.num))
+			.on(pet.userNum.eq(user.num))
 			.where(user.id.eq(userId))
 			.fetch();
 	}

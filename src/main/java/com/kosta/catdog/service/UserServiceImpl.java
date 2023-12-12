@@ -1,6 +1,8 @@
 package com.kosta.catdog.service;
 
 
+import com.kosta.catdog.entity.Designer;
+import com.kosta.catdog.repository.DesignerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +17,26 @@ public class UserServiceImpl implements UserService {
 	private UserDslRepository userDslRepository;
 	@Autowired
 	private UserRepository userRepository;
-
+	@Autowired
+	private DesignerRepository designerRepository;
 	@Override
 	public void join(User user) throws Exception {
-		user.setRoles("ROLE_USER");
 		userRepository.save(user);
+		System.out.println("Get Roles : " + user.getRoles());
+		if(user.getRoles().equals("ROLE_DES")){
+			System.out.println("IF ROLE_DES !!!");
+			String id = user.getId();
+			Designer des = new Designer();
+			des.setId(id);
+			System.out.println(des.getId());
+			designerRepository.save(des);
+		}
+
+
 	}
 
 	@Override
+
 public boolean login(String id, String password) {
     try {
         User user = userDslRepository.findById_AndPassword(id, password);
@@ -35,6 +49,7 @@ public boolean login(String id, String password) {
 }
 
 	@Override
+
 	public String isUserIdDuplicate(String id) throws Exception {
 		User user = userDslRepository.findById(id);
 		if(user != null ) {
@@ -86,6 +101,19 @@ public boolean login(String id, String password) {
 	@Override
 	public void modifyPassword(Integer num, String password) throws Exception {
 		userDslRepository.modifyPassword(num, password);
+
+		return "success";
+	}
+
+	@Override
+	public void modifyRole(String id) throws Exception {
+		userDslRepository.modifyRole(id);
+	}
+
+	@Override
+	public User findByNum(Integer num) throws Exception {
+		return userDslRepository.findByNum(num);
+
 	}
 	
 	

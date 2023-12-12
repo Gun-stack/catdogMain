@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -33,9 +34,9 @@ public class Designer {
 	private String id;
 	@Column
 	private String name;
-	@Column(unique=true)
+//	@Column(unique=true)
 	private String desNickname; // 디자이너 닉네임
-	@Column(unique=true) 
+	@Column(unique=true)
 	private String email;
 	@Column
 	private String password;
@@ -54,6 +55,7 @@ public class Designer {
 	@Column
 	private String info; // 프로필 정보 등록
 	@Column
+	@ColumnDefault("true") // default
 	private String state; // 회원유지: true, 탈퇴: false
 	@Column(unique=true)
 	private String kId; // 카카오톡 아이디 연동

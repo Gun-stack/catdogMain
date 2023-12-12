@@ -38,7 +38,7 @@ public class PetController {
 			@RequestParam("breed") String breed,
 			@RequestParam("gender") Boolean gender,
 			@RequestParam("neuter") Boolean neuter,
-			@RequestParam("userNum") Integer userNum
+			@RequestParam("userNum") Integer usernum
 			) 
 	{
 		try {
@@ -50,8 +50,7 @@ public class PetController {
 		        pet.setBreed(breed);
 		        pet.setGender(gender);
 		        pet.setNeuter(neuter);
-		        pet.setUserNum(userNum);
-		        
+		        pet.setUserNum(usernum);
 		        System.out.println(pet);
 		        System.out.println(file);
 		        
@@ -81,7 +80,7 @@ public class PetController {
 	// 등록한 반려동물 조회
 	@GetMapping("/petinfo")
 	public ResponseEntity<List<Pet>> selectPets(@RequestParam String userId){
-		System.out.println(userId);
+		System.out.println("petInfo : id :"+ userId);
 		List<Pet> petList= userDslRepository.findPetsByUserID(userId);
 		System.out.println(petList);
 		
@@ -93,11 +92,46 @@ public class PetController {
 		}
 		
 	}
-	
+			
 
-	// 반려동물 정보 수정
-	public void modipet(Pet pet) {
-		System.out.println("modiPet !!");
+	@PostMapping("/petmodi")
+	public ResponseEntity<Boolean> modipet(
+			@RequestPart(value="file", required = false) List<MultipartFile> file,
+			@RequestParam("num") Integer num,
+			@RequestParam("name") String name,
+			@RequestParam("dogOrCat") Boolean dogOrCat,
+			@RequestParam("age") Integer age,
+			@RequestParam("weight") String weight,
+			@RequestParam("breed") String breed,
+			@RequestParam("gender") Boolean gender,
+			@RequestParam("neuter") Boolean neuter,
+			@RequestParam("userNum") Integer usernum
+			){
+		try {
+			Pet pet =new Pet();
+			pet.setNum(num);
+			pet.setName(name);
+	        pet.setDogOrCat(dogOrCat);  // Corrected type casting
+	        pet.setAge(age);  // Corrected type casting
+	        pet.setWeight(new BigDecimal(weight));
+	        pet.setBreed(breed);
+	        pet.setGender(gender);
+	        pet.setNeuter(neuter);
+	        pet.setUserNum(usernum);
+	        System.out.println(pet);
+	        System.out.println(file);
+	        if (file != null && !file.isEmpty()) {
+	            petService.petModi(pet, file);
+	        } else {
+	            petService.petModi(pet, null);  // 또는 파일을 처리하지 않는 메서드 호출
+	        }
+		        
+		       
+			return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Boolean>(false,HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

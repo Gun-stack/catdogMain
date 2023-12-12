@@ -1,5 +1,7 @@
 package com.kosta.catdog.repository;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.List;
 
@@ -10,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kosta.catdog.entity.DesGallery;
+import com.kosta.catdog.entity.Designer;
 import com.kosta.catdog.entity.Pet;
 import com.kosta.catdog.entity.QDesGallery;
 import com.kosta.catdog.entity.QDesigner;
 import com.kosta.catdog.entity.QPet;
 import com.kosta.catdog.entity.QReservation;
 import com.kosta.catdog.entity.QReview;
-import com.kosta.catdog.entity.QShop;
 import com.kosta.catdog.entity.QUser;
 import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.entity.Review;
@@ -48,12 +50,6 @@ public class UserDslRepository {
 		QUser user = QUser.user;
 		return jpaQueryFactory.selectFrom(user)
 				.where(user.nickname.eq(nickname)).fetchOne();
-	}
-
-	public User findByNum(Integer num) {
-		QUser user = QUser.user;
-		return jpaQueryFactory.selectFrom(user)
-				.where(user.num.eq(num)).fetchOne();
 	}
 
 	public User findById_AndPassword(String id, String password){
@@ -102,6 +98,33 @@ public class UserDslRepository {
 		entityManager.flush();
 		entityManager.clear();
 	}
+
+	
+	@Transactional
+	public void updateReservationIsReview(Integer resNum) {
+		QReservation reservation = QReservation.reservation;
+		jpaQueryFactory.update(reservation).set(reservation.isReview, 1)
+		.where(reservation.num.eq(resNum))
+		.execute();
+		entityManager.flush();
+		entityManager.clear();
+		
+	
+	}
+
+	@Transactional
+	public void modifyRole(String id){
+		QUser user = QUser.user;
+		jpaQueryFactory.update(user)
+				.set(user.roles, user.roles)
+				.where(user.id.eq(id))
+				.execute();
+		entityManager.flush();
+		entityManager.clear();
+	}
+
+
+
 
 	// DesGallery
 	public DesGallery findDesGallery(Integer num) {
@@ -188,8 +211,9 @@ public class UserDslRepository {
 		return jpaQueryFactory.selectFrom(reservation)
 				.join(designer)
 				.on(reservation.desId.eq(designer.id))
-				.where(designer.num.eq(num).and(reservation.date.eq((date))))
+				.where(designer.num.eq(num).and(reservation.date.eq(date)))
 				.fetch();
+
 	}
 	
 	public List<Reservation> findReservationListByUserId(String userId) {
@@ -210,6 +234,9 @@ public class UserDslRepository {
 			.fetch();
 	}
 	
+
+	
+	
 	// Designer
 	public Double findAvgStarCountByDesigner(Integer num) {
 	    QDesigner designer = QDesigner.designer;
@@ -227,11 +254,77 @@ public class UserDslRepository {
 	            .average()
 	            .orElse(0.0); // 리스트가 비어 있는 경우 기본값 0.0 반환
 
-	    return avgStarCount;
+	    return avgStarCount
+	    		;
 	}
-
-
-
+	
+	//리뷰 등록시 평균별점
+	@Transactional
+	public void UpdateStarByDesNumAndReviewStar(Integer desNum, Review review) {
+		 QDesigner designer = QDesigner.designer;
+		    
+		    BigDecimal desStar = jpaQueryFactory.select(designer.star)
+		            .from(designer)
+		            .where(designer.num.eq(desNum))
+		            .fetchOne();
+		    Integer revCnt = jpaQueryFactory.select(designer.reviewCnt)
+		            .from(designer)
+		            .where(designer.num.eq(desNum))
+		            .fetchOne();
+		    
+		    desStar = (desStar.multiply(BigDecimal.valueOf(revCnt)).add(BigDecimal.valueOf(review.getStar())))
+		            .divide(BigDecimal.valueOf(revCnt + 1), 2, RoundingMode.HALF_UP);
+		    
+		    // 이제 변경된 별점 및 리뷰 카운트를 데이터베이스에 저장해야 합니다.
+		    // (디자이너에 대한 속성인 star 및 reviewCnt가 있는 가정하에 작성된 코드입니다)
+		    jpaQueryFactory.update(designer)
+		            .set(designer.star, desStar)
+		            .set(designer.reviewCnt, revCnt + 1)
+		            .where(designer.num.eq(desNum))
+		            .execute();
+	}
+	//리뷰 수정시 평균별점 반영
+	@Transactional
+	public void UpdateStarByDesNumAndReviewStarModi(Integer desNum, Review review) {
+		 QDesigner designer = QDesigner.designer;
+		    
+		    BigDecimal desStar = jpaQueryFactory.select(designer.star)
+		            .from(designer)
+		            .where(designer.num.eq(desNum))
+		            .fetchOne();
+		    Integer revCnt = jpaQueryFactory.select(designer.reviewCnt)
+		            .from(designer)
+		            .where(designer.num.eq(desNum))
+		            .fetchOne();
+		    
+		    desStar = (desStar.multiply(BigDecimal.valueOf(revCnt)).subtract(BigDecimal.valueOf(review.getStar())))
+		            .divide(BigDecimal.valueOf(revCnt), 2, RoundingMode.HALF_UP);
+		    
+		    // 이제 변경된 별점 및 리뷰 카운트를 데이터베이스에 저장해야 합니다.
+		    // (디자이너에 대한 속성인 star 및 reviewCnt가 있는 가정하에 작성된 코드입니다)
+		    jpaQueryFactory.update(designer)
+		            .set(designer.star, desStar)
+		            .set(designer.reviewCnt, revCnt)
+		            .where(designer.num.eq(desNum))
+		            .execute();
+	}
+	
+	
+	//designer by Id
+	
+	public Designer FindDesignerById(String desId) {
+		QDesigner designer = QDesigner.designer;
+		
+		return  jpaQueryFactory.selectFrom(designer)
+				.where(designer.id.eq(desId))
+				.fetchOne();
+			
+		
+		
+	}
+	
+	
+	
 	// Shop
 //	@Transactional
 //	public void addDesignerToShop(String id, String position) {
@@ -240,6 +333,14 @@ public class UserDslRepository {
 //		jpaQueryFactory.update(designer)
 //			.set(designer.sId, sId)
 //	}
+	
+	//review by resnum
+	public Review FindReviewByResNum(Integer resNum) {
+		QReview review = QReview.review;
+		return jpaQueryFactory.selectFrom(review)
+				.where(review.resNum.eq(resNum))
+				.fetchOne();
+	}
 
 	
 }

@@ -22,10 +22,11 @@ public class PrincipalDetailsService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 		User userEntity = userDslRepository.findById(id);
-		if (userEntity!=null) {
-			return new PrincipalDetails(userEntity);
+		
+		if (userEntity ==null) {
+			throw new UsernameNotFoundException("사용자를 찾을 수 없습니다.");
 		}
-		return null;
+		return new PrincipalDetails(userEntity);
 	}
 
 }

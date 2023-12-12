@@ -26,7 +26,8 @@ public class UserServiceImpl implements UserService {
 		if(user.getRoles().equals("ROLE_DES")){
 			System.out.println("IF ROLE_DES !!!");
 			String id = user.getId();
-			Designer des = new Designer(id);
+			Designer des = new Designer();
+			des.setId(id);
 			System.out.println(des.getId());
 			designerRepository.save(des);
 		}
@@ -36,13 +37,19 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 
-	public Boolean login(String id, String password) throws Exception {
-
-		User user = userDslRepository.findById_AndPassword(id,password);
-		return user==null? false:true;
-	}
+public boolean login(String id, String password) {
+    try {
+        User user = userDslRepository.findById_AndPassword(id, password);
+        return user != null;
+    } catch (Exception e) {
+        // 예외 처리: 예외가 발생하면 로깅 또는 특정 작업 수행
+        e.printStackTrace();
+        return false; // 로그인 실패로 처리
+    }
+}
 
 	@Override
+
 	public String isUserIdDuplicate(String id) throws Exception {
 		User user = userDslRepository.findById(id);
 		if(user != null ) {
@@ -82,27 +89,32 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public String modifyNickname(Integer num, String nickname) throws Exception {
+	public void modifyNickname(Integer num, String nickname) throws Exception {
 		userDslRepository.modifyNickname(num, nickname);
-		return "success";
 	}
 
 	@Override
-	public String modifyTel(Integer num, String tel) throws Exception {
+	public void modifyTel(Integer num, String tel) throws Exception {
 		userDslRepository.modifyTel(num, tel);
+	}
+
+	@Override
+	public void modifyPassword(Integer num, String password) throws Exception {
+		userDslRepository.modifyPassword(num, password);
+
 		return "success";
 	}
 
 	@Override
-	public String modifyPassword(Integer num, String password) throws Exception {
-		userDslRepository.modifyPassword(num, password);
-		return "success";
+	public void modifyRole(String id) throws Exception {
+		userDslRepository.modifyRole(id);
 	}
 
 	@Override
 	public User findByNum(Integer num) throws Exception {
 		return userDslRepository.findByNum(num);
+
 	}
-
-
+	
+	
 }

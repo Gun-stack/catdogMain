@@ -102,6 +102,18 @@ public class UserDslRepository {
 		entityManager.flush();
 		entityManager.clear();
 	}
+	@Transactional
+	public void modifyRole(String id){
+		QUser user = QUser.user;
+		jpaQueryFactory.update(user)
+				.set(user.roles, user.roles)
+				.where(user.id.eq(id))
+				.execute();
+		entityManager.flush();
+		entityManager.clear();
+	}
+
+
 
 	// DesGallery
 	public List<DesGallery> findDesGalleryListShopPage(Integer num, int offset, int limit) {

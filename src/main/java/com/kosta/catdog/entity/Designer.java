@@ -65,8 +65,4 @@ public class Designer {
 	private String tag;	// 해시태그
 	@Column
 	private String role;	// ROLE_DES or ROLE_SHOP
-
-	public Designer(String id) {
-		this.id = id;
-	}
 }

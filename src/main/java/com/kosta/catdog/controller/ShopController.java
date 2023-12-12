@@ -1,6 +1,7 @@
 package com.kosta.catdog.controller;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +27,9 @@ import com.kosta.catdog.repository.ShopRepository;
 import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.service.ShopService;
 import com.kosta.catdog.service.UserService;
+
+import javax.servlet.http.HttpServletResponse;
+
 
 @RestController
 public class ShopController {
@@ -205,6 +209,7 @@ public class ShopController {
 
 		try{
 		Shop shop = new Shop();
+		shop.setId(id);
 		shop.setName(name);
 		shop.setSId(sId);
 		shop.setAddressRoad(address_road);
@@ -240,6 +245,32 @@ public class ShopController {
 	// 메뉴 등록 
 	public void regshopmenu(String menu) {
 		System.out.println("regShopMenu !!");
+	}
+
+
+	// 샵 조회
+	@GetMapping("/shoplist")
+	public List<Shop> shoplist(String id){
+		System.out.println("Shop List !!!");
+		System.out.println("Id : " + id);
+		try{
+			List<Shop> sl =  shopService.listshop(id);
+			System.out.println("Shop Info : " + sl);
+			return sl != null ? sl : Collections.emptyList();
+		}catch (Exception e){
+			e.printStackTrace();
+			return Collections.emptyList();
+		}
+	}
+
+
+	@GetMapping("/shopimg/{num}")
+	public void ImageView(@PathVariable Integer num, HttpServletResponse response) {
+		try {
+			shopService.fileView(num, response.getOutputStream());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

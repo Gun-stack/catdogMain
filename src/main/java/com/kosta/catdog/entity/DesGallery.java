@@ -36,4 +36,14 @@ public class DesGallery {
 	    private String tag; // 해시태그
 		@Column
 	    private Date date; //작성일
+		@Column
+		private String dir;
+		@Column
+		private String name;
+		@Column
+		private Long size;
+		@Column
+		private String type;
+		@Column
+	    private String content;
 }

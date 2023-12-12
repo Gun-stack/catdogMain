@@ -2,15 +2,15 @@ package com.kosta.catdog.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.kosta.catdog.entity.Designer;
-import com.kosta.catdog.entity.Pet;
 import com.kosta.catdog.entity.Review;
 import com.kosta.catdog.entity.Shop;
-import org.springframework.web.multipart.MultipartFile;
 
 public interface ShopService {
 	// 샵 등록
-	Shop addShop(Shop shop , List<MultipartFile> files) throws Exception;
+	void addShop(Shop shop) throws Exception;
 	// 디자이너 등록
 	// void addDesigner(String id, String position) throws Exception;
 	// 디자이너 삭제
@@ -21,5 +21,8 @@ public interface ShopService {
 	void addShopNotice(String notice) throws Exception;
 	// 소속 디자이너 모아 보여주기
 	List<Designer> designerListByShop(Integer num) throws Exception;
-	
+	// 고객 리뷰 모아 보여주기(최신 날짜순으로)
+	List<Review> reviewListByShopOrderByDateDesc(Integer num) throws Exception;
+	//샵 프로팔이미지 등록
+	Shop addShopImg(Shop shop, MultipartFile file)throws Exception;
 }

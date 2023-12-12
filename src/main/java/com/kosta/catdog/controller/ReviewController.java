@@ -1,8 +1,11 @@
 package com.kosta.catdog.controller;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -155,9 +158,5 @@ public class ReviewController {
 		return null;
 	}
 	
-	// 디자이너별 리뷰 모아보기(한번에 3개씩 호출)
-	// List<Review> reviewList = findReviewListByDesignerOrderByDateDesc(num, 0, 3);
-	// 샵별 리뷰 모아보기(한번에 3개씩 호출)
-	// List<Review> reviewList = findReviewListByShopOrderByDateDesc(num, 0, 3);
 	
 }

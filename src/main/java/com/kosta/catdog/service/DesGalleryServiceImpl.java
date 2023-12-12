@@ -1,11 +1,10 @@
 package com.kosta.catdog.service;
 
-import java.io.OutputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import com.kosta.catdog.entity.DesGallery;
 import com.kosta.catdog.repository.DesGalleryRepository;
 import com.kosta.catdog.repository.UserDslRepository;
@@ -18,32 +17,28 @@ public class DesGalleryServiceImpl implements DesGalleryService {
 	private DesGalleryRepository desGalleryRepository;
 	
 	@Override
-	public DesGallery registerDesGallery(DesGallery desGallery, List<MultipartFile> files) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public void registerDesGallery(DesGallery desGallery) throws Exception {
+		desGalleryRepository.save(desGallery);
 	}
 
 	@Override
-	public void modifyDesGallery(Integer num) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void modifyDesGallery(DesGallery desGallery) throws Exception {
+		desGalleryRepository.save(desGallery);
 	}
 
 	@Override
 	public void deleteDesGallery(Integer num) throws Exception {
-		// TODO Auto-generated method stub
-		
+		desGalleryRepository.deleteById(num);
 	}
 
 	@Override
 	public DesGallery findDesGallery(Integer num) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return userDslRepository.findDesGallery(num);
 	}
 
 	@Override
-	public List<DesGallery> desGalleryListMainPage() throws Exception {
-		return desGalleryRepository.findAll();
+	public Slice<DesGallery> desGalleryListMainPage(Pageable pageable) throws Exception {
+		return desGalleryRepository.findAll(pageable);
 	}
 
 	@Override
@@ -55,11 +50,4 @@ public class DesGalleryServiceImpl implements DesGalleryService {
 	public List<DesGallery> desGalleryListDesignerPage(Integer num, int offset, int limit) throws Exception {
 		return userDslRepository.findDesGalleryListDesignerPage(num, offset, limit);
 	}
-
-	@Override
-	public void fileView(Integer num, OutputStream out) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

@@ -1,8 +1,5 @@
 package com.kosta.catdog.config;
 
-import com.kosta.catdog.config.oauth2.OAuth2LoginSuccessHandler;
-import com.kosta.catdog.config.oauth2.PrincipalOauth2UserService;
-import com.kosta.catdog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,11 +10,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.filter.CorsFilter;
 
 import com.kosta.catdog.config.jwt.JwtAuthenticationFilter;
 import com.kosta.catdog.config.jwt.JwtAuthorizationFilter;
+import com.kosta.catdog.config.oauth2.OAuth2LoginSuccessHandler;
+import com.kosta.catdog.config.oauth2.PrincipalOauth2UserService;
 import com.kosta.catdog.repository.UserDslRepository;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity

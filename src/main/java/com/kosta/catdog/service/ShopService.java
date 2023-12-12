@@ -3,12 +3,14 @@ package com.kosta.catdog.service;
 import java.util.List;
 
 import com.kosta.catdog.entity.Designer;
+import com.kosta.catdog.entity.Pet;
 import com.kosta.catdog.entity.Review;
 import com.kosta.catdog.entity.Shop;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ShopService {
 	// 샵 등록
-	void addShop(Shop shop) throws Exception;
+	Shop addShop(Shop shop , List<MultipartFile> files) throws Exception;
 	// 디자이너 등록
 	// void addDesigner(String id, String position) throws Exception;
 	// 디자이너 삭제

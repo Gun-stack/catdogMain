@@ -1,18 +1,26 @@
 package com.kosta.catdog.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.kosta.catdog.entity.*;
+import com.kosta.catdog.service.ShopService;
+import com.kosta.catdog.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.kosta.catdog.entity.Designer;
-import com.kosta.catdog.entity.Reservation;
-import com.kosta.catdog.entity.Review;
-import com.kosta.catdog.entity.Shop;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 public class ShopController {
+
+	@Autowired
+	private ShopService shopService;
+	@Autowired
+	private UserService userService;
 	
 	// 샵 조회(인기순)
 	public List<Shop> listshopbystar(){
@@ -61,21 +69,46 @@ public class ShopController {
 	}
 	// 샵 등록
 	@PostMapping("/shopreg")
-	public void shopreg(@RequestPart(value="file", required = false) List<MultipartFile> file,
+	public ResponseEntity<Boolean> shopreg(@RequestPart(value="file", required = false) List<MultipartFile> file,
+						@RequestParam("userId") String id,
+					   @RequestParam("sId") Integer sId,
 						@RequestParam("name") String name,
 						@RequestParam("address_road") String address_road,
 						@RequestParam("address_detail") String address_detail,
-						@RequestParam("latitude") String latitude,
-						@RequestParam("longitude") String longitude
+						@RequestParam("latitude") BigDecimal latitude,
+						@RequestParam("longitude") BigDecimal longitude
 						) {
-		System.out.println("shopReg !!");
-		System.out.println("Shop Name : " + name);
-		System.out.println("Shop addressRoad : " + address_road);
-		System.out.println("Shop addressDetail : " + address_detail);
-		System.out.println("Shop latitude(위도) : " + latitude);
-		System.out.println("Shop longitude(경도) : " + longitude);
-		System.out.println("Shop profImg : " + file);
+		// 사업자 번호 입력 받기
+
+
+		try{
+		Shop shop = new Shop();
+		shop.setName(name);
+		shop.setSId(sId);
+		shop.setAddressRoad(address_road);
+		shop.setAddressDetail(address_detail);
+		shop.setLat(latitude);
+		shop.setLon(longitude);
+
+
+		if (file != null && !file.isEmpty()) {
+			shopService.addShop(shop, file);
+		} else {
+			shopService.addShop(shop, null);  // 또는 파일을 처리하지 않는 메서드 호출
+		}
+			User user = userService.getUserInfoById(id);
+			user.setRoles("ROLE_SHOP");
+			userService.modifyRole(id);
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Boolean>(false,HttpStatus.BAD_REQUEST);
+		}
+
+
 	}
+
 	// 공지사항 등록
 	public void regshopnotice(String notice) {
 		System.out.println("regShopNotice !!");	

@@ -26,20 +26,13 @@ public class UserServiceImpl implements UserService {
 		if(user.getRoles().equals("ROLE_DES")){
 			System.out.println("IF ROLE_DES !!!");
 			String id = user.getId();
-			Designer des = new Designer(id);
+			Designer des = new Designer();
+			des.setId(id);
 			System.out.println(des.getId());
 			designerRepository.save(des);
 		}
 
 
-	}
-
-	@Override
-
-	public Boolean login(String id, String password) throws Exception {
-
-		User user = userDslRepository.findById_AndPassword(id,password);
-		return user==null? false:true;
 	}
 
 	@Override
@@ -97,6 +90,11 @@ public class UserServiceImpl implements UserService {
 	public String modifyPassword(Integer num, String password) throws Exception {
 		userDslRepository.modifyPassword(num, password);
 		return "success";
+	}
+
+	@Override
+	public void modifyRole(String id) throws Exception {
+		userDslRepository.modifyRole(id);
 	}
 
 	@Override

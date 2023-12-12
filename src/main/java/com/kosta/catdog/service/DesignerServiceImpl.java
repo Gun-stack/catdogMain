@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
@@ -12,9 +13,11 @@ import org.springframework.util.FileCopyUtils;
 import com.kosta.catdog.entity.DesFileVo;
 import com.kosta.catdog.entity.DesGallery;
 import com.kosta.catdog.entity.Designer;
+
 import com.kosta.catdog.entity.PetFileVO;
 import com.kosta.catdog.entity.Review;
 import com.kosta.catdog.repository.DesFileVORepository;
+
 import com.kosta.catdog.repository.DesignerRepository;
 import com.kosta.catdog.repository.UserDslRepository;
 
@@ -33,22 +36,7 @@ public class DesignerServiceImpl implements DesignerService {
 	public void addDesignerInfo(Designer designer) throws Exception {
 		designerRepository.save(designer);
 	}
-	
-	@Override
-	public DesGallery desGalleryByDesigner(Integer num) throws Exception {
-		return userDslRepository.findDesGalleryByDesigner(num);
-	}
-
-	@Override
-	public List<DesGallery> desGalleryListByDesigner(String desId) throws Exception {
-		return userDslRepository.findDesGalleryListByDesigner(desId);
-	}
-
-	@Override
-	public List<Review> reviewListByDesignerOrderByDateDesc(Integer num) throws Exception {
-		return userDslRepository.findReviewListByDesignerOrderByDateDesc(num);
-	}
-
+		
 	@Override
 	public Double avgStarCountByDesigner(Integer num) throws Exception {
 		return userDslRepository.findAvgStarCountByDesigner(num);

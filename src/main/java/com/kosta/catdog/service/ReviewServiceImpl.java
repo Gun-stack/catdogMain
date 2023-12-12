@@ -140,4 +140,16 @@ try {
 
 	
 
+	@Override
+	public List<Review> reviewListByDesignerOrderByDateDesc(Integer num, int offset, int limit) throws Exception {
+		return userDslRepository.findReviewListByDesignerOrderByDateDesc(num, offset, limit);
+	}
+	
+	@Override
+	public List<Review> reviewListByShopOrderByDateDesc(Integer num, int offset, int limit) throws Exception {
+		return userDslRepository.findReviewListByShopOrderByDateDesc(num, offset, limit);
+	}
+	
+	
+
 }

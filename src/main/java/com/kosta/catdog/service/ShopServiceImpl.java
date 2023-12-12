@@ -53,10 +53,4 @@ public class ShopServiceImpl implements ShopService {
 		return null;
 	}
 
-	@Override
-	public List<Review> reviewListByShopOrderByDateDesc(Integer num) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

@@ -8,11 +8,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kosta.catdog.entity.Designer;
 import com.kosta.catdog.entity.Review;
 import com.kosta.catdog.entity.ReviewFileVO;
 import com.kosta.catdog.repository.ReviewFileVORepository;
@@ -30,6 +33,7 @@ public class ReviewServiceImpl implements ReviewService {
 	@Autowired
 	private ReviewFileVORepository fileVORepository;
 	
+	@Transactional
 	@Override
 	public Review postReview(Review review , MultipartFile file ) throws Exception {
 		String dir = "c:/kkw/upload/review/";
@@ -65,9 +69,10 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 	
 	@Override
+	@Transactional
 	public Review modifyReveiw(Review review, MultipartFile file) throws Exception {
 		String dir = "c:/kkw/upload/review/";
-		System.out.println(review);
+		System.out.println("review : "+review);
 		Review newReview = reviewRepository.findById(review.getNum()).get();
 		
 		if(file !=null) {
@@ -91,15 +96,13 @@ public class ReviewServiceImpl implements ReviewService {
 		review.setAfterImg(fileNums);
 		}
 		//디자이너 넘버찾기
-		Integer desNum = userDslRepository.FindDesignerById(review.getDesId()).getNum();
+		Designer des = userDslRepository.FindDesignerById(review.getDesId());
+		Integer desNum = des.getNum();
 		//리뷰저장
 		review.setNum(newReview.getNum());
 		reviewRepository.save(review);
 		
-		
 		//디자이너 넘버와 리뷰 별점으로 디자이너 별점과 리뷰갯수 올려주기
-		
-		
 		userDslRepository.UpdateStarByDesNumAndReviewStarModi(desNum, review);
 		
 		
@@ -123,7 +126,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public void fileView(Integer num, OutputStream out) throws Exception {
-try {
+				try {
 			
 			Integer fileNum = Integer.parseInt( reviewRepository.findById(num).get().getAfterImg() );
 			Optional<ReviewFileVO> fileVoOptional  = fileVORepository.findById(fileNum);

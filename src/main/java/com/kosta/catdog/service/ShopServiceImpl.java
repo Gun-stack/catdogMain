@@ -154,23 +154,23 @@ try {
 		return shopDslRepository.findById(id);
 	}
 
-	@Override
-	public void fileView(Integer num, OutputStream out) throws Exception {
-		try {
-//			Optional<PetFileVO> fileVoOptional  = petFileVORepository.findById(num);
-//			PetFileVO fileVo = fileVoOptional.get();
-
-//			FileCopyUtils.copy(fileVo.getData(), out); //데이타 뿌려주기
-//			FileInputStream fis = new FileInputStream(fileVo.getDir()+num);//폴더에서 가져오기
-
-			String dir = "/Users/baghaengbog/Desktop/Study/upload/shop";
-			FileInputStream fis = new FileInputStream(dir+num);
-			FileCopyUtils.copy(fis, out);
-			out.flush();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	@Override
+//	public void fileView(Integer num, OutputStream out) throws Exception {
+//		try {
+////			Optional<PetFileVO> fileVoOptional  = petFileVORepository.findById(num);
+////			PetFileVO fileVo = fileVoOptional.get();
+//
+////			FileCopyUtils.copy(fileVo.getData(), out); //데이타 뿌려주기
+////			FileInputStream fis = new FileInputStream(fileVo.getDir()+num);//폴더에서 가져오기
+//
+//			String dir = "/Users/baghaengbog/Desktop/Study/upload/shop";
+//			FileInputStream fis = new FileInputStream(dir+num);
+//			FileCopyUtils.copy(fis, out);
+//			out.flush();
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 }

@@ -28,8 +28,6 @@ import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.service.ShopService;
 import com.kosta.catdog.service.UserService;
 
-import javax.servlet.http.HttpServletResponse;
-
 
 @RestController
 public class ShopController {
@@ -48,7 +46,7 @@ public class ShopController {
 	
 	//샵사진조회
 		@GetMapping("/shopimg/{num}")
-		public void ImageView(@PathVariable Integer num, HttpServletResponse response) {
+		public void imageView(@PathVariable Integer num, HttpServletResponse response) {
 			try {
 				shopService.fileView(num, response.getOutputStream());
 			} catch (Exception e) {

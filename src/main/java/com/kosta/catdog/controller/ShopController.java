@@ -45,6 +45,7 @@ public class ShopController {
 	
 	
 	//샵사진조회
+
 		@GetMapping("/shopimg/{num}")
 		public void imageView(@PathVariable Integer num, HttpServletResponse response) {
 			try {
@@ -118,7 +119,7 @@ public class ShopController {
 		
 	}
 	
-	@GetMapping("/shoplist")
+	@GetMapping("/shoplistall")
 	public ResponseEntity<List<Shop>> listSHop() 
 	{
 		try {
@@ -129,7 +130,6 @@ public class ShopController {
 			e.printStackTrace();
 			return new ResponseEntity<List<Shop>>(HttpStatus.NOT_FOUND);
 		}
-	
 	}
 	
 	@GetMapping("/shopinfobynum")
@@ -261,14 +261,5 @@ public class ShopController {
 		}
 	}
 
-
-	@GetMapping("/shopimg/{num}")
-	public void ImageView(@PathVariable Integer num, HttpServletResponse response) {
-		try {
-			shopService.fileView(num, response.getOutputStream());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 }

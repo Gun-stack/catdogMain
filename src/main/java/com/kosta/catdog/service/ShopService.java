@@ -31,5 +31,4 @@ public interface ShopService {
 	
 	Shop addShopImg(Shop shop, MultipartFile file) throws Exception;
 	
-	public void fileView(Integer num, OutputStream out) throws Exception;
 }

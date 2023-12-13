@@ -29,4 +29,7 @@ public interface ShopService {
 	// 샵 이미지 조회
 	void fileView(Integer num, OutputStream out) throws Exception ;
 	
+	Shop addShopImg(Shop shop, MultipartFile file) throws Exception;
+	
+	public void fileView(Integer num, OutputStream out) throws Exception;
 }

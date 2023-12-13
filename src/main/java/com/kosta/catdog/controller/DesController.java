@@ -1,5 +1,7 @@
 package com.kosta.catdog.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +64,18 @@ public class DesController {
 				e.printStackTrace();
 			}
 		}
-	
+	// 디자이너 sID로 찾기
+	 @GetMapping("/deslist")
+	  public ResponseEntity<List<Designer>> desListBySId(@RequestParam("sId") Integer sId){
+		 try {
+			 List<Designer> desList = userDslRepository.findDesListBySId(sId);
+			 
+			 return new ResponseEntity<List<Designer>> (desList,HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<Designer>> (HttpStatus.BAD_REQUEST);
+
+		}
+	 }
 	
 	// 디자이너 등록
 	public void regdes(Designer des) {

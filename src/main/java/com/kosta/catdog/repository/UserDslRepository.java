@@ -19,6 +19,7 @@ import com.kosta.catdog.entity.QDesigner;
 import com.kosta.catdog.entity.QPet;
 import com.kosta.catdog.entity.QReservation;
 import com.kosta.catdog.entity.QReview;
+import com.kosta.catdog.entity.QShop;
 import com.kosta.catdog.entity.QUser;
 import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.entity.Review;
@@ -97,6 +98,16 @@ public class UserDslRepository {
 			.execute();
 		entityManager.flush();
 		entityManager.clear();
+	}
+	public List<Designer> findDesListBySId(Integer sId) {
+		QDesigner des = QDesigner.designer;
+		 return	jpaQueryFactory.selectFrom(des)
+				.where(des.sId.eq(sId))
+				.fetch();
+		
+		
+				
+				
 	}
 
 	

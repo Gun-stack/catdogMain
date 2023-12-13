@@ -3,19 +3,33 @@ package com.kosta.catdog.controller;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-import com.kosta.catdog.entity.*;
-import com.kosta.catdog.service.ShopService;
-import com.kosta.catdog.service.UserService;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kosta.catdog.entity.Designer;
+import com.kosta.catdog.entity.Reservation;
+import com.kosta.catdog.entity.Review;
+import com.kosta.catdog.entity.Shop;
+import com.kosta.catdog.entity.User;
+import com.kosta.catdog.repository.DesignerRepository;
+import com.kosta.catdog.repository.ShopRepository;
+import com.kosta.catdog.repository.UserDslRepository;
+import com.kosta.catdog.service.ShopService;
+import com.kosta.catdog.service.UserService;
+
 import javax.servlet.http.HttpServletResponse;
+
 
 @RestController
 public class ShopController {
@@ -24,6 +38,115 @@ public class ShopController {
 	private ShopService shopService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private UserDslRepository userDslRepository;
+	@Autowired 
+	private ShopRepository shopRepository;
+	@Autowired
+	private DesignerRepository designerRepository;
+	
+	
+	//샵사진조회
+		@GetMapping("/shopimg/{num}")
+		public void ImageView(@PathVariable Integer num, HttpServletResponse response) {
+			try {
+				shopService.fileView(num, response.getOutputStream());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	
+	
+	
+	//샵이미지 등록
+		@PostMapping("/regshopbgimg")
+		public ResponseEntity<Shop> regShopImg(@RequestPart(value="file", required = false) MultipartFile file,
+				@RequestParam("shopNum") Integer num	) {
+				
+			try {
+					Shop shopInfo = shopRepository.findById(num).get();
+					System.out.println(shopInfo);
+					Shop shop = shopService.addShopImg(shopInfo, file);
+					
+					return new ResponseEntity<Shop>(shop,HttpStatus.OK);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new ResponseEntity<Shop>(HttpStatus.BAD_REQUEST);
+				}
+					
+		}
+		// 공지사항 등록
+		@PostMapping("/regshopnotice")
+			public ResponseEntity<Shop> regShopNotice(@RequestParam ("notice") String notice,
+					@RequestParam("shopNum") Integer num ) {
+				try {
+					Shop shopInfo = shopRepository.findById(num).get();
+					shopInfo.setNotice(notice);
+					shopRepository.save(shopInfo);
+					return new ResponseEntity<Shop>(shopInfo,HttpStatus.OK);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new ResponseEntity<Shop>(HttpStatus.BAD_REQUEST);
+			}	
+		}
+		//영업시간 등록
+		
+		@PostMapping("/regshopworktime")
+		public ResponseEntity<Shop> regShopWorktime(@RequestParam ("worktime") String worktime,
+				@RequestParam("shopNum") Integer num ) {
+			try {
+				Shop shopInfo = shopRepository.findById(num).get();
+				shopInfo.setWorkTime(worktime);
+				shopRepository.save(shopInfo);
+				return new ResponseEntity<Shop>(shopInfo,HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<Shop>(HttpStatus.BAD_REQUEST);
+		}	
+	}
+		
+		@PostMapping("/regshopinfo")
+		public ResponseEntity<Shop> regShopInfo(@RequestParam ("info") String info,
+				@RequestParam("shopNum") Integer num ) {
+			try {
+				Shop shopInfo = shopRepository.findById(num).get();
+				shopInfo.setInfo(info);
+				shopRepository.save(shopInfo);
+				return new ResponseEntity<Shop>(shopInfo,HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<Shop>(HttpStatus.BAD_REQUEST);
+		}	
+		
+	}
+	
+	@GetMapping("/shoplist")
+	public ResponseEntity<List<Shop>> listSHop() 
+	{
+		try {
+			List<Shop> shopList =  shopRepository.findAll();
+			return new ResponseEntity<List<Shop>>(shopList,HttpStatus.OK);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<Shop>>(HttpStatus.NOT_FOUND);
+		}
+	
+	}
+	
+	@GetMapping("/shopinfobynum")
+	public ResponseEntity<Shop> shopInfoByNum(@RequestParam Integer num) 
+	{
+		try {
+			Shop shop =  shopRepository.findById(num).get();
+			return new ResponseEntity<Shop>(shop,HttpStatus.OK);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Shop>(HttpStatus.NOT_FOUND);
+		}
+	
+	}
 	
 	// 샵 조회(인기순)
 	public List<Shop> listshopbystar(){
@@ -93,6 +216,7 @@ public class ShopController {
 		shop.setAddressDetail(address_detail);
 		shop.setLat(latitude);
 		shop.setLon(longitude);
+		shop.setId(id);
 
 
 		if (file != null && !file.isEmpty()) {
@@ -103,6 +227,10 @@ public class ShopController {
 			User user = userService.getUserInfoById(id);
 			user.setRoles("ROLE_SHOP");
 			userService.modifyRole(id);
+			Designer des = userDslRepository.FindDesignerById(id);
+			des.setSId(sId);
+			designerRepository.save(des);
+			
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 
 		} catch (Exception e) {
@@ -113,10 +241,7 @@ public class ShopController {
 
 	}
 
-	// 공지사항 등록
-	public void regshopnotice(String notice) {
-		System.out.println("regShopNotice !!");	
-	}
+	
 	// 메뉴 등록 
 	public void regshopmenu(String menu) {
 		System.out.println("regShopMenu !!");

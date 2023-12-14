@@ -34,10 +34,7 @@ public class UserGalleryController {
 	@Autowired
 	private  UserGalleryRepository userGalleryRepository;
 	@Autowired
-	private UserGalleryService userGalleryService;
-	
-	
-	
+	private UserGalleryService userGalleryService;	
 	
 	@GetMapping("/usergalview/{num}")
 	public void ImageView(@PathVariable Integer num, HttpServletResponse response) {

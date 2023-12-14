@@ -28,7 +28,7 @@ public class ReviewController {
 	@Autowired
 	private ReviewService reviewService;
 	@Autowired
-	private UserDslRepository 	dslRepository;
+	private UserDslRepository dslRepository;
 	
 	//리뷰등록
 	@PostMapping("/reviewreg")
@@ -56,9 +56,9 @@ public class ReviewController {
 		 System.out.println(review);
 		 
 		 if (file !=null) {
-			reviewService.postReview(review, file);
+			reviewService.registerReview(review, file);
 		}else {
-			reviewService.postReview(review, null);
+			reviewService.registerReview(review, null);
 		}
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	} catch (Exception e) {

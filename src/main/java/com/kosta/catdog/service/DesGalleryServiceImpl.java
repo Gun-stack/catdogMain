@@ -30,7 +30,7 @@ public class DesGalleryServiceImpl implements DesGalleryService {
 	private String uploadDir; //파일이 업로드 되는dir
 	
 	@Override
-	public void registerDesGallery(DesGallery desGallery ,MultipartFile file) throws Exception {
+	public DesGallery registerDesGallery(DesGallery desGallery ,MultipartFile file) throws Exception {
 		String fileNums="";
 		Date today = Date.valueOf(LocalDate.now());
 		desGallery.setDir(uploadDir);
@@ -45,6 +45,7 @@ public class DesGalleryServiceImpl implements DesGalleryService {
 		String num = String.valueOf(desGallery.getNum()) ;
 		desGallery.setImg(num);
 		desGalleryRepository.save(desGallery);
+		return desGallery;
 	}
 	
 	@Override
@@ -58,13 +59,13 @@ public class DesGalleryServiceImpl implements DesGalleryService {
 		out.flush();
 	} catch (Exception e) {
 		e.printStackTrace();
-	}
-	
+	}	
 }
 
 	@Override
-	public void modifyDesGallery(DesGallery desGallery) throws Exception {
+	public DesGallery modifyDesGallery(DesGallery desGallery, MultipartFile file) throws Exception {
 		desGalleryRepository.save(desGallery);
+		return desGallery;
 	}
 
 	@Override

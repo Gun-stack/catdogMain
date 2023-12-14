@@ -72,7 +72,7 @@ public class DesignerServiceImpl implements DesignerService {
 	}
 
 	public Designer desreg(Designer des, List<MultipartFile> files) throws Exception {
-		String dir = "c:/kkw/upload/des/";
+		String dir = "/Users/baghaengbog/Desktop/Study/upload/des";
 		if(files!=null && files.size() !=0 ) {
 			String fileNums = "";
 			for (MultipartFile file : files) {

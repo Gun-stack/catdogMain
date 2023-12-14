@@ -118,8 +118,8 @@ public class UserController {
         String nickname = (String)requestBody.get("nickname");
 
         try{
-            userService.modifyNickname(num, nickname);
-            return new ResponseEntity<String>( HttpStatus.OK);
+            String res = userService.modifyNickname(num, nickname);
+            return new ResponseEntity<String>(res, HttpStatus.OK);
         } catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
@@ -133,8 +133,8 @@ public class UserController {
         String userTel = (String)requestBody.get("userTel");
 
         try{
-//            String res = userService.modifyTel(num, userTel);
-            return new ResponseEntity<String>( HttpStatus.OK);
+            String res = userService.modifyTel(num, userTel);
+            return new ResponseEntity<String>(res, HttpStatus.OK);
         } catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
@@ -143,8 +143,28 @@ public class UserController {
     }
 
     // 비밀번호 변경
-    public void modipassword(String password) {
+    @PostMapping("/modipassword")
+    public ResponseEntity<String> modipassword(@RequestBody Map<String, Object> requestBody) {
         System.out.println("modiPassword !!");
+        Integer num = (Integer)requestBody.get("num");
+//        String password = (String)requestBody.get("password");
+//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        String password = bCryptPasswordEncoder.encode(requestBody.get("password").toString());
+
+
+        System.out.println("Num : " + num);
+        System.out.println("password : " + password);
+
+        try{
+            User user = userService.findByNum(num);
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            System.out.println("UserNum : " + user.getNum());
+            String res = userService.modifyPassword(user.getNum(), password);
+            return new ResponseEntity<String>(res, HttpStatus.OK);
+        } catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
+        }
     }
 
     // 회원 탈퇴

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,21 +31,25 @@ public class ReviewServiceImpl implements ReviewService {
 	@Autowired
 	private ReviewFileVORepository fileVORepository;
 	
+	@Value("${review.upload.dir}")
+	private String uploadDir; //파일이 업로드 되는dir
+	
+	
 	@Override
 	public Review postReview(Review review , MultipartFile file ) throws Exception {
-		String dir = "c:/kkw/upload/review/";
+		
 		if(file !=null) {
 		String fileNums="";
 		Date today = Date.valueOf(LocalDate.now());
 		ReviewFileVO fileVO = new ReviewFileVO();
-		fileVO.setDir(dir);
+		fileVO.setDir(uploadDir);
 		fileVO.setName(file.getOriginalFilename());
 		fileVO.setSize(file.getSize());
 		fileVO.setType(file.getContentType());
 		fileVO.setDate(today);
 		fileVORepository.save(fileVO);
 		
-		File uploadFile= new File(dir+fileVO.getNum());
+		File uploadFile= new File(uploadDir+fileVO.getNum());
 		file.transferTo(uploadFile);
 		if(!fileNums.equals(""))
 			fileNums += ",";
@@ -66,7 +71,7 @@ public class ReviewServiceImpl implements ReviewService {
 	
 	@Override
 	public Review modifyReveiw(Review review, MultipartFile file) throws Exception {
-		String dir = "c:/kkw/upload/review/";
+		
 		System.out.println(review);
 		Review newReview = reviewRepository.findById(review.getNum()).get();
 		
@@ -75,14 +80,14 @@ public class ReviewServiceImpl implements ReviewService {
 		Date today = Date.valueOf(LocalDate.now());
 		ReviewFileVO fileVO = new ReviewFileVO();
 		
-		fileVO.setDir(dir);
+		fileVO.setDir(uploadDir);
 		fileVO.setName(file.getOriginalFilename());
 		fileVO.setSize(file.getSize());
 		fileVO.setType(file.getContentType());
 		fileVO.setDate(today);
 		fileVORepository.save(fileVO);
 		
-		File uploadFile= new File(dir+fileVO.getNum());
+		File uploadFile= new File(uploadDir+fileVO.getNum());
 		file.transferTo(uploadFile);
 		if(!fileNums.equals(""))
 			fileNums += ",";

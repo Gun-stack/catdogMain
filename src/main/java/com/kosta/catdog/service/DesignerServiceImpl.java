@@ -13,6 +13,7 @@ import com.kosta.catdog.entity.ShopFileVO;
 import com.kosta.catdog.repository.DesFileVORepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
@@ -43,7 +44,9 @@ public class DesignerServiceImpl implements DesignerService {
 
 	@Autowired
 	private DesFileVORepository desFileVORepository;
-
+	
+	@Value("${des.upload.dir}")
+	private String uploadDir; //파일이 업로드 되는dir
 
 	@Override
 	public void addDesignerInfo(Designer designer) throws Exception {
@@ -56,7 +59,6 @@ public class DesignerServiceImpl implements DesignerService {
 	}
 
 	@Override
-
 	public void fileView(Integer num, OutputStream out) throws Exception {
 		try {
 		Integer fileNum = Integer.parseInt(designerRepository.findById(num).get().getProfImg() );
@@ -72,7 +74,6 @@ public class DesignerServiceImpl implements DesignerService {
 	}
 
 	public Designer desreg(Designer des, List<MultipartFile> files) throws Exception {
-		String dir = "c:/kkw/upload/des/";
 		if(files!=null && files.size() !=0 ) {
 			String fileNums = "";
 			for (MultipartFile file : files) {
@@ -81,7 +82,7 @@ public class DesignerServiceImpl implements DesignerService {
 
 
 				DesFileVo fileVO = new DesFileVo();
-				fileVO.setDir(dir);
+				fileVO.setDir(uploadDir);
 				fileVO.setName(file.getOriginalFilename());
 				fileVO.setSize(file.getSize());
 				fileVO.setType(file.getContentType());
@@ -89,7 +90,7 @@ public class DesignerServiceImpl implements DesignerService {
 				//fileVO.setData(file.getBytes());
 				desFileVORepository.save(fileVO);
 
-				File uploadFile = new File(dir + fileVO.getNum());
+				File uploadFile = new File(uploadDir + fileVO.getNum());
 				file.transferTo(uploadFile);
 				if (!fileNums.equals(""))
 					fileNums += ",";

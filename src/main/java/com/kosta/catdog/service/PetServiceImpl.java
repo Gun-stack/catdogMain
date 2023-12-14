@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,9 +28,14 @@ public class PetServiceImpl implements PetService {
 	@Autowired 
 	private PetFileVORepository petFileVORepository;
 	
+	@Value("${pet.upload.dir}")
+	private String uploadDir; //파일이 업로드 되는dir
+	
+	
+	
 	@Override
 	public Pet petReg(Pet pet, List<MultipartFile> files) throws Exception {
-		String dir = "c:/kkw/upload/pet/";
+		
 		if(files!=null && files.size() !=0 ) {
 			String fileNums="";
 			for(MultipartFile file : files) {
@@ -38,7 +44,7 @@ public class PetServiceImpl implements PetService {
 
 				
 			PetFileVO fileVO = new PetFileVO();
-			fileVO.setDir(dir);
+			fileVO.setDir(uploadDir);
 			fileVO.setName(file.getOriginalFilename());
 			fileVO.setSize(file.getSize());
 			fileVO.setType(file.getContentType());
@@ -46,7 +52,7 @@ public class PetServiceImpl implements PetService {
 			fileVO.setDate(today);
 			petFileVORepository.save(fileVO);
 			
-			File uploadFile= new File(dir+fileVO.getNum());
+			File uploadFile= new File(uploadDir+fileVO.getNum());
 			file.transferTo(uploadFile);
 			if(!fileNums.equals(""))
 				fileNums += ",";
@@ -74,7 +80,7 @@ public class PetServiceImpl implements PetService {
 	}
 	@Override
 	public Pet petModi(Pet pet, List<MultipartFile> files) throws Exception {
-		String dir = "c:/kkw/upload/pet";
+		
 		Pet newPet = petRepository.findById(pet.getNum()).get();
 		if(files!=null && files.size() !=0 ) {
 			String fileNums="";
@@ -84,7 +90,7 @@ public class PetServiceImpl implements PetService {
 
 				
 			PetFileVO fileVO = new PetFileVO();
-			fileVO.setDir(dir);
+			fileVO.setDir(uploadDir);
 			fileVO.setName(file.getOriginalFilename());
 			fileVO.setSize(file.getSize());
 			fileVO.setType(file.getContentType());
@@ -92,7 +98,7 @@ public class PetServiceImpl implements PetService {
 			fileVO.setDate(today);
 			petFileVORepository.save(fileVO);
 			
-			File uploadFile= new File(dir+fileVO.getNum());
+			File uploadFile= new File(uploadDir+fileVO.getNum());
 			file.transferTo(uploadFile);
 			if(!fileNums.equals(""))
 				fileNums += ",";

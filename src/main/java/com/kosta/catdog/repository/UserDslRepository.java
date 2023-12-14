@@ -241,7 +241,7 @@ public class UserDslRepository {
 	QPet pet = QPet.pet;
 	return jpaQueryFactory.selectFrom(pet)
 			.join(user)
-			.on(pet.UserNum.eq(user.num))
+			.on(pet.userNum.eq(user.num))
 			.where(user.id.eq(userId))
 			.fetch();
 	}

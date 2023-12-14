@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -25,18 +26,20 @@ public class DesGalleryServiceImpl implements DesGalleryService {
 	@Autowired
 	private DesGalleryRepository desGalleryRepository;
 	
+	@Value("${desgallery.upload.dir}")
+	private String uploadDir; //파일이 업로드 되는dir
+	
 	@Override
 	public void registerDesGallery(DesGallery desGallery ,MultipartFile file) throws Exception {
-		String dir = "c:/kkw/upload/desgallery/";
 		String fileNums="";
 		Date today = Date.valueOf(LocalDate.now());
-		desGallery.setDir(dir);
+		desGallery.setDir(uploadDir);
 		desGallery.setName(file.getOriginalFilename());
 		desGallery.setSize(file.getSize());
 		desGallery.setType(file.getContentType());
 		desGallery.setDate(today);
 		desGalleryRepository.save(desGallery);
-		File uploadFile= new File(dir+desGallery.getNum());
+		File uploadFile= new File(uploadDir+desGallery.getNum());
 		file.transferTo(uploadFile);
 		
 		String num = String.valueOf(desGallery.getNum()) ;

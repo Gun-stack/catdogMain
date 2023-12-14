@@ -2,7 +2,9 @@ package com.kosta.catdog.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kosta.catdog.entity.Pet;
 import com.kosta.catdog.entity.Reservation;
+import com.kosta.catdog.entity.User;
 import com.kosta.catdog.repository.ReservationRepository;
 import com.kosta.catdog.repository.UserDslRepository;
 
@@ -80,6 +84,26 @@ public class ResController {
 	}
 	
 	
+	
+	@GetMapping("/reservedetail")
+	public ResponseEntity<Object> findPetByResvNum(@RequestParam("num") Integer num) {
+		try {
+			Reservation resv =reservationRepository.findById(num).get();
+			User user = userDslRepository.findById(resv.getUserId());
+			Pet pet = userDslRepository.FindPetByuserIdAndPetName(user.getNum(), resv.getPetName());
+			
+			
+			Map<String, Object> response = new HashMap<>();
+		        response.put("resv", resv);
+		        response.put("user",user);
+		        response.put("pet", pet);
+			
+			return new ResponseEntity<Object>(response, HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 	
 

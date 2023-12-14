@@ -24,4 +24,10 @@ public class ShopDslRepository {
         return jpaQueryFactory.selectFrom(shop)
                 .where(shop.id.eq(id)).fetch();
     }
+
+    public Shop fidnByNum(Integer num) {
+        QShop shop = QShop.shop;
+        return jpaQueryFactory.selectFrom(shop)
+                .where(shop.num.eq(num)).fetchOne();
+    }
 }

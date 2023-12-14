@@ -49,6 +49,7 @@ public class ShopServiceImpl implements ShopService {
 		
 	@Override
 	public Shop addShop(Shop shop , List<MultipartFile> files) throws Exception {
+
 		if(files!=null && files.size() !=0 ) {
 			String fileNums = "";
 			for (MultipartFile file : files) {
@@ -76,9 +77,47 @@ public class ShopServiceImpl implements ShopService {
 		shopRepository.save(shop);
 		return shop;
 	}
-	
+
+	@Override
+	public String modiShop(Shop shop, List<MultipartFile> files) throws Exception {
+
+		Shop newShop = shopRepository.findById(shop.getNum()).get();
+		if(files!=null && files.size() !=0 ) {
+			String fileNums = "";
+			for (MultipartFile file : files) {
+
+				Date today = Date.valueOf(LocalDate.now());
+
+
+				ShopFileVO fileVO = new ShopFileVO();
+				fileVO.setDir(uploadDir);
+				fileVO.setName(file.getOriginalFilename());
+				fileVO.setSize(file.getSize());
+				fileVO.setType(file.getContentType());
+				fileVO.setDate(today);
+				//fileVO.setData(file.getBytes());
+				shopFileVORepository.save(fileVO);
+
+				File updateFile = new File(uploadDir + fileVO.getNum());
+				file.transferTo(updateFile);
+//				if (!fileNums.equals(""))
+//					fileNums += ",";
+				fileNums = String.valueOf(fileVO.getNum());
+			}
+			shop.setProfImg(fileNums);
+		}
+		else if(files == null){
+			shop.setProfImg(newShop.getProfImg());
+		}
+		shop.setNum(newShop.getNum());
+		shopRepository.save(shop);
+		System.out.println("SHOP INFO : " + shop);
+		return "true";
+	}
+
 	@Override
 	public Shop addShopImg(Shop shop, MultipartFile file) throws Exception {
+
 		if(file !=null) {
 		String fileNums="";
 		
@@ -157,6 +196,11 @@ try {
 	@Override
 	public List<Shop> listshop(String id) throws Exception {
 		return shopDslRepository.findById(id);
+	}
+
+	@Override
+	public Shop selectshop(Integer num) throws Exception {
+		return shopDslRepository.fidnByNum(num);
 	}
 
 //	@Override

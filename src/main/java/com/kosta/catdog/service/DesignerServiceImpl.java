@@ -74,6 +74,7 @@ public class DesignerServiceImpl implements DesignerService {
 	}
 
 	public Designer desreg(Designer des, List<MultipartFile> files) throws Exception {
+
 		if(files!=null && files.size() !=0 ) {
 			String fileNums = "";
 			for (MultipartFile file : files) {

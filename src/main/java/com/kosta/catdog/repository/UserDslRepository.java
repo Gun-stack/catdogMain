@@ -53,6 +53,12 @@ public class UserDslRepository {
 				.where(user.nickname.eq(nickname)).fetchOne();
 	}
 
+	public User findByNum(Integer num) {
+		QUser user = QUser.user;
+		return jpaQueryFactory.selectFrom(user)
+				.where(user.num.eq(num)).fetchOne();
+	}
+
 	public User findById_AndPassword(String id, String password){
 		QUser user = QUser.user;
 		return jpaQueryFactory.selectFrom(user)

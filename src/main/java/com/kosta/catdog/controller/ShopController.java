@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +49,7 @@ public class ShopController {
 
 		@GetMapping("/shopimg/{num}")
 		public void imageView(@PathVariable Integer num, HttpServletResponse response) {
+			System.out.println("ShopImg/Num!!!");
 			try {
 				shopService.fileView(num, response.getOutputStream());
 			} catch (Exception e) {
@@ -234,6 +236,58 @@ public class ShopController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Boolean>(false,HttpStatus.BAD_REQUEST);
+		}
+
+
+	}
+
+	// 샵 정보 수정
+	@PostMapping("/shopmodi")
+	public ResponseEntity<String> shopmodi(@RequestPart(value="file", required = false) List<MultipartFile> file,
+										   @RequestParam("shopnum") Integer num,
+										   @RequestParam("sId") Integer sId,
+										   @RequestParam("name") String name,
+										   @RequestParam("address_road") String address_road,
+										   @RequestParam("address_detail") String address_detail,
+										   @RequestParam("latitude") BigDecimal latitude,
+										   @RequestParam("longitude") BigDecimal longitude
+	) {
+
+		System.out.println("Shop Modi !!!");
+		String res ;
+
+		try{
+			Shop shop = new Shop();
+			shop = shopService.selectshop(num);
+			Integer bid = shop.getSId();
+
+			shop.setSId(sId);
+			shop.setName(name);
+			shop.setAddressRoad(address_road);
+			shop.setAddressDetail(address_detail);
+			shop.setLat(latitude);
+			shop.setLon(longitude);
+
+			Integer aid = shop.getSId();
+
+			System.out.println("File : " + file);
+
+
+
+			if (file != null && !file.isEmpty()) {
+				res = shopService.modiShop(shop, file);
+			} else {
+				res = shopService.modiShop(shop, null);  // 또는 파일을 처리하지 않는 메서드 호출
+			}
+			Designer des = userDslRepository.FindDesignerById(shop.getId());
+			des.setSId(aid);
+			designerRepository.save(des);
+
+			return new ResponseEntity<String>( res,HttpStatus.OK);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("false",HttpStatus.BAD_REQUEST);
 		}
 
 

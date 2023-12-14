@@ -67,7 +67,7 @@ public class PetServiceImpl implements PetService {
 	public void fileView(Integer num, OutputStream out) throws Exception {
 		try {
 			
-			Integer fileNum = Integer.parseInt( petRepository.findById(num).get().getImg() );
+			Integer fileNum = Integer.parseInt(petRepository.findById(num).get().getImg() );
 			Optional<PetFileVO> fileVoOptional  = petFileVORepository.findById(fileNum);
 			PetFileVO fileVo = fileVoOptional.get();
 //			FileCopyUtils.copy(fileVo.getData(), out); //데이타 뿌려주기
@@ -107,9 +107,7 @@ public class PetServiceImpl implements PetService {
 			pet.setImg(fileNums);
 		}
 		else if(files==null ) {
-			
 			pet.setImg(newPet.getImg());
-			
 		}
 		pet.setNum(newPet.getNum());
 		petRepository.save(pet);

@@ -29,7 +29,7 @@ public class PetServiceImpl implements PetService {
 	
 	@Override
 	public Pet petReg(Pet pet, List<MultipartFile> files) throws Exception {
-		String dir = "c:/kkw/upload/pet";
+		String dir = "c:/kkw/upload/pet/";
 		if(files!=null && files.size() !=0 ) {
 			String fileNums="";
 			for(MultipartFile file : files) {
@@ -42,8 +42,8 @@ public class PetServiceImpl implements PetService {
 			fileVO.setName(file.getOriginalFilename());
 			fileVO.setSize(file.getSize());
 			fileVO.setType(file.getContentType());
+//			fileVO.setData(file.getBytes());
 			fileVO.setDate(today);
-			//fileVO.setData(file.getBytes());
 			petFileVORepository.save(fileVO);
 			
 			File uploadFile= new File(dir+fileVO.getNum());
@@ -60,20 +60,52 @@ public class PetServiceImpl implements PetService {
 	@Override
 	public void fileView(Integer num, OutputStream out) throws Exception {
 		try {
-//			Optional<PetFileVO> fileVoOptional  = petFileVORepository.findById(num);
-//			PetFileVO fileVo = fileVoOptional.get();
 			
+			Integer fileNum = Integer.parseInt(petRepository.findById(num).get().getImg() );
+			Optional<PetFileVO> fileVoOptional  = petFileVORepository.findById(fileNum);
+			PetFileVO fileVo = fileVoOptional.get();
 //			FileCopyUtils.copy(fileVo.getData(), out); //데이타 뿌려주기
-//			FileInputStream fis = new FileInputStream(fileVo.getDir()+num);//폴더에서 가져오기 
-			
-			String dir = "c:/kkw/upload/pet";
-			FileInputStream fis = new FileInputStream(dir+num);
+			FileInputStream fis = new FileInputStream(fileVo.getDir()+fileNum);//폴더에서 가져오기 
 			FileCopyUtils.copy(fis, out);
 			out.flush();
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	@Override
+	public Pet petModi(Pet pet, List<MultipartFile> files) throws Exception {
+		String dir = "c:/kkw/upload/pet";
+		Pet newPet = petRepository.findById(pet.getNum()).get();
+		if(files!=null && files.size() !=0 ) {
+			String fileNums="";
+			for(MultipartFile file : files) {
+				
+			Date today = Date.valueOf(LocalDate.now());
+
+				
+			PetFileVO fileVO = new PetFileVO();
+			fileVO.setDir(dir);
+			fileVO.setName(file.getOriginalFilename());
+			fileVO.setSize(file.getSize());
+			fileVO.setType(file.getContentType());
+//			fileVO.setData(file.getBytes());
+			fileVO.setDate(today);
+			petFileVORepository.save(fileVO);
+			
+			File uploadFile= new File(dir+fileVO.getNum());
+			file.transferTo(uploadFile);
+			if(!fileNums.equals(""))
+				fileNums += ",";
+			fileNums += fileVO.getNum();
+			}
+			pet.setImg(fileNums);
+		}
+		else if(files==null ) {
+			pet.setImg(newPet.getImg());
+		}
+		pet.setNum(newPet.getNum());
+		petRepository.save(pet);
+		return pet;
 	}
 	
 	

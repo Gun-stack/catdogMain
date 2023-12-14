@@ -1,24 +1,30 @@
 package com.kosta.catdog.controller;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.kosta.catdog.config.auth.PrincipalDetails;
-import com.kosta.catdog.config.jwt.JwtProperties;
-import com.kosta.catdog.dto.LoginRequestDto;
+import com.kosta.catdog.entity.Designer;
 import com.kosta.catdog.entity.User;
 import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.repository.UserRepository;
+import com.kosta.catdog.service.DesignerService;
 import com.kosta.catdog.service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +37,8 @@ public class UserController {
     private final UserRepository userRepository;
 
     private final UserService userService;
+
+    private final DesignerService designerService;
 
 
     // 유저 정보 조회
@@ -104,16 +112,15 @@ public class UserController {
     }
 
     // 닉네임 변경
+
     @PostMapping("/modinickname")
     public ResponseEntity<String> modinickname(@RequestBody Map<String, Object> requestBody) {
         Integer num = (Integer)requestBody.get("num");
         String nickname = (String)requestBody.get("nickname");
 
-        System.out.println("Num : " + num);
-        System.out.println("Nickname : " + nickname);
         try{
-            String res = userService.modifyNickname(num, nickname);
-            return new ResponseEntity<String>(res, HttpStatus.OK);
+            userService.modifyNickname(num, nickname);
+            return new ResponseEntity<String>( HttpStatus.OK);
         } catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
@@ -126,44 +133,68 @@ public class UserController {
         Integer num = (Integer)requestBody.get("num");
         String userTel = (String)requestBody.get("userTel");
 
-        System.out.println("Num : " + num);
-        System.out.println("UserTel : " + userTel);
         try{
-            String res = userService.modifyTel(num, userTel);
-            return new ResponseEntity<String>(res, HttpStatus.OK);
+//            String res = userService.modifyTel(num, userTel);
+            return new ResponseEntity<String>( HttpStatus.OK);
         } catch(Exception e){
             e.printStackTrace();
             return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
         }
+
     }
 
     // 비밀번호 변경
-    @PostMapping("/modipassword")
-    public ResponseEntity<String> modipassword(@RequestBody Map<String, Object> requestBody) {
-        Integer num = (Integer)requestBody.get("num");
-//        String password = (String)requestBody.get("password");
-//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        String password = bCryptPasswordEncoder.encode(requestBody.get("password").toString());
-
-
-        System.out.println("Num : " + num);
-        System.out.println("password : " + password);
-
-        try{
-            User user = userService.findByNum(num);
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-            System.out.println("UserNum : " + user.getNum());
-            String res = userService.modifyPassword(user.getNum(), password);
-            return new ResponseEntity<String>(res, HttpStatus.OK);
-        } catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
-        }
+    public void modipassword(String password) {
+        System.out.println("modiPassword !!");
     }
 
     // 회원 탈퇴
     public void exit(String id, String password) {
         System.out.println("EXIT !!");
+    }
+
+    //디자이너 등록
+    @PostMapping("/desreg")
+    public ResponseEntity<Boolean> desreg(@RequestPart(value="file", required = false) List<MultipartFile> file
+            , @RequestParam("id") String id
+            , @RequestParam("desNickname") String desNickname
+            , @RequestParam("position") String position) {
+        try{
+            User user = userService.getUserInfoById(id);
+            // id , position, desnickname
+            Designer des = new Designer();
+            BigDecimal zero = new BigDecimal(0);
+            
+            if(user.getRoles().equals("ROLE_USER")){ // 일반 회원이 미용사로 신청할 경우
+                user.setRoles("ROLE_DES"); // user 권한 변경
+                userService.modifyRole(id);
+                des.setId(user.getId());
+                des.setDesNickname(desNickname);
+                des.setPosition(position);
+                des.setEmail(user.getEmail());
+                des.setTel(Integer.parseInt(user.getTel()) );
+                des.setStar(zero);
+                des.setReviewCnt(0);
+                des.setBookmarkCnt(0);
+            }else { // ROLE_SHOP 권한을 가진 사람이 신청할경우
+                des.setId(user.getId());
+                des.setDesNickname(desNickname);
+                des.setPosition(position);
+                des.setEmail(user.getEmail());
+                des.setTel(Integer.parseInt(user.getTel()) )	;
+                des.setStar(zero);
+                des.setReviewCnt(0);
+                des.setBookmarkCnt(0);
+
+            }
+            designerService.desreg(des, file);
+
+            return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<Boolean>(false,HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 }

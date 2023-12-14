@@ -1,6 +1,5 @@
 package com.kosta.catdog.entity;
 
-import java.sql.Time;
 import java.sql.Date;
 
 import javax.persistence.Column;
@@ -40,7 +39,7 @@ public class Reservation {
     @Column
     private Date date; // 예약 날짜
     @Column
-    private Time time; // 예약 시간
+    private String time; // 예약 시간
     @Column
     private String status; // 예약 상태
     @Column

@@ -17,5 +17,6 @@ public interface ReservationService {
 	void modifyReservation(Reservation reservation) throws Exception;
 	// 예약 취소
 	void cancelReservation(Integer num) throws Exception;
+
 	
 }

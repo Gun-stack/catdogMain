@@ -175,7 +175,7 @@ public class UserController {
 
     //디자이너 등록
     @PostMapping("/desreg")
-    public ResponseEntity<Boolean> desreg(@RequestPart(value="file", required = false) List<MultipartFile> file
+    public ResponseEntity<Designer> desreg(@RequestPart(value="file", required = false) List<MultipartFile> file
             , @RequestParam("id") String id
             , @RequestParam("desNickname") String desNickname
             , @RequestParam("position") String position) {
@@ -192,7 +192,7 @@ public class UserController {
                 des.setDesNickname(desNickname);
                 des.setPosition(position);
                 des.setEmail(user.getEmail());
-                des.setTel(Integer.parseInt(user.getTel()) );
+                des.setTel(user.getTel());
                 des.setStar(zero);
                 des.setReviewCnt(0);
                 des.setBookmarkCnt(0);
@@ -201,18 +201,18 @@ public class UserController {
                 des.setDesNickname(desNickname);
                 des.setPosition(position);
                 des.setEmail(user.getEmail());
-                des.setTel(Integer.parseInt(user.getTel()) )	;
+                des.setTel(user.getTel());
                 des.setStar(zero);
                 des.setReviewCnt(0);
                 des.setBookmarkCnt(0);
 
             }
-            designerService.desreg(des, file);
+            Designer des1= designerService.desreg(des, file);
 
-            return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+            return new ResponseEntity<Designer>(des1, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
-            return new ResponseEntity<Boolean>(false,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Designer>(HttpStatus.BAD_REQUEST);
         }
 
     }

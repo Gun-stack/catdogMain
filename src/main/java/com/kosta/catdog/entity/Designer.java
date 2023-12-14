@@ -41,7 +41,7 @@ public class Designer {
 	@Column
 	private String password;
 	@Column(unique=true)
-	private Integer tel;
+	private String tel;
 	@Column
 	private String profImg;
 	@Column

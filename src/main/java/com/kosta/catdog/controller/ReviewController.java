@@ -158,5 +158,22 @@ public class ReviewController {
 	// List<Review> reviewList = findReviewListByDesignerOrderByDateDesc(num, 0, 3);
 	// 샵별 리뷰 모아보기(한번에 3개씩 호출)
 	// List<Review> reviewList = findReviewListByShopOrderByDateDesc(num, 0, 3);
+	@GetMapping("reviewlistbydes")
+	public ResponseEntity<List<Review>> ReviewListByDes(@RequestParam
+			Integer num, @RequestParam int offset,@RequestParam int limit){
+		try {
+			List<Review> reviewList = reviewService.reviewListByDesignerOrderByDateDesc(num, offset, limit);
+			
+			
+			return new ResponseEntity<List<Review>> (reviewList ,HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<Review>> (HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	
+	
 	
 }

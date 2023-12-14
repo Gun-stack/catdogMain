@@ -142,7 +142,7 @@ public class DesGalleryController {
 	public List<DesGallery> desGalleryListDesignerPage(@RequestParam("num") Integer num,
 			@RequestParam("offset") int offset, @RequestParam("limit") int limit) {
 		try {
-			List<DesGallery> DesGalleryList = userDslRepository.findDesGalleryListDesignerPage(num, 0, 9);
+			List<DesGallery> DesGalleryList = userDslRepository.findDesGalleryListDesignerPage(num, offset, limit);
 			return DesGalleryList;
 		} catch(Exception e) {
 			e.printStackTrace();

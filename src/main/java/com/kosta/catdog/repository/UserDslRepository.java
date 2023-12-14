@@ -24,6 +24,7 @@ import com.kosta.catdog.entity.QUser;
 import com.kosta.catdog.entity.QUserGallery;
 import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.entity.Review;
+import com.kosta.catdog.entity.Shop;
 import com.kosta.catdog.entity.User;
 import com.kosta.catdog.entity.UserGallery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -363,6 +364,16 @@ public class UserDslRepository {
 //		jpaQueryFactory.update(designer)
 //			.set(designer.sId, sId)
 //	}
+	
+	//shop
+	public Shop FindShopBySid(Integer sid) {
+		QShop shop =QShop.shop;
+		return jpaQueryFactory.selectFrom(shop)
+				.where(shop.sId.eq(sid))
+				.fetchOne();
+
+	}
+	
 	
 	//review by resnum
 	public Review FindReviewByResNum(Integer resNum) {

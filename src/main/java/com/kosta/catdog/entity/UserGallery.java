@@ -1,12 +1,17 @@
 package com.kosta.catdog.entity;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -47,8 +52,7 @@ public class UserGallery {
 	private String type;
 	@Column
     private String content;
-	
-	
-	
-	
+//	@OneToMany(mappedBy = "userGallery", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+//	@OrderBy("date desc") // 댓글 정렬
+//	private List<UserGalleryComment> comment;	
 }

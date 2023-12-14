@@ -89,15 +89,15 @@ public boolean login(String id, String password) {
 	}
 
 	@Override
-	public String modifyNickname(Integer num, String nickname) throws Exception {
+	public User modifyNickname(Integer num, String nickname) throws Exception {
 		userDslRepository.modifyNickname(num, nickname);
-		return "success";
+		return userRepository.findById(num).get();
 	}
 
 	@Override
-	public String modifyTel(Integer num, String tel) throws Exception {
+	public User modifyTel(Integer num, String tel) throws Exception {
 		userDslRepository.modifyTel(num, tel);
-		return "success";
+		return userRepository.findById(num).get();
 	}
 
 	@Override

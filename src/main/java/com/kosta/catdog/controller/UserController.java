@@ -84,6 +84,7 @@ public class UserController {
     public ResponseEntity<String> checkusernickname(@RequestParam String nickname) {
         try {
             String res = userService.isNicknameDuplicate(nickname);
+            
             return new ResponseEntity<String>(res, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,31 +115,31 @@ public class UserController {
     // 닉네임 변경
 
     @PostMapping("/modinickname")
-    public ResponseEntity<String> modinickname(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<User> modinickname(@RequestBody Map<String, Object> requestBody) {
         Integer num = (Integer)requestBody.get("num");
         String nickname = (String)requestBody.get("nickname");
 
         try{
-            String res = userService.modifyNickname(num, nickname);
-            return new ResponseEntity<String>(res, HttpStatus.OK);
+        	User user = userService.modifyNickname(num, nickname);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
         } catch(Exception e){
             e.printStackTrace();
-            return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<User>( HttpStatus.BAD_REQUEST);
         }
     }
 
     // 전화번호 변경
     @PostMapping("/moditel")
-    public ResponseEntity<String> moditel(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<User> moditel(@RequestBody Map<String, Object> requestBody) {
         Integer num = (Integer)requestBody.get("num");
         String userTel = (String)requestBody.get("userTel");
 
         try{
-            String res = userService.modifyTel(num, userTel);
-            return new ResponseEntity<String>(res, HttpStatus.OK);
+        	User user = userService.modifyTel(num, userTel);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
         } catch(Exception e){
             e.printStackTrace();
-            return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<User>( HttpStatus.BAD_REQUEST);
         }
 
     }

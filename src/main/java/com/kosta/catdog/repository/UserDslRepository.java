@@ -78,7 +78,7 @@ public class UserDslRepository {
 	@Transactional
 	public void modifyNickname(Integer num, String nickname) {
 		QUser user = QUser.user;
-		jpaQueryFactory.update(user)
+		 jpaQueryFactory.update(user)
 			.set(user.nickname, nickname)
 			.where(user.num.eq(num))
 			.execute();

@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.repository.ReservationRepository;
@@ -24,6 +26,21 @@ public class ResController {
 	private ReservationRepository reservationRepository;
 	@Autowired
 	private UserDslRepository userDslRepository;
+	
+	
+	
+	@PostMapping("/completereserve")
+	public	ResponseEntity<String> CompleteReservation(
+			@RequestPart(value="file", required = false) List<MultipartFile> file,
+			@RequestParam("text") String text,
+			@RequestParam("num") Integer num
+			){
+		Reservation resv = reservationRepository.findById(num).get();
+		resv.setStatus("완료");
+		resv.setRefText(text);
+		reservationRepository.save(resv);
+		return new ResponseEntity<String>("1",HttpStatus.OK);
+	}
 	
 	@GetMapping("/resinfobyuserid")
 	public ResponseEntity<List<Reservation>> selectresbyuser(@RequestParam String userId){

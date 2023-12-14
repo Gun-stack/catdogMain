@@ -82,7 +82,6 @@ public class ReviewController {
 			@RequestParam("afterImg") String afterImg
 			){
 		try {
-			System.out.println("모디진입");
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	        java.util.Date utilDate = dateFormat.parse(date);
 	        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
@@ -98,7 +97,7 @@ public class ReviewController {
 				reviewService.modifyReveiw(review, file);
 			}else {
 				review.setAfterImg(afterImg);
-				reviewService.modifyReveiw(review, file);
+				reviewService.modifyReveiw(review, null);
 			}
 			return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 		} catch (Exception e) {

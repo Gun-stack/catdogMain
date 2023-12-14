@@ -14,6 +14,7 @@ import com.kosta.catdog.repository.ShopDslRepository;
 import com.kosta.catdog.repository.ShopFileVORepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,9 +44,12 @@ public class ShopServiceImpl implements ShopService {
 	@Autowired
 	private ShopFileVORepository shopFileVORepository;
 
+	@Value("${shop.upload.dir}")
+	private String uploadDir; //파일이 업로드 되는dir
+		
 	@Override
 	public Shop addShop(Shop shop , List<MultipartFile> files) throws Exception {
-		String dir = "/Users/baghaengbog/Desktop/Study/upload/shop";
+
 		if(files!=null && files.size() !=0 ) {
 			String fileNums = "";
 			for (MultipartFile file : files) {
@@ -54,7 +58,7 @@ public class ShopServiceImpl implements ShopService {
 
 
 				ShopFileVO fileVO = new ShopFileVO();
-				fileVO.setDir(dir);
+				fileVO.setDir(uploadDir);
 				fileVO.setName(file.getOriginalFilename());
 				fileVO.setSize(file.getSize());
 				fileVO.setType(file.getContentType());
@@ -62,7 +66,7 @@ public class ShopServiceImpl implements ShopService {
 				//fileVO.setData(file.getBytes());
 				shopFileVORepository.save(fileVO);
 
-				File uploadFile = new File(dir + fileVO.getNum());
+				File uploadFile = new File(uploadDir + fileVO.getNum());
 				file.transferTo(uploadFile);
 				if (!fileNums.equals(""))
 					fileNums += ",";
@@ -77,7 +81,6 @@ public class ShopServiceImpl implements ShopService {
 	@Override
 	public String modiShop(Shop shop, List<MultipartFile> files) throws Exception {
 
-		String dir = "/Users/baghaengbog/Desktop/Study/upload/shop";
 		Shop newShop = shopRepository.findById(shop.getNum()).get();
 		if(files!=null && files.size() !=0 ) {
 			String fileNums = "";
@@ -87,7 +90,7 @@ public class ShopServiceImpl implements ShopService {
 
 
 				ShopFileVO fileVO = new ShopFileVO();
-				fileVO.setDir(dir);
+				fileVO.setDir(uploadDir);
 				fileVO.setName(file.getOriginalFilename());
 				fileVO.setSize(file.getSize());
 				fileVO.setType(file.getContentType());
@@ -95,7 +98,7 @@ public class ShopServiceImpl implements ShopService {
 				//fileVO.setData(file.getBytes());
 				shopFileVORepository.save(fileVO);
 
-				File updateFile = new File(dir + fileVO.getNum());
+				File updateFile = new File(uploadDir + fileVO.getNum());
 				file.transferTo(updateFile);
 //				if (!fileNums.equals(""))
 //					fileNums += ",";
@@ -114,19 +117,22 @@ public class ShopServiceImpl implements ShopService {
 
 	@Override
 	public Shop addShopImg(Shop shop, MultipartFile file) throws Exception {
-		String dir = "/Users/baghaengbog/Desktop/Study/upload/shop";
+
 		if(file !=null) {
 		String fileNums="";
+		
 		Date today = Date.valueOf(LocalDate.now());
+		
 		ShopFileVO fileVO = new ShopFileVO();
-		fileVO.setDir(dir);
+		
+		fileVO.setDir(uploadDir);
 		fileVO.setName(file.getOriginalFilename());
 		fileVO.setSize(file.getSize());
 		fileVO.setType(file.getContentType());
 		fileVO.setDate(today);
 		shopFileVORepository.save(fileVO);
 		
-		File uploadFile= new File(dir+fileVO.getNum());
+		File uploadFile= new File(uploadDir+fileVO.getNum());
 		file.transferTo(uploadFile);
 		if(!fileNums.equals(""))
 			fileNums += ",";

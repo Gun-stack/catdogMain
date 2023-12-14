@@ -1,5 +1,6 @@
 package com.kosta.catdog.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -172,6 +173,7 @@ public class UserController {
         System.out.println("EXIT !!");
     }
 
+    //디자이너 등록
     @PostMapping("/desreg")
     public ResponseEntity<Boolean> desreg(@RequestPart(value="file", required = false) List<MultipartFile> file
             , @RequestParam("id") String id
@@ -181,16 +183,29 @@ public class UserController {
             User user = userService.getUserInfoById(id);
             // id , position, desnickname
             Designer des = new Designer();
+            BigDecimal zero = new BigDecimal(0);
+            
             if(user.getRoles().equals("ROLE_USER")){ // 일반 회원이 미용사로 신청할 경우
                 user.setRoles("ROLE_DES"); // user 권한 변경
                 userService.modifyRole(id);
                 des.setId(user.getId());
                 des.setDesNickname(desNickname);
                 des.setPosition(position);
+                des.setEmail(user.getEmail());
+                des.setTel(Integer.parseInt(user.getTel()) );
+                des.setStar(zero);
+                des.setReviewCnt(0);
+                des.setBookmarkCnt(0);
             }else { // ROLE_SHOP 권한을 가진 사람이 신청할경우
                 des.setId(user.getId());
                 des.setDesNickname(desNickname);
                 des.setPosition(position);
+                des.setEmail(user.getEmail());
+                des.setTel(Integer.parseInt(user.getTel()) )	;
+                des.setStar(zero);
+                des.setReviewCnt(0);
+                des.setBookmarkCnt(0);
+
             }
             designerService.desreg(des, file);
 

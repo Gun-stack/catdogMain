@@ -155,13 +155,14 @@ public class UserDslRepository {
 		QDesGallery desGallery = QDesGallery.desGallery;
 		QDesigner designer = QDesigner.designer;
 		QShop shop = QShop.shop;
+		
 		return jpaQueryFactory.selectFrom(desGallery)
 				.from(desGallery)
 				.join(designer)
 				.on(desGallery.desId.eq(designer.id))
 				.join(shop)
 				.on(designer.sId.eq(shop.sId))
-				.where(shop.num.eq(shop.num))
+				.where(shop.num.eq(num))
 				.orderBy(desGallery.date.desc())
 				.offset(offset)
 				.limit(limit)
@@ -280,6 +281,7 @@ public class UserDslRepository {
 	public void UpdateStarByDesNumAndReviewStar(Integer desNum, Review review) {
 		 QDesigner designer = QDesigner.designer;
 		    
+		 
 		    BigDecimal desStar = jpaQueryFactory.select(designer.star)
 		            .from(designer)
 		            .where(designer.num.eq(desNum))
@@ -331,13 +333,9 @@ public class UserDslRepository {
 	
 	public Designer FindDesignerById(String desId) {
 		QDesigner designer = QDesigner.designer;
-		
 		return  jpaQueryFactory.selectFrom(designer)
 				.where(designer.id.eq(desId))
 				.fetchOne();
-			
-		
-		
 	}
 	
 	

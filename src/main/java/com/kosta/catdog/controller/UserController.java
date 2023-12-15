@@ -199,6 +199,7 @@ public class UserController {
                 des.setStar(zero);
                 des.setReviewCnt(0);
                 des.setBookmarkCnt(0);
+                des.setName(user.getName());
             }else { // ROLE_SHOP 권한을 가진 사람이 신청할경우
                 des.setId(user.getId());
                 des.setName(user.getName());
@@ -210,6 +211,7 @@ public class UserController {
                 des.setStar(zero);
                 des.setReviewCnt(0);
                 des.setBookmarkCnt(0);
+                des.setName(user.getName());
 
             }
             Designer des1= designerService.desreg(des, file);

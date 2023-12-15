@@ -52,7 +52,4 @@ public class UserGallery {
 	private String type;
 	@Column
     private String content;
-//	@OneToMany(mappedBy = "userGallery", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-//	@OrderBy("date desc") // 댓글 정렬
-//	private List<UserGalleryComment> comment;	
 }

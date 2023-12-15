@@ -197,7 +197,7 @@ public class ShopController {
 	@PostMapping("/shopreg")
 	public ResponseEntity<Boolean> shopreg(@RequestPart(value="file", required = false) List<MultipartFile> file,
 						@RequestParam("userId") String id,
-					   @RequestParam("sId") Integer sId,
+					   @RequestParam("sId") String sId,
 						@RequestParam("name") String name,
 						@RequestParam("address_road") String address_road,
 						@RequestParam("address_detail") String address_detail,
@@ -245,7 +245,7 @@ public class ShopController {
 	@PostMapping("/shopmodi")
 	public ResponseEntity<String> shopmodi(@RequestPart(value="file", required = false) List<MultipartFile> file,
 										   @RequestParam("shopnum") Integer num,
-										   @RequestParam("sId") Integer sId,
+										   @RequestParam("sId") String sId,
 										   @RequestParam("name") String name,
 										   @RequestParam("address_road") String address_road,
 										   @RequestParam("address_detail") String address_detail,
@@ -259,7 +259,7 @@ public class ShopController {
 		try{
 			Shop shop = new Shop();
 			shop = shopService.selectshop(num);
-			Integer bid = shop.getSId();
+			String bid = shop.getSId();
 
 			shop.setSId(sId);
 			shop.setName(name);
@@ -268,7 +268,7 @@ public class ShopController {
 			shop.setLat(latitude);
 			shop.setLon(longitude);
 
-			Integer aid = shop.getSId();
+			String aid = shop.getSId();
 
 			System.out.println("File : " + file);
 

@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kosta.catdog.entity.Designer;
 import com.kosta.catdog.entity.Pet;
 import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.entity.User;
 import com.kosta.catdog.repository.ReservationRepository;
 import com.kosta.catdog.repository.UserDslRepository;
+import com.kosta.catdog.service.ReservationService;
 
 
 @RestController
@@ -30,20 +32,31 @@ public class ResController {
 	private ReservationRepository reservationRepository;
 	@Autowired
 	private UserDslRepository userDslRepository;
+	@Autowired
+	private ReservationService reservationService;
 	
 	
 	
 	@PostMapping("/completereserve")
 	public	ResponseEntity<String> CompleteReservation(
-			@RequestPart(value="file", required = false) List<MultipartFile> file,
+			@RequestPart(value="file", required = false) MultipartFile file,
 			@RequestParam("text") String text,
 			@RequestParam("num") Integer num
 			){
-		Reservation resv = reservationRepository.findById(num).get();
-		resv.setStatus("완료");
-		resv.setRefText(text);
-		reservationRepository.save(resv);
-		return new ResponseEntity<String>("1",HttpStatus.OK);
+		System.out.println("text = " +file);
+		
+		try {
+			Reservation resv = reservationRepository.findById(num).get();
+			resv.setStatus("완료");
+			resv.setCompleteText(text);
+			reservationService.CompleteReservation(resv, file);			
+			return new ResponseEntity<String>("1",HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+			
+		}
+		
 	}
 	
 	@GetMapping("/resinfobyuserid")
@@ -56,6 +69,9 @@ public class ResController {
 			return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	
+	
 	
 	@GetMapping("/resinfobydesnum")
 	public ResponseEntity<List<Reservation>> SelectByDes(@RequestParam Integer desNum, @RequestParam String date){
@@ -91,12 +107,15 @@ public class ResController {
 			Reservation resv =reservationRepository.findById(num).get();
 			User user = userDslRepository.findById(resv.getUserId());
 			Pet pet = userDslRepository.FindPetByuserIdAndPetName(user.getNum(), resv.getPetName());
+			Designer des = userDslRepository.FindDesignerById(resv.getDesId());
 			
 			
 			Map<String, Object> response = new HashMap<>();
 		        response.put("resv", resv);
 		        response.put("user",user);
 		        response.put("pet", pet);
+		        response.put("des", des);
+		        
 			
 			return new ResponseEntity<Object>(response, HttpStatus.OK);
 		} catch(Exception e) {

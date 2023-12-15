@@ -47,6 +47,10 @@ public class Reservation {
     @Column
     private String refText; // 스타일 내용
     @Column
+    private String CompleteImg; // 스타일 이미지
+    @Column
+    private String CompleteText; // 스타일 내용
+    @Column
     private String notice;
     @Column
     private Integer isReview;

@@ -1,7 +1,10 @@
 package com.kosta.catdog.controller;
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.entity.Review;
+import com.kosta.catdog.repository.ReservationRepository;
 import com.kosta.catdog.repository.ReviewRepository;
 import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.service.ReviewService;
@@ -29,6 +34,8 @@ public class ReviewController {
 	private ReviewService reviewService;
 	@Autowired
 	private UserDslRepository 	dslRepository;
+	@Autowired
+	private ReservationRepository reservationRepository;
 	
 	//리뷰등록
 	@PostMapping("/reviewreg")
@@ -37,9 +44,14 @@ public class ReviewController {
 			@RequestParam("content") String content,
 			@RequestParam("star") Integer star,
 			@RequestParam("desId") String desId,
+			@RequestParam("desNickname") String desNickname,
+			@RequestParam("userNickname") String userNickname,
+			@RequestParam("petName") String petName,
 			@RequestParam("userId") String userId,
 			@RequestParam("date") String date,
 			@RequestParam("resNum") Integer resNum
+			
+			
 			)
 	{
 	try {
@@ -50,9 +62,12 @@ public class ReviewController {
 		 review.setUserId(userId);
 		 review.setDesId(desId);
 		 review.setResNum(resNum);
+		 review.setDesNickname(desNickname);
+		 review.setUserNickname(userNickname);
 		 review.setContent(content);
 		 review.setStar(star);
 		 review.setDate(sqlDate);
+		 review.setPetName(petName);
 		 System.out.println(review);
 		 
 		 if (file !=null) {
@@ -76,6 +91,8 @@ public class ReviewController {
 			@RequestParam("star") Integer star,
 			@RequestParam("desId") String desId,
 			@RequestParam("userId") String userId,
+			@RequestParam("desNickname") String desNickname,
+			@RequestParam("userNickname") String userNickname,
 			@RequestParam("date") String date,
 			@RequestParam("resNum") Integer resNum,
 			@RequestParam("num") Integer num,
@@ -90,6 +107,8 @@ public class ReviewController {
 		 review.setUserId(userId);
 		 review.setDesId(desId);
 		 review.setResNum(resNum);
+		 review.setDesNickname(desNickname);
+		 review.setUserNickname(userNickname);
 		 review.setContent(content);
 		 review.setStar(star);
 		 review.setDate(sqlDate);
@@ -111,15 +130,19 @@ public class ReviewController {
 	
 	// 리뷰 조회(예약번호)
 	@GetMapping("/reviewdetail")
-	public ResponseEntity<Review> reviewByResNum(@RequestParam Integer resNum){
+	public ResponseEntity<Object> reviewByResNum(@RequestParam Integer resNum){
 		System.out.println("resNum : "+ resNum);
 		try {
 			Review review =  dslRepository.FindReviewByResNum(resNum);
+			Reservation res = reservationRepository.findById(resNum).get();
+			Map<String, Object> response = new HashMap<>();
+			response.put("res", res);
+			response.put("review", review);
 			
-			return new ResponseEntity<Review>(review,HttpStatus.OK);
+			return new ResponseEntity<Object>(response,HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new ResponseEntity<Review>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 		}
 	}
 	//리뷰사진조회
@@ -158,6 +181,7 @@ public class ReviewController {
 	// List<Review> reviewList = findReviewListByDesignerOrderByDateDesc(num, 0, 3);
 	// 샵별 리뷰 모아보기(한번에 3개씩 호출)
 	// List<Review> reviewList = findReviewListByShopOrderByDateDesc(num, 0, 3);
+	
 	@GetMapping("reviewlistbydes")
 	public ResponseEntity<List<Review>> ReviewListByDes(@RequestParam
 			Integer num, @RequestParam int offset,@RequestParam int limit){

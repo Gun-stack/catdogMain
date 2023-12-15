@@ -26,7 +26,7 @@ public class Shop {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer num; // 고유번호
 	@Column(unique=true)
-	private Integer sId; // 사업자 등록번호
+	private String sId; // 사업자 등록번호
 //	@Column(unique=true)
 	@Column
 	private String id;

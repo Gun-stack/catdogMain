@@ -103,7 +103,7 @@ public class DesController {
 		}
 	// 디자이너 sID로 찾기
 	 @GetMapping("/deslist")
-	  public ResponseEntity<List<Designer>> desListBySId(@RequestParam("sId") Integer sId){
+	  public ResponseEntity<List<Designer>> desListBySId(@RequestParam("sId") String sId){
 		 try {
 			 List<Designer> desList = userDslRepository.findDesListBySId(sId);
 			 

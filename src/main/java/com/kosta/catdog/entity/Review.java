@@ -30,9 +30,16 @@ public class Review {
 	@Column
     private String desId; // 디자이너 id
 	@Column
+    private String desNickname; // 디자이너 닉네임
+	
+	@Column
 	private Integer	resNum;
 	@Column
 	private String	userId;
+	@Column
+	private String	userNickname;
+	@Column
+	private String	petName;
 	@Column
 	private String	content;
 	@Column

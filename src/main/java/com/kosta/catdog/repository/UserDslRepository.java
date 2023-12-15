@@ -108,7 +108,7 @@ public class UserDslRepository {
 		entityManager.flush();
 		entityManager.clear();
 	}
-	public List<Designer> findDesListBySId(Integer sId) {
+	public List<Designer> findDesListBySId(String sId) {
 		QDesigner des = QDesigner.designer;
 		 return	jpaQueryFactory.selectFrom(des)
 				.where(des.sId.eq(sId))
@@ -366,7 +366,7 @@ public class UserDslRepository {
 //	}
 	
 	//shop
-	public Shop FindShopBySid(Integer sid) {
+	public Shop FindShopBySid(String sid) {
 		QShop shop =QShop.shop;
 		return jpaQueryFactory.selectFrom(shop)
 				.where(shop.sId.eq(sid))

@@ -29,7 +29,7 @@ public class Designer {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer num; // 고유번호
 	@Column	
-	private Integer sId; // 사업자 등록번호
+	private String sId; // 사업자 등록번호
 	@Column(unique=true)
 	private String id;
 	@Column

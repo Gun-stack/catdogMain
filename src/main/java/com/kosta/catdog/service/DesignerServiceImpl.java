@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import com.kosta.catdog.entity.DesFileVo;
 import com.kosta.catdog.entity.ShopFileVO;
-import com.kosta.catdog.repository.DesFileVORepository;
+import com.kosta.catdog.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +25,6 @@ import com.kosta.catdog.entity.PetFileVO;
 import com.kosta.catdog.entity.Review;
 import com.kosta.catdog.repository.DesFileVORepository;
 
-import com.kosta.catdog.repository.DesignerRepository;
-import com.kosta.catdog.repository.UserDslRepository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -41,6 +39,9 @@ public class DesignerServiceImpl implements DesignerService {
 	private UserDslRepository userDslRepository;
 	@Autowired
 	private DesignerRepository designerRepository;
+
+	@Autowired
+	private DesignerDslRepository designerDslRepository;
 
 	@Autowired
 	private DesFileVORepository desFileVORepository;
@@ -101,6 +102,16 @@ public class DesignerServiceImpl implements DesignerService {
 		}
 		designerRepository.save(des);
 		return des;
+	}
+
+	@Override
+	public Designer selectDes(Integer num) throws Exception {
+		return designerRepository.findByNum(num);
+	}
+
+	@Override
+	public void modipostition(Designer des) throws Exception {
+		designerDslRepository.modifyDesPosition(des);
 	}
 
 

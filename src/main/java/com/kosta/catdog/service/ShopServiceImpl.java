@@ -176,9 +176,8 @@ try {
 //	}
 	
 	@Override
-	public void deleteDesigner() throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void deleteDesigner(Integer num, String sId) throws Exception {
+		designerDslRepository.deleteDesigner(num, sId);
 	}
 
 	@Override

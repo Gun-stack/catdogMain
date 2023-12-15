@@ -77,9 +77,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		http
 				.addFilter(new JwtAuthorizationFilter(authenticationManager(), userDslRepository)) //BasicAuthenticationFilter
 				.authorizeRequests()
-				.antMatchers("/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-				.antMatchers("/manager/**").access("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
-				.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')") // 로그인 & 권한
+				.antMatchers("/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
+				.antMatchers("/shop/**").access("hasRole('ROLE_USER') or hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
+				.antMatchers("/admin/**").access("hasRole('ROLE_SHOP')") // 로그인 & 권한
 				.anyRequest().permitAll(); // 나머지는 허용
 	}
 

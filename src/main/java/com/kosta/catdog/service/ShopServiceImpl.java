@@ -10,8 +10,7 @@ import java.util.Optional;
 
 
 import com.kosta.catdog.entity.*;
-import com.kosta.catdog.repository.ShopDslRepository;
-import com.kosta.catdog.repository.ShopFileVORepository;
+import com.kosta.catdog.repository.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +23,6 @@ import com.kosta.catdog.entity.ReviewFileVO;
 import com.kosta.catdog.entity.Shop;
 import com.kosta.catdog.entity.ShopFileVO;
 import com.kosta.catdog.repository.ShopFileVORepository;
-import com.kosta.catdog.repository.ShopRepository;
-import com.kosta.catdog.repository.UserDslRepository;
 
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +33,10 @@ public class ShopServiceImpl implements ShopService {
 	
 	@Autowired
 	private UserDslRepository userDslRepository;
+	@Autowired
+	private DesignerDslRepository designerDslRepository;
+	@Autowired
+	private DesignerRepository designerRepository;
 	@Autowired
 	private ShopRepository shopRepository;
 	@Autowired
@@ -144,7 +145,12 @@ public class ShopServiceImpl implements ShopService {
 		shopRepository.save(shop);
 		return shop;
 	}
-	
+
+	@Override
+	public void desreg(Designer des) throws Exception {
+		designerDslRepository.modifyDes(des);
+	}
+
 	// 사진보기
 	@Override
 	public void fileView(Integer num, OutputStream out) throws Exception {

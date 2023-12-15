@@ -75,7 +75,7 @@ class CatdogApplicationTests {
 	// @Test
 	void findComment() {
 		try {
-			Optional<UserGalleryComment> comment = userGalleryCommentRepository.findById(1);
+			List<UserGalleryComment> comment = userDslRepository.findComment(1);
 			System.out.println(comment);
 		} catch(Exception e) {
 			e.printStackTrace();

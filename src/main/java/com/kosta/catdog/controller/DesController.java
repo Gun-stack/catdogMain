@@ -51,74 +51,81 @@ public class DesController {
 
     }
 
-    //디자이너 아이디로 정보찾기
-    @GetMapping("/desinfobyid")
-    public ResponseEntity<Object> DesInfoById(@RequestParam String desId) {
-        System.out.println(desId);
-        try {
-            Map<String, Object> response = new HashMap<>();
-            Designer des = userDslRepository.FindDesignerById(desId);
-            Shop shop = userDslRepository.FindShopBySid(des.getSId());
+	 //디자이너 아이디로 정보찾기
+	 @GetMapping("/desinfobyid")
+	    public ResponseEntity<Object> DesInfoById(@RequestParam String desId) {
+		 	System.out.println(desId);
+			 try {
+				 Designer des = userDslRepository.FindDesignerById(desId);
+				 Shop shop = userDslRepository.FindShopBySid(des.getSId());
+				 
+				 Map<String, Object> response = new HashMap<>();
+			        response.put("des", des);
+			        response.put("shop", shop);
+				
+				return new ResponseEntity<Object>(response, HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+			}
+	    }
+	 
+	 
+	 @GetMapping("/shopdesinfobynum")
+	    public ResponseEntity<Object> ShopDesInfoByNum(@RequestParam Integer desNum) {
+			 try {
+				 Designer des = designerRepository.findById(desNum).get();
+				 Shop shop = userDslRepository.FindShopBySid(des.getSId());
+				 
+				 Map<String, Object> response = new HashMap<>();
+			        response.put("des", des);
+			        response.put("shop", shop);
+				
+				return new ResponseEntity<Object>(response, HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+			}
+	    }
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	//디자이너 프로필이미지 보기
+	 @GetMapping("/desimg/{num}")
+	 public void ImageView(@PathVariable Integer num, HttpServletResponse response) {
+			try {
+				designerService.fileView(num, response.getOutputStream());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	// 디자이너 sID로 찾기
+	 @GetMapping("/deslist")
+	  public ResponseEntity<List<Designer>> desListBySId(@RequestParam("sId") String sId){
+		 try {
+			 List<Designer> desList = userDslRepository.findDesListBySId(sId);
+			 
+			 return new ResponseEntity<List<Designer>> (desList,HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<List<Designer>> (HttpStatus.BAD_REQUEST);
 
-
-            response.put("shop", shop);
-
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }
-    }
-    @GetMapping("/shopdesinfobynum")
-    public ResponseEntity<Object> ShopDesInfoByNum(@RequestParam Integer desNum) {
-        try {
-            Designer des = designerRepository.findById(desNum).get();
-            Shop shop = userDslRepository.FindShopBySid(des.getSId());
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("des", des);
-            response.put("shop", shop);
-
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
-
-    //디자이너 프로필이미지 보기
-    @GetMapping("/desimg/{num}")
-    public void ImageView(@PathVariable Integer num, HttpServletResponse response) {
-        try {
-            designerService.fileView(num, response.getOutputStream());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // 디자이너 sID로 찾기
-    @GetMapping("/deslist")
-    public ResponseEntity<List<Designer>> desListBySId(@RequestParam("sId") String sId) {
-        try {
-            List<Designer> desList = userDslRepository.findDesListBySId(sId);
-
-            return new ResponseEntity<List<Designer>>(desList, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<List<Designer>>(HttpStatus.BAD_REQUEST);
-
-        }
-    }
-
-    // 디자이너 등록
-    public void regdes(Designer des) {
-        System.out.println("redDes !!");
-    }
-
-
-    // 프로필 문구 수정
-    public void modipro(String info) {
-        System.out.println("modiProfile !!");
-    }
+		}
+	 }
+	
+	// 디자이너 등록
+	public void regdes(Designer des) {
+		System.out.println("redDes !!");
+	}
+	
+	
+	// 프로필 문구 수정
+	public void modipro(String info) {
+		System.out.println("modiProfile !!");
+	}
 
 }

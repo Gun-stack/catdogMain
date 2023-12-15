@@ -13,7 +13,6 @@ import com.kosta.catdog.service.DesignerService;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.description.type.TypeList;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
@@ -50,36 +49,38 @@ public class ShopController {
     private DesignerService designerService;
 
 
-    //샵사진조회
+    //샵사진조회	
 
-    @GetMapping("/shopimg/{num}")
-    public void imageView(@PathVariable Integer num, HttpServletResponse response) {
-        System.out.println("ShopImg/Num!!!");
-        try {
-            shopService.fileView(num, response.getOutputStream());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+		@GetMapping("/shopimg/{num}")
+		public void imageView(@PathVariable String num, HttpServletResponse response) {
+			System.out.println("ShopImg/Num!!!");
+			Integer nums =Integer.parseInt(num);
+			try {
+				shopService.fileView(nums, response.getOutputStream());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 
     //샵이미지 등록
-    @PostMapping("/regshopbgimg")
-    public ResponseEntity<Shop> regShopImg(@RequestPart(value = "file", required = false) MultipartFile file,
-                                           @RequestParam("shopNum") Integer num) {
-
-        try {
-            Shop shopInfo = shopRepository.findById(num).get();
-            System.out.println(shopInfo);
-            Shop shop = shopService.addShopImg(shopInfo, file);
-
-            return new ResponseEntity<Shop>(shop, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<Shop>(HttpStatus.BAD_REQUEST);
-        }
-
-    }
+		@PostMapping("/regshopbgimg")
+		public ResponseEntity<Shop> regShopImg(@RequestPart(value="file", required = false)List<MultipartFile> file ,
+				@RequestParam("shopNum") Integer num	) {
+			System.out.println( "file" +file);
+				
+			try {
+					Shop shopInfo = shopRepository.findById(num).get();
+					System.out.println(shopInfo);
+					Shop shop = shopService.addShopImg(shopInfo, file);
+					
+					return new ResponseEntity<Shop>(shop,HttpStatus.OK);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new ResponseEntity<Shop>(HttpStatus.BAD_REQUEST);
+				}
+					
+		}
 
     // 공지사항 등록
     @PostMapping("/regshopnotice")

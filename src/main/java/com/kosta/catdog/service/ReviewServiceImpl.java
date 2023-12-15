@@ -38,7 +38,7 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Transactional
 	@Override
-	public Review postReview(Review review, MultipartFile file) throws Exception {
+	public Review registerReview(Review review, MultipartFile file) throws Exception {
 
 		if (file != null) {
 			String fileNums = "";

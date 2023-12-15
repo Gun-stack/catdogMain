@@ -33,5 +33,6 @@ public interface ShopService {
 	void fileView(Integer num, OutputStream out) throws Exception ;
 	
 	Shop addShopImg(Shop shop, MultipartFile file) throws Exception;
-	
+
+	void desreg(Designer des) throws Exception;
 }

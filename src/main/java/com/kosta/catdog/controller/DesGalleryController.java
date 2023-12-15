@@ -12,6 +12,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,25 +71,34 @@ public class DesGalleryController {
 		}
 	}
 	
-//	@PostMapping("/modidesgallery")
-//	public ResponseEntity<> modifyDesGallery(@RequestParam DesGallery desGallery) {
-//		try {
-//			desGalleryService.modifyDesGallery(desGallery);
-//			return new ResponseEntity<>(, HttpStatus.OK);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//		}
-//	}
+	@PostMapping("/modidesgallery")
+	public ResponseEntity<DesGallery> modifyDesGallery(
+			@RequestParam("content") String content,
+			@RequestPart(value="file", required = false) MultipartFile file,
+			@RequestParam("desId") String desId) {
+		try {
+			DesGallery desGallery = new DesGallery();
+			desGallery.setContent(content);
+			desGallery.setDesId(desId);
+			
+			desGalleryService.modifyDesGallery(desGallery, file);
+			return new ResponseEntity<DesGallery>(HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<DesGallery>(HttpStatus.BAD_REQUEST);
+		}
+	}
 	
-//	@DeleteMapping("/")
-//	public void deleteDesGallery(@RequestParam Integer num) {
-//		try {
-//			desGalleryService.deleteDesGallery(num);
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
+	@DeleteMapping("/desgallery/{num}")
+	public ResponseEntity<Integer> deleteDesGallery(@PathVariable Integer num) {
+		try {
+			desGalleryService.deleteDesGallery(num);
+			return new ResponseEntity<Integer>(num, HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Integer>(HttpStatus.BAD_REQUEST);
+		}
+	}
 	
 	@GetMapping("/desgallerydetail")
 	public ResponseEntity<Object> findDesGallery(@RequestParam("num") Integer num) {

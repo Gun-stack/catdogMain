@@ -23,33 +23,34 @@ import com.kosta.catdog.service.DesignerService;
 
 @RestController
 public class DesController {
-	
-	@Autowired
-	private DesignerRepository designerRepository;
-	
-	@Autowired
-	private UserDslRepository userDslRepository;
-	
-	@Autowired 
-	private ShopRepository shopRepository;
-	
-	
-	@Autowired
-	private DesignerService designerService;
-	// 디자이너 정보 조회 고유번호 로 찾기
-	 @GetMapping("/desinfobynum")
-	    public ResponseEntity<Designer> DesInfo(@RequestParam Integer desNum) {
-		 	System.out.println(desNum);
-			 try {
-				 Designer des = designerRepository.findById(desNum).get();
-				 return new ResponseEntity<Designer>(des, HttpStatus.OK);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return new ResponseEntity<Designer>(HttpStatus.BAD_REQUEST);
-			}
-			 
-	    }
-	 
+
+    @Autowired
+    private DesignerRepository designerRepository;
+
+    @Autowired
+    private UserDslRepository userDslRepository;
+
+    @Autowired
+    private ShopRepository shopRepository;
+
+
+    @Autowired
+    private DesignerService designerService;
+
+    // 디자이너 정보 조회 고유번호 로 찾기
+    @GetMapping("/desinfobynum")
+    public ResponseEntity<Designer> DesInfo(@RequestParam Integer desNum) {
+        System.out.println(desNum);
+        try {
+            Designer des = designerRepository.findById(desNum).get();
+            return new ResponseEntity<Designer>(des, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<Designer>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 	 //디자이너 아이디로 정보찾기
 	 @GetMapping("/desinfobyid")
 	    public ResponseEntity<Object> DesInfoById(@RequestParam String desId) {
@@ -126,5 +127,5 @@ public class DesController {
 	public void modipro(String info) {
 		System.out.println("modiProfile !!");
 	}
-	
+
 }

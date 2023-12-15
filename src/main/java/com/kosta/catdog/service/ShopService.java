@@ -15,7 +15,7 @@ public interface ShopService {
 	//샵 수정
 	String modiShop(Shop shop, List<MultipartFile> files) throws Exception;
 	// 디자이너 삭제
-	void deleteDesigner() throws Exception;
+	void deleteDesigner(Integer num, String sId) throws Exception;
 	// 샵 기본정보 등록
 	void addShopInfo(Shop shop) throws Exception;
 	// 공지사항 등록

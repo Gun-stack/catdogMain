@@ -68,6 +68,8 @@ public class DesController {
 				return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
 			}
 	    }
+	 
+	 
 	 @GetMapping("/shopdesinfobynum")
 	    public ResponseEntity<Object> ShopDesInfoByNum(@RequestParam Integer desNum) {
 			 try {

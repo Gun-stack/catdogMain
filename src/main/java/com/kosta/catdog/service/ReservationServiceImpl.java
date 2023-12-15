@@ -28,8 +28,12 @@ public class ReservationServiceImpl implements ReservationService {
 	private ResFileVORepository fileVORepository;
 	
 	@Override
-	public void makeReservation(Reservation reservation) throws Exception {
+	public Reservation makeReservation(Reservation reservation ) throws Exception {
+		
+	
 		reservationRepository.save(reservation);
+		return reservation;
+		
 	}
 	
 	@Value("${res.upload.dir}")

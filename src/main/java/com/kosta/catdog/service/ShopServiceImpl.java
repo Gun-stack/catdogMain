@@ -56,7 +56,6 @@ public class ShopServiceImpl implements ShopService {
 
 				Date today = Date.valueOf(LocalDate.now());
 
-
 				ShopFileVO fileVO = new ShopFileVO();
 				fileVO.setDir(uploadDir);
 				fileVO.setName(file.getOriginalFilename());
@@ -68,6 +67,7 @@ public class ShopServiceImpl implements ShopService {
 
 				File uploadFile = new File(uploadDir + fileVO.getNum());
 				file.transferTo(uploadFile);
+				
 				if (!fileNums.equals(""))
 					fileNums += ",";
 				fileNums += fileVO.getNum();
@@ -116,32 +116,36 @@ public class ShopServiceImpl implements ShopService {
 	}
 
 	@Override
-	public Shop addShopImg(Shop shop, MultipartFile file) throws Exception {
+	public Shop addShopImg(Shop shop, List<MultipartFile> files) throws Exception {
+		System.out.println("files : "+ files);
 
-		if(file !=null) {
-		String fileNums="";
+		if(files!=null && files.size() !=0 ) {
+			String fileNums = "";
+			for (MultipartFile file : files) {
 		
-		Date today = Date.valueOf(LocalDate.now());
-		
-		ShopFileVO fileVO = new ShopFileVO();
-		
-		fileVO.setDir(uploadDir);
-		fileVO.setName(file.getOriginalFilename());
-		fileVO.setSize(file.getSize());
-		fileVO.setType(file.getContentType());
-		fileVO.setDate(today);
-		shopFileVORepository.save(fileVO);
-		
-		File uploadFile= new File(uploadDir+fileVO.getNum());
-		file.transferTo(uploadFile);
-		if(!fileNums.equals(""))
-			fileNums += ",";
-		fileNums += fileVO.getNum();
-		
+				Date today = Date.valueOf(LocalDate.now());
+				
+				ShopFileVO fileVO = new ShopFileVO();
+				
+				fileVO.setDir(uploadDir);
+				fileVO.setName(file.getOriginalFilename());
+				fileVO.setSize(file.getSize());
+				fileVO.setType(file.getContentType());
+				fileVO.setDate(today);
+				shopFileVORepository.save(fileVO);
+				
+				File uploadFile= new File(uploadDir+fileVO.getNum());
+				file.transferTo(uploadFile);
+				if(!fileNums.equals(""))
+					fileNums += ",";
+				fileNums += fileVO.getNum();
+			
+			}
 		shop.setBgImg(fileNums);
 		}
 		//리뷰저장
 		shopRepository.save(shop);
+		
 		return shop;
 	}
 	

@@ -93,6 +93,7 @@ public class ReviewController {
 			@RequestParam("userId") String userId,
 			@RequestParam("desNickname") String desNickname,
 			@RequestParam("userNickname") String userNickname,
+			@RequestParam("petName") String petName,
 			@RequestParam("date") String date,
 			@RequestParam("resNum") Integer resNum,
 			@RequestParam("num") Integer num,
@@ -112,6 +113,7 @@ public class ReviewController {
 		 review.setContent(content);
 		 review.setStar(star);
 		 review.setDate(sqlDate);
+		 review.setPetName(petName);
 		 if (file !=null) {
 				reviewService.modifyReveiw(review, file);
 			}else {
@@ -188,6 +190,20 @@ public class ReviewController {
 		try {
 			List<Review> reviewList = reviewService.reviewListByDesignerOrderByDateDesc(num, offset, limit);
 			
+			
+			return new ResponseEntity<List<Review>> (reviewList ,HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<List<Review>> (HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	@GetMapping("reviewlistbyshop")
+	public ResponseEntity<List<Review>> ReviewListByShop(@RequestParam
+			Integer num, @RequestParam int offset,@RequestParam int limit){
+		try {
+			List<Review> reviewList = reviewService.reviewListByShopOrderByDateDesc(num, offset, limit);
 			
 			return new ResponseEntity<List<Review>> (reviewList ,HttpStatus.OK);
 		} catch (Exception e) {

@@ -28,11 +28,9 @@ import lombok.NoArgsConstructor;
 public class UserGalleryComment {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer	num;
-	// @ManyToOne
-	@JoinColumn(name = "num")
+	@Column
 	private Integer	galleryNum;
-	// @ManyToOne
-	@JoinColumn(name = "userId")
+	@Column
 	private String	userId;
 	@Column
 	private String	content;

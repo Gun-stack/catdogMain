@@ -7,7 +7,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,13 +39,14 @@ public class ShopController {
 	private DesignerRepository designerRepository;
 	
 	
-	//샵사진조회
+	//샵사진조회	
 
 		@GetMapping("/shopimg/{num}")
-		public void imageView(@PathVariable Integer num, HttpServletResponse response) {
+		public void imageView(@PathVariable String num, HttpServletResponse response) {
 			System.out.println("ShopImg/Num!!!");
+			Integer nums =Integer.parseInt(num);
 			try {
-				shopService.fileView(num, response.getOutputStream());
+				shopService.fileView(nums, response.getOutputStream());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -56,8 +56,9 @@ public class ShopController {
 	
 	//샵이미지 등록
 		@PostMapping("/regshopbgimg")
-		public ResponseEntity<Shop> regShopImg(@RequestPart(value="file", required = false) MultipartFile file,
+		public ResponseEntity<Shop> regShopImg(@RequestPart(value="file", required = false)List<MultipartFile> file ,
 				@RequestParam("shopNum") Integer num	) {
+			System.out.println( "file" +file);
 				
 			try {
 					Shop shopInfo = shopRepository.findById(num).get();
@@ -309,6 +310,8 @@ public class ShopController {
 			return Collections.emptyList();
 		}
 	}
+	
+	 
 
 	@PostMapping("/shopdesreg")
 	public void shopdesreg(@RequestBody Designer des) {

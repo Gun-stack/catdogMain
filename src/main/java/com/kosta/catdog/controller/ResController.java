@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -34,6 +35,7 @@ public class ResController {
 	private UserDslRepository userDslRepository;
 	@Autowired
 	private ReservationService reservationService;
+	
 	
 	
 	
@@ -84,13 +86,13 @@ public class ResController {
 
 	        // java.util.Date를 java.sql.Date로 변환
 	        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
-
+	        
 	        // 여기서 sqlDate를 사용하여 로직 수행
 	        List<Reservation> resList = userDslRepository.findReservationListByDesigner_AndDate(desNum, sqlDate);
 	        if (resList != null) {
-	            return new ResponseEntity<>(resList, HttpStatus.OK);
+	            return new ResponseEntity<List<Reservation>>(resList, HttpStatus.OK);
 	        } else {
-	            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	            return new ResponseEntity<List<Reservation>>(HttpStatus.NOT_FOUND);
 	        }
 	    } catch (ParseException e) {
 	        // 예외 처리: 날짜 형식이 올바르지 않은 경우
@@ -129,11 +131,11 @@ public class ResController {
 	
 	// 예약 등록 !!
 		@PostMapping("/makereservation")
-public ResponseEntity<Reservation> reservation(@RequestBody  Reservation resvInfo) {
-		try {
-			System.out.println(resvInfo);
-			reservationRepository.save(resvInfo);
-			return new ResponseEntity<Reservation>(resvInfo,HttpStatus.OK);
+public ResponseEntity<Reservation> reservation(@RequestBody Reservation resvInfo) {
+		try {	
+			System.out.println( "resv : " +resvInfo);
+			Reservation res = reservationService.makeReservation(resvInfo);
+			return new ResponseEntity<Reservation>(res,HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Reservation>(HttpStatus.BAD_REQUEST);

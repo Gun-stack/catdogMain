@@ -191,19 +191,23 @@ public class UserController {
                 userService.modifyRole(id);
                 des.setId(user.getId());
                 des.setDesNickname(desNickname);
-                des.setPosition(position);
+                des.setPosition(position);	
                 des.setEmail(user.getEmail());
                 des.setTel(user.getTel());
+                des.setRole(user.getRoles());
+                des.setName(user.getName());
                 des.setStar(zero);
                 des.setReviewCnt(0);
                 des.setBookmarkCnt(0);
                 des.setName(user.getName());
             }else { // ROLE_SHOP 권한을 가진 사람이 신청할경우
                 des.setId(user.getId());
+                des.setName(user.getName());
                 des.setDesNickname(desNickname);
                 des.setPosition(position);
                 des.setEmail(user.getEmail());
                 des.setTel(user.getTel());
+                des.setRole(user.getRoles());
                 des.setStar(zero);
                 des.setReviewCnt(0);
                 des.setBookmarkCnt(0);

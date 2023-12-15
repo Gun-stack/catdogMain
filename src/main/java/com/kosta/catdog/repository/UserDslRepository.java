@@ -22,11 +22,13 @@ import com.kosta.catdog.entity.QReview;
 import com.kosta.catdog.entity.QShop;
 import com.kosta.catdog.entity.QUser;
 import com.kosta.catdog.entity.QUserGallery;
+import com.kosta.catdog.entity.QUserGalleryComment;
 import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.entity.Review;
 import com.kosta.catdog.entity.Shop;
 import com.kosta.catdog.entity.User;
 import com.kosta.catdog.entity.UserGallery;
+import com.kosta.catdog.entity.UserGalleryComment;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
@@ -356,14 +358,7 @@ public class UserDslRepository {
 	
 	
 	
-	// Shop
-//	@Transactional
-//	public void addDesignerToShop(String id, String position) {
-//		QDesigner designer = QDesigner.designer;
-//		QShop shop = QShop.shop;
-//		jpaQueryFactory.update(designer)
-//			.set(designer.sId, sId)
-//	}
+
 	
 	//shop
 	public Shop FindShopBySid(Integer sid) {
@@ -394,6 +389,15 @@ public class UserDslRepository {
 				
 	}
 	
-	
+	// UserGalleryComment
+	public List<UserGalleryComment> findComment(Integer num) {
+		QUserGallery userGallery = QUserGallery.userGallery;
+		QUserGalleryComment userGalleryComment = QUserGalleryComment.userGalleryComment;
+		return jpaQueryFactory.selectFrom(userGalleryComment)
+				.join(userGallery)
+				.on(userGallery.num.eq(userGalleryComment.num))
+				.where(userGallery.num.eq(userGalleryComment.num))
+				.fetch();
+	}
 	
 }

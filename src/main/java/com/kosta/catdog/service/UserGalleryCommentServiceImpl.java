@@ -2,15 +2,19 @@ package com.kosta.catdog.service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.kosta.catdog.entity.UserGalleryComment;
+import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.repository.UserGalleryCommentRepository;
 import com.kosta.catdog.repository.UserGalleryRepository;
 
 public class UserGalleryCommentServiceImpl implements UserGalleryCommentService {
+	@Autowired
+	private UserDslRepository userDslRepository;
 	@Autowired
 	private UserGalleryCommentRepository userGalleryCommentRepository;
 	@Autowired
@@ -48,5 +52,10 @@ public class UserGalleryCommentServiceImpl implements UserGalleryCommentService 
 	public void deleteComment(Integer num) throws Exception {
 		userGalleryCommentRepository.deleteById(num);
 	}
+
+	@Override
+	public List<UserGalleryComment> findComment(Integer num) throws Exception {
+		return userDslRepository.findComment(num);
+	}	
 
 }

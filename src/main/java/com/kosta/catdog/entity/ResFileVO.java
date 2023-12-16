@@ -7,33 +7,31 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@DynamicInsert
-@DynamicUpdate
+
+@Entity(name="RESFILE")
 @Builder
-public class UserGalleryComment {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer	num;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ResFileVO {
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Integer num;
 	@Column
-	private Integer	galleryNum;
+	private String dir;
 	@Column
-	private String	userId;
+	private String name;
 	@Column
-	private String	content;
+	private Long size;
+	@Column
+	private String type;
 	@Column
 	private Date date;
+	@Column
+	private byte[] data;
 }

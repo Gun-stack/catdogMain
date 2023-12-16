@@ -1,5 +1,6 @@
 package com.kosta.catdog.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -83,6 +84,7 @@ public class UserController {
     public ResponseEntity<String> checkusernickname(@RequestParam String nickname) {
         try {
             String res = userService.isNicknameDuplicate(nickname);
+            
             return new ResponseEntity<String>(res, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,38 +115,58 @@ public class UserController {
     // 닉네임 변경
 
     @PostMapping("/modinickname")
-    public ResponseEntity<String> modinickname(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<User> modinickname(@RequestBody Map<String, Object> requestBody) {
         Integer num = (Integer)requestBody.get("num");
         String nickname = (String)requestBody.get("nickname");
 
         try{
-            userService.modifyNickname(num, nickname);
-            return new ResponseEntity<String>( HttpStatus.OK);
+        	User user = userService.modifyNickname(num, nickname);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
         } catch(Exception e){
             e.printStackTrace();
-            return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<User>( HttpStatus.BAD_REQUEST);
         }
     }
 
     // 전화번호 변경
     @PostMapping("/moditel")
-    public ResponseEntity<String> moditel(@RequestBody Map<String, Object> requestBody) {
+    public ResponseEntity<User> moditel(@RequestBody Map<String, Object> requestBody) {
         Integer num = (Integer)requestBody.get("num");
         String userTel = (String)requestBody.get("userTel");
 
         try{
-//            String res = userService.modifyTel(num, userTel);
-            return new ResponseEntity<String>( HttpStatus.OK);
+        	User user = userService.modifyTel(num, userTel);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
         } catch(Exception e){
             e.printStackTrace();
-            return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<User>( HttpStatus.BAD_REQUEST);
         }
 
     }
 
     // 비밀번호 변경
-    public void modipassword(String password) {
+    @PostMapping("/modipassword")
+    public ResponseEntity<String> modipassword(@RequestBody Map<String, Object> requestBody) {
         System.out.println("modiPassword !!");
+        Integer num = (Integer)requestBody.get("num");
+//        String password = (String)requestBody.get("password");
+//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        String password = bCryptPasswordEncoder.encode(requestBody.get("password").toString());
+
+
+        System.out.println("Num : " + num);
+        System.out.println("password : " + password);
+
+        try{
+            User user = userService.findByNum(num);
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            System.out.println("UserNum : " + user.getNum());
+            String res = userService.modifyPassword(user.getNum(), password);
+            return new ResponseEntity<String>(res, HttpStatus.OK);
+        } catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
+        }
     }
 
     // 회원 탈퇴
@@ -152,8 +174,9 @@ public class UserController {
         System.out.println("EXIT !!");
     }
 
+    //디자이너 등록
     @PostMapping("/desreg")
-    public ResponseEntity<Boolean> desreg(@RequestPart(value="file", required = false) List<MultipartFile> file
+    public ResponseEntity<Designer> desreg(@RequestPart(value="file", required = false) List<MultipartFile> file
             , @RequestParam("id") String id
             , @RequestParam("desNickname") String desNickname
             , @RequestParam("position") String position) {
@@ -161,23 +184,42 @@ public class UserController {
             User user = userService.getUserInfoById(id);
             // id , position, desnickname
             Designer des = new Designer();
+            BigDecimal zero = new BigDecimal(0);
+            
             if(user.getRoles().equals("ROLE_USER")){ // 일반 회원이 미용사로 신청할 경우
                 user.setRoles("ROLE_DES"); // user 권한 변경
                 userService.modifyRole(id);
                 des.setId(user.getId());
                 des.setDesNickname(desNickname);
-                des.setPosition(position);
+                des.setPosition(position);	
+                des.setEmail(user.getEmail());
+                des.setTel(user.getTel());
+                des.setRole(user.getRoles());
+                des.setName(user.getName());
+                des.setStar(zero);
+                des.setReviewCnt(0);
+                des.setBookmarkCnt(0);
+                des.setName(user.getName());
             }else { // ROLE_SHOP 권한을 가진 사람이 신청할경우
                 des.setId(user.getId());
+                des.setName(user.getName());
                 des.setDesNickname(desNickname);
                 des.setPosition(position);
-            }
-            designerService.desreg(des, file);
+                des.setEmail(user.getEmail());
+                des.setTel(user.getTel());
+                des.setRole(user.getRoles());
+                des.setStar(zero);
+                des.setReviewCnt(0);
+                des.setBookmarkCnt(0);
+                des.setName(user.getName());
 
-            return new ResponseEntity<Boolean>(true, HttpStatus.OK);
+            }
+            Designer des1= designerService.desreg(des, file);
+
+            return new ResponseEntity<Designer>(des1, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
-            return new ResponseEntity<Boolean>(false,HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Designer>(HttpStatus.BAD_REQUEST);
         }
 
     }

@@ -21,9 +21,14 @@ import com.kosta.catdog.entity.QReservation;
 import com.kosta.catdog.entity.QReview;
 import com.kosta.catdog.entity.QShop;
 import com.kosta.catdog.entity.QUser;
+import com.kosta.catdog.entity.QUserGallery;
+import com.kosta.catdog.entity.QUserGalleryComment;
 import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.entity.Review;
+import com.kosta.catdog.entity.Shop;
 import com.kosta.catdog.entity.User;
+import com.kosta.catdog.entity.UserGallery;
+import com.kosta.catdog.entity.UserGalleryComment;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
@@ -53,6 +58,12 @@ public class UserDslRepository {
 				.where(user.nickname.eq(nickname)).fetchOne();
 	}
 
+	public User findByNum(Integer num) {
+		QUser user = QUser.user;
+		return jpaQueryFactory.selectFrom(user)
+				.where(user.num.eq(num)).fetchOne();
+	}
+
 	public User findById_AndPassword(String id, String password){
 		QUser user = QUser.user;
 		return jpaQueryFactory.selectFrom(user)
@@ -70,7 +81,7 @@ public class UserDslRepository {
 	@Transactional
 	public void modifyNickname(Integer num, String nickname) {
 		QUser user = QUser.user;
-		jpaQueryFactory.update(user)
+		 jpaQueryFactory.update(user)
 			.set(user.nickname, nickname)
 			.where(user.num.eq(num))
 			.execute();
@@ -99,7 +110,7 @@ public class UserDslRepository {
 		entityManager.flush();
 		entityManager.clear();
 	}
-	public List<Designer> findDesListBySId(Integer sId) {
+	public List<Designer> findDesListBySId(String sId) {
 		QDesigner des = QDesigner.designer;
 		 return	jpaQueryFactory.selectFrom(des)
 				.where(des.sId.eq(sId))
@@ -134,7 +145,12 @@ public class UserDslRepository {
 		entityManager.clear();
 	}
 
-
+	public UserGallery findUserGallery(Integer num) {
+		QUserGallery userGallery = QUserGallery.userGallery;
+		return jpaQueryFactory.selectFrom(userGallery)
+				.where(userGallery.num.eq(num))
+				.fetchOne();				
+	}
 
 
 	// DesGallery
@@ -149,13 +165,14 @@ public class UserDslRepository {
 		QDesGallery desGallery = QDesGallery.desGallery;
 		QDesigner designer = QDesigner.designer;
 		QShop shop = QShop.shop;
+		
 		return jpaQueryFactory.selectFrom(desGallery)
 				.from(desGallery)
 				.join(designer)
 				.on(desGallery.desId.eq(designer.id))
 				.join(shop)
 				.on(designer.sId.eq(shop.sId))
-				.where(shop.num.eq(shop.num))
+				.where(shop.num.eq(num))
 				.orderBy(desGallery.date.desc())
 				.offset(offset)
 				.limit(limit)
@@ -297,27 +314,36 @@ public class UserDslRepository {
 	//리뷰 수정시 평균별점 반영
 	@Transactional
 	public void UpdateStarByDesNumAndReviewStarModi(Integer desNum, Review review) {
-		 QDesigner designer = QDesigner.designer;
-		    
-		    BigDecimal desStar = jpaQueryFactory.select(designer.star)
-		            .from(designer)
-		            .where(designer.num.eq(desNum))
-		            .fetchOne();
-		    Integer revCnt = jpaQueryFactory.select(designer.reviewCnt)
-		            .from(designer)
-		            .where(designer.num.eq(desNum))
-		            .fetchOne();
-		    
-		    desStar = (desStar.multiply(BigDecimal.valueOf(revCnt)).subtract(BigDecimal.valueOf(review.getStar())))
-		            .divide(BigDecimal.valueOf(revCnt), 2, RoundingMode.HALF_UP);
-		    
-		    // 이제 변경된 별점 및 리뷰 카운트를 데이터베이스에 저장해야 합니다.
-		    // (디자이너에 대한 속성인 star 및 reviewCnt가 있는 가정하에 작성된 코드입니다)
-		    jpaQueryFactory.update(designer)
-		            .set(designer.star, desStar)
-		            .set(designer.reviewCnt, revCnt)
-		            .where(designer.num.eq(desNum))
-		            .execute();
+		QDesigner designer = QDesigner.designer;
+		QReview review1 = QReview.review;
+			
+		Designer des = jpaQueryFactory.selectFrom(designer).where(designer.num.eq(desNum)).fetchOne();
+		
+		List<Review> allReviews = jpaQueryFactory.selectFrom(review1)
+                .where(review1.desId.eq(des.getId())).fetch();
+		
+
+	    // 리뷰의 모든 별점을 더한 값
+	    BigDecimal totalStars = allReviews.stream()
+	            .map(reviewInList -> BigDecimal.valueOf(reviewInList.getStar()))
+	            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+	    // 새로운 리뷰의 별점을 추가
+	    totalStars = totalStars.add(BigDecimal.valueOf(review.getStar()));
+
+	    // 리뷰의 개수
+	    int reviewCount = allReviews.size() + 1;
+	    
+	    // 평균 별점 계산
+	    BigDecimal averageStars = totalStars.divide(BigDecimal.valueOf(reviewCount), 2, RoundingMode.HALF_UP);
+
+	    // 디자이너 업데이트
+	    jpaQueryFactory.update(designer)
+	            .set(designer.star, averageStars)
+	            .set(designer.reviewCnt, reviewCount)
+	            .where(designer.num.eq(desNum))
+	            .execute();
+
 	}
 	
 	
@@ -325,25 +351,24 @@ public class UserDslRepository {
 	
 	public Designer FindDesignerById(String desId) {
 		QDesigner designer = QDesigner.designer;
-		
 		return  jpaQueryFactory.selectFrom(designer)
 				.where(designer.id.eq(desId))
 				.fetchOne();
-			
-		
-		
 	}
 	
 	
 	
-	// Shop
-//	@Transactional
-//	public void addDesignerToShop(String id, String position) {
-//		QDesigner designer = QDesigner.designer;
-//		QShop shop = QShop.shop;
-//		jpaQueryFactory.update(designer)
-//			.set(designer.sId, sId)
-//	}
+
+	
+	//shop
+	public Shop FindShopBySid(String sid) {
+		QShop shop =QShop.shop;
+		return jpaQueryFactory.selectFrom(shop)
+				.where(shop.sId.eq(sid))
+				.fetchOne();
+
+	}
+	
 	
 	//review by resnum
 	public Review FindReviewByResNum(Integer resNum) {
@@ -353,5 +378,26 @@ public class UserDslRepository {
 				.fetchOne();
 	}
 
+	
+	//pet 
+	public Pet FindPetByuserIdAndPetName(Integer userNum,String petName) {
+		QUser user = QUser.user;
+		QPet pet =  QPet.pet;
+		return jpaQueryFactory.selectFrom(pet)
+				.where(pet.userNum.eq(userNum).and(pet.name.eq(petName)))
+				.fetchOne();
+				
+	}
+	
+	// UserGalleryComment
+	public List<UserGalleryComment> findComment(Integer num) {
+		QUserGallery userGallery = QUserGallery.userGallery;
+		QUserGalleryComment userGalleryComment = QUserGalleryComment.userGalleryComment;
+		return jpaQueryFactory.selectFrom(userGalleryComment)
+				.join(userGallery)
+				.on(userGallery.num.eq(userGalleryComment.num))
+				.where(userGallery.num.eq(userGalleryComment.num))
+				.fetch();
+	}
 	
 }

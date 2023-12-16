@@ -6,5 +6,4 @@ import com.kosta.catdog.entity.Reservation;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Integer> {
 	Reservation findReservationByNum(Integer num);
-
 }

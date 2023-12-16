@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kosta.catdog.entity.Pet;
+import com.kosta.catdog.repository.PetRepository;
 import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.service.PetService;
 
@@ -26,6 +27,8 @@ public class PetController {
 	private PetService petService;
 	@Autowired 
 	private UserDslRepository userDslRepository;
+	@Autowired
+	private PetRepository 	petRepository;
 	
 	
 	@PostMapping("/petreg")
@@ -92,6 +95,19 @@ public class PetController {
 		}
 		
 	}
+	// 등록한 반려동물 조회
+		@GetMapping("/petinfobynum")
+		public ResponseEntity<Pet> selectPetByNum(@RequestParam Integer num){
+			Pet pet = petRepository.findById(num).get();
+			
+			try {
+				return new ResponseEntity<Pet> (pet , HttpStatus.OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return new ResponseEntity<Pet> (HttpStatus.BAD_REQUEST);
+			}
+			
+		}
 			
 
 	@PostMapping("/petmodi")

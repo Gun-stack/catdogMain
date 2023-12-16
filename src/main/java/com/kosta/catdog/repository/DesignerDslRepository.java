@@ -26,4 +26,26 @@ public class DesignerDslRepository {
         entityManager.flush();
         entityManager.clear();
     }
+
+    @Transactional
+    public void modifyDesPosition(Designer des){
+        QDesigner qdes = QDesigner.designer;
+        jpaQueryFactory.update(qdes)
+                .set(qdes.position, des.getPosition())
+                .where(qdes.num.eq(des.getNum()))
+                .execute();
+        entityManager.flush();
+        entityManager.clear();
+    }
+
+    @Transactional
+    public void deleteDesigner(Integer num, String sId){
+        QDesigner qdes = QDesigner.designer;
+        jpaQueryFactory.update(qdes)
+                .set(qdes.sId, "0")
+                .where(qdes.sId.eq(sId).and(qdes.num.eq(num)))
+                .execute();
+        entityManager.flush();
+        entityManager.clear();
+    }
 }

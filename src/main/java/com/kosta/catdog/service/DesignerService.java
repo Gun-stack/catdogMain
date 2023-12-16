@@ -27,4 +27,10 @@ public interface DesignerService {
 	// 미용사 등록
 	Designer desreg(Designer des, List<MultipartFile> files) throws Exception;
 
+	// 미용사 조회
+	Designer selectDes(Integer num) throws Exception;
+
+	//미용사 직팩 변경
+	void modipostition(Designer des) throws Exception;
+
 }

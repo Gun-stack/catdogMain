@@ -1,24 +1,26 @@
 package com.kosta.catdog.service;
 
 import java.sql.Date;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.kosta.catdog.entity.UserGalleryComment;
 import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.repository.UserGalleryCommentRepository;
 import com.kosta.catdog.repository.UserGalleryRepository;
 
+@Service
 public class UserGalleryCommentServiceImpl implements UserGalleryCommentService {
+	
 	@Autowired
 	private UserDslRepository userDslRepository;
 	@Autowired
 	private UserGalleryCommentRepository userGalleryCommentRepository;
-	@Autowired
-	private UserGalleryCommentService userGalleryCommentService;
 	@Autowired
 	private UserGalleryRepository userGalleryRepository;
 		

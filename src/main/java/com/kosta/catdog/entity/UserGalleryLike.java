@@ -21,11 +21,11 @@ import lombok.NoArgsConstructor;
 @DynamicInsert
 @DynamicUpdate
 @Builder
-public class DesGalleryLike {
+public class UserGalleryLike {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer	num;
 	@Column	
-	private Integer	desGalNum;
+	private Integer	userGalNum;
 	@Column	
 	private Integer	userNum;
 

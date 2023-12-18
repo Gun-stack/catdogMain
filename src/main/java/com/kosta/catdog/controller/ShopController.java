@@ -63,9 +63,8 @@ public class ShopController {
 
     //샵이미지 등록
 		@PostMapping("/regshopbgimg")
-		public ResponseEntity<Shop> regShopImg(@RequestPart(value="file", required = false) MultipartFile file,
-				@RequestParam("shopNum") Integer num	) {
-				
+		public ResponseEntity<Shop> regShopImg(@RequestPart(value="file", required = false) List<MultipartFile> file,
+				@RequestParam("shopNum") Integer num) {		
 			try {
 					Shop shopInfo = shopRepository.findById(num).get();
 					System.out.println(shopInfo);

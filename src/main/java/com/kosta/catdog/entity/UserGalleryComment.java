@@ -33,6 +33,8 @@ public class UserGalleryComment {
 	@Column
 	private String	userId;
 	@Column
+	private String	userNickname;
+	@Column
 	private String	content;
 	@Column
 	private Date date;

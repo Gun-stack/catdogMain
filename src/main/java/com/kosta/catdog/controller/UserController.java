@@ -1,6 +1,7 @@
 package com.kosta.catdog.controller;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -176,21 +177,22 @@ public class UserController {
 
     //디자이너 등록
     @PostMapping("/desreg")
-    public ResponseEntity<Designer> desreg(@RequestPart(value="file", required = false) List<MultipartFile> file
+    public ResponseEntity<Object> desreg(@RequestPart(value="file", required = false) List<MultipartFile> file
             , @RequestParam("id") String id
             , @RequestParam("desNickname") String desNickname
             , @RequestParam("position") String position) {
         try{
             User user = userService.getUserInfoById(id);
-            // id , position, desnickname
             Designer des = new Designer();
             BigDecimal zero = new BigDecimal(0);
+            Map<String, Object> response = new HashMap<>();
             
             if(user.getRoles().equals("ROLE_USER")){ // 일반 회원이 미용사로 신청할 경우
                 user.setRoles("ROLE_DES"); // user 권한 변경
                 userService.modifyRole(id);
                 des.setId(user.getId());
                 des.setDesNickname(desNickname);
+                des.setSId("0");
                 des.setPosition(position);	
                 des.setEmail(user.getEmail());
                 des.setTel(user.getTel());
@@ -202,6 +204,7 @@ public class UserController {
                 des.setName(user.getName());
             }else { // ROLE_SHOP 권한을 가진 사람이 신청할경우
                 des.setId(user.getId());
+                des.setSId("0");
                 des.setName(user.getName());
                 des.setDesNickname(desNickname);
                 des.setPosition(position);
@@ -215,11 +218,14 @@ public class UserController {
 
             }
             Designer des1= designerService.desreg(des, file);
+            
+            response.put("des", des1);
+            response.put("user", user);
 
-            return new ResponseEntity<Designer>(des1, HttpStatus.OK);
+            return new ResponseEntity<Object>(response, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
-            return new ResponseEntity<Designer>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
 
     }

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.querydsl.core.Tuple;
+
 import javax.servlet.http.HttpServletResponse;
 
 import com.kosta.catdog.service.DesignerService;
@@ -51,6 +52,7 @@ public class ShopController {
 
     //샵사진조회	
 
+
 		@GetMapping("/shopimg/{num}")
 		public void ImageView(@PathVariable Integer num, HttpServletResponse response) {
 			try {
@@ -77,6 +79,7 @@ public class ShopController {
 				}
 					
 		}
+
 
     // 공지사항 등록
     @PostMapping("/regshopnotice")
@@ -346,8 +349,8 @@ public class ShopController {
             // 디자이너 id로 user 테이블에서 같은 id인 정보를 찾고 그 중 권한만 가져오기
             Tuple res = userDslRepository.findDesById(desId);
 
-            String role = res.get(0,String.class);
-            String name = res.get(1,String.class);
+            String role = res.get(0, String.class);
+            String name = res.get(1, String.class);
 
             // 디자이너 정보 출력
             System.out.println("Des Info : " + des);
@@ -355,14 +358,14 @@ public class ShopController {
             System.out.println("Role : " + role);
             System.out.println("name : " + name);
 
-            if(!role.equals("ROLE_DES")){
+            if (role.equals("ROLE_USER")) {  // 유저인 경으
                 throw new Exception("NOT ROLE_DES");
             }
             return new ResponseEntity<>(des, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>( HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -385,14 +388,14 @@ public class ShopController {
 
     // 샵에서 디자이너 삭제
     @PostMapping("/shopoutdes")
-    public void shopoutdes(@RequestParam("num") Integer num , @RequestParam("sId") String sId){
+    public void shopoutdes(@RequestParam("num") Integer num, @RequestParam("sId") String sId) {
         System.out.println("Num : " + num);
         System.out.println("sId : " + sId);
 
-        try{
+        try {
             // 디자이너 테이블에서 사업자 번호가 sId인 회원중 회원 고유 번호가 num인 회원의 sid를 "" 로 만들기
             shopService.deleteDesigner(num, sId);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

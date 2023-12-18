@@ -56,14 +56,19 @@ public class DesController {
 	    public ResponseEntity<Object> DesInfoById(@RequestParam String desId) {
 		 	System.out.println(desId);
 			 try {
-				 Designer des = userDslRepository.FindDesignerById(desId);
-				 Shop shop = userDslRepository.FindShopBySid(des.getSId());
-				 
 				 Map<String, Object> response = new HashMap<>();
+				 Designer des = userDslRepository.FindDesignerById(desId);		
+				 
+				 if(!(des.getSId().equals("")||des.getSId()==null )) {
+				 Shop shop = userDslRepository.FindShopBySid(des.getSId());
 			        response.put("des", des);
 			        response.put("shop", shop);
-				
-				return new ResponseEntity<Object>(response, HttpStatus.OK);
+				 }
+				 else
+				 {
+				    response.put("des", des);
+				 }
+				 return new ResponseEntity<Object>(response, HttpStatus.OK);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);

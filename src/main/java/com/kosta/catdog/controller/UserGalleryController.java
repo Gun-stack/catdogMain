@@ -20,9 +20,14 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kosta.catdog.entity.DesGallery;
+import com.kosta.catdog.entity.DesGalleryLike;
 import com.kosta.catdog.entity.User;
 import com.kosta.catdog.entity.UserGallery;
+import com.kosta.catdog.entity.UserGalleryComment;
+import com.kosta.catdog.entity.UserGalleryLike;
 import com.kosta.catdog.repository.UserDslRepository;
+import com.kosta.catdog.repository.UserGalleryLikeRepository;
 import com.kosta.catdog.repository.UserGalleryRepository;
 import com.kosta.catdog.service.UserGalleryService;
 
@@ -35,6 +40,8 @@ public class UserGalleryController {
 	private  UserGalleryRepository userGalleryRepository;
 	@Autowired
 	private UserGalleryService userGalleryService;	
+	@Autowired
+	private UserGalleryLikeRepository userGalleryLikeRepository;
 	
 	@GetMapping("/usergalview/{num}")
 	public void ImageView(@PathVariable Integer num, HttpServletResponse response) {
@@ -87,13 +94,24 @@ public class UserGalleryController {
 //	}
 	
 	@GetMapping("/usergallerydetail")
-	public ResponseEntity<Object> findUserGallery(@RequestParam("num") Integer num) {
+	public ResponseEntity<Object> findUserGallery(@RequestParam("galNum") Integer galNum ,@RequestParam("userNum") Integer userNum) {
 		try {
-			UserGallery userGallery = userGalleryService.findUserGallery(num);
-			User User = userDslRepository.findById(userGallery.getUserId());
+			UserGallery userGallery = userGalleryService.findUserGallery(galNum);
+			
+			
+			Boolean isLike = userDslRepository.FindIsUserGalLike(galNum,userNum);
+			
+			List<UserGalleryComment> comments = userDslRepository.findComment(galNum);
+			
+			
+			
+			User writer = userDslRepository.findById(userGallery.getUserId());
+			
 			Map<String, Object> response = new HashMap<>();
 		        response.put("userGallery", userGallery);
-		        response.put("user", User);
+		        response.put("writer", writer);
+		        response.put("isLike", isLike);
+		        response.put("comments", comments);	
 			
 			return new ResponseEntity<Object>(response, HttpStatus.OK);
 		} catch(Exception e) {
@@ -144,4 +162,42 @@ public class UserGalleryController {
 //		}
 //		return null;
 //	}
+	
+	@PostMapping("/usergallerylike")
+	public ResponseEntity<Boolean> LikeUserGallery(@RequestParam ("galNum") Integer galNum , @RequestParam ("userNum") Integer userNum ){
+		
+		try {
+			
+		UserGalleryLike userGalleryLike = new UserGalleryLike();
+		userGalleryLike.setUserGalNum(galNum);
+		userGalleryLike.setUserNum(userNum);
+		
+		
+		UserGallery userGal = userGalleryRepository.findById(galNum).get();
+		
+		
+		if(userDslRepository.FindUserGalLike(galNum, userNum)==null) {
+			userGalleryLikeRepository.save(userGalleryLike);
+			userGal.setLikeCnt(userGal.getLikeCnt()+1);
+			userGalleryRepository.save(userGal);
+			return new ResponseEntity<Boolean> (true,HttpStatus.OK);
+			}
+		else {
+			Integer num = userDslRepository.FindUserGalLike(galNum, userNum).getNum();
+			userGalleryLikeRepository.deleteById(num);
+			userGal.setLikeCnt(userGal.getLikeCnt()-1);
+			userGalleryRepository.save(userGal);
+			return new ResponseEntity<Boolean> (false,HttpStatus.OK);
+		}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Boolean> (HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	
+	
+	
 }

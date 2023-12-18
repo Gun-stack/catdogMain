@@ -22,7 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kosta.catdog.entity.DesGallery;
+import com.kosta.catdog.entity.DesGalleryLike;
 import com.kosta.catdog.entity.Designer;
+import com.kosta.catdog.entity.UserGalleryComment;
+import com.kosta.catdog.repository.DesGalleryLikeRepository;
 import com.kosta.catdog.repository.DesGalleryRepository;
 import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.service.DesGalleryService;
@@ -36,6 +39,7 @@ public class DesGalleryController {
 	private DesGalleryRepository desGalleryRepository;
 	@Autowired
 	private DesGalleryService desGalleryService;
+	@Autowired DesGalleryLikeRepository desGalleryLikeRepository;
 	
 	
 	
@@ -101,14 +105,21 @@ public class DesGalleryController {
 	}
 	
 	@GetMapping("/desgallerydetail")
-	public ResponseEntity<Object> findDesGallery(@RequestParam("num") Integer num) {
+	public ResponseEntity<Object> findDesGallery(@RequestParam("galnum") Integer galNum,@RequestParam("usernum") Integer userNum) {
 		try {
-			DesGallery desGallery = desGalleryService.findDesGallery(num);
+			DesGallery desGallery = desGalleryService.findDesGallery(galNum);
 			Designer des = userDslRepository.FindDesignerById(desGallery.getDesId());
+			Boolean isLike = userDslRepository.FindIsDesGalLike(galNum,userNum);
+			
+	
+			
 			 
 			Map<String, Object> response = new HashMap<>();
 		        response.put("desGallery", desGallery);
 		        response.put("designer", des);
+		        response.put("isLike", isLike);
+		        
+		        
 			
 			return new ResponseEntity<Object>(response, HttpStatus.OK);
 		} catch(Exception e) {
@@ -159,4 +170,42 @@ public class DesGalleryController {
 		}
 		return null;
 	}
+	
+	@PostMapping("/desgallerylike")
+	public ResponseEntity<Boolean> LikeDesGallery(@RequestParam ("galNum") Integer galNum , @RequestParam ("userNum") Integer userNum ){
+		
+		try {
+			
+		DesGalleryLike desGalleryLike = new DesGalleryLike();
+		desGalleryLike.setDesGalNum(galNum);
+		desGalleryLike.setUserNum(userNum);
+		
+		DesGallery desGal = desGalleryRepository.findById(galNum).get();
+		
+		
+		if(userDslRepository.FindDesGalLike(galNum, userNum)==null) {
+			desGalleryLikeRepository.save(desGalleryLike);
+			desGal.setLikeCnt(desGal.getLikeCnt()+1);
+			desGalleryRepository.save(desGal);
+			return new ResponseEntity<Boolean> (true,HttpStatus.OK);
+			}
+		else {
+			Integer num = userDslRepository.FindDesGalLike(galNum, userNum).getNum();
+			desGalleryLikeRepository.deleteById(num);
+			desGal.setLikeCnt(desGal.getLikeCnt()-1);
+			desGalleryRepository.save(desGal);
+			return new ResponseEntity<Boolean> (false,HttpStatus.OK);
+			
+		}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Boolean> (HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	
+	
+	
 }

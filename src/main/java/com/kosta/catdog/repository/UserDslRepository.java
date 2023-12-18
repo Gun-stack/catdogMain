@@ -4,19 +4,19 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.EntityManager;
-import com.querydsl.core.Tuple;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kosta.catdog.entity.DesGallery;
+import com.kosta.catdog.entity.DesGalleryLike;
 import com.kosta.catdog.entity.Designer;
 import com.kosta.catdog.entity.Pet;
 import com.kosta.catdog.entity.QDesGallery;
+import com.kosta.catdog.entity.QDesGalleryLike;
 import com.kosta.catdog.entity.QDesigner;
 import com.kosta.catdog.entity.QPet;
 import com.kosta.catdog.entity.QReservation;
@@ -25,12 +25,15 @@ import com.kosta.catdog.entity.QShop;
 import com.kosta.catdog.entity.QUser;
 import com.kosta.catdog.entity.QUserGallery;
 import com.kosta.catdog.entity.QUserGalleryComment;
+import com.kosta.catdog.entity.QUserGalleryLike;
 import com.kosta.catdog.entity.Reservation;
 import com.kosta.catdog.entity.Review;
 import com.kosta.catdog.entity.Shop;
 import com.kosta.catdog.entity.User;
 import com.kosta.catdog.entity.UserGallery;
 import com.kosta.catdog.entity.UserGalleryComment;
+import com.kosta.catdog.entity.UserGalleryLike;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
@@ -404,10 +407,71 @@ public class UserDslRepository {
 	public List<UserGalleryComment> findComment(Integer num) {
 		QUserGallery userGallery = QUserGallery.userGallery;
 		QUserGalleryComment userGalleryComment = QUserGalleryComment.userGalleryComment;
+		
 		return jpaQueryFactory.selectFrom(userGalleryComment)
-				.join(userGallery)
-				.on(userGallery.num.eq(userGalleryComment.num))
-				.where(userGallery.num.eq(userGalleryComment.num))
+				.where(userGalleryComment.galleryNum.eq(num))
 				.fetch();
 	}
+	
+	//desgallery like
+	public DesGalleryLike FindDesGalLike(Integer desGalNum , Integer userNum) {
+		QDesGalleryLike desGalleryLike = QDesGalleryLike.desGalleryLike;
+		
+		DesGalleryLike isLike = jpaQueryFactory.selectFrom(desGalleryLike)
+				.where(desGalleryLike.desGalNum.eq(desGalNum).and(desGalleryLike.userNum.eq(userNum)))
+				.fetchOne();
+		if(isLike==null) {
+			return null;
+		}
+		else {
+			return isLike;
+		}		
+	}
+	
+	//
+	public Boolean FindIsDesGalLike(Integer desGalNum,Integer userNum){
+		QDesGalleryLike desGalleryLike = QDesGalleryLike.desGalleryLike;
+		if(jpaQueryFactory.selectFrom(desGalleryLike)
+				.where(desGalleryLike.desGalNum.eq(desGalNum).and(desGalleryLike.userNum.eq(userNum))).fetch().isEmpty()) {
+			return false;
+		}
+		else {
+		List<DesGalleryLike> isLike = jpaQueryFactory.selectFrom(desGalleryLike)
+				.where(desGalleryLike.desGalNum.eq(desGalNum).and(desGalleryLike.userNum.eq(userNum))).fetch();
+			return true;
+		}
+	}
+	
+	public Boolean FindIsUserGalLike(Integer userGalNum,Integer userNum){
+		QUserGalleryLike userGalleryLike = QUserGalleryLike.userGalleryLike;
+		if(jpaQueryFactory.selectFrom(userGalleryLike)
+				.where(userGalleryLike.userGalNum.eq(userGalNum).and(userGalleryLike.userNum.eq(userNum))).fetch().isEmpty()) {
+			return false;
+		}
+		else {
+		List<UserGalleryLike> isLike = jpaQueryFactory.selectFrom(userGalleryLike)
+				.where(userGalleryLike.userGalNum.eq(userGalNum).and(userGalleryLike.userNum.eq(userNum))).fetch();
+			return true;
+		}
+	}
+	
+	//usergallery like
+		public UserGalleryLike FindUserGalLike(Integer userGalNum , Integer userNum) {
+			QUserGalleryLike userGalleryLike = QUserGalleryLike.userGalleryLike;
+			
+			UserGalleryLike isLike = jpaQueryFactory.selectFrom(userGalleryLike)
+					.where(userGalleryLike.userGalNum.eq(userGalNum).and(userGalleryLike.userNum.eq(userNum)))
+					.fetchOne();
+			if(isLike==null) {
+				return null;
+			}
+			else {
+				return isLike;
+			}		
+		}
+	
+
+	
+	
+	
 }

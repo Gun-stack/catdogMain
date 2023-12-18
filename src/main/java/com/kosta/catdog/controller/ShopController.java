@@ -30,7 +30,7 @@ import com.kosta.catdog.repository.ShopRepository;
 import com.kosta.catdog.repository.UserDslRepository;
 import com.kosta.catdog.service.ShopService;
 import com.kosta.catdog.service.UserService;
-
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class ShopController {
@@ -52,36 +52,34 @@ public class ShopController {
 
     //샵사진조회	
 
-    @GetMapping("/shopimg/{num}")
-    public void imageView(@PathVariable String num, HttpServletResponse response) {
-        System.out.println("ShopImg/Num!!!");
-        Integer nums = Integer.parseInt(num);
-        try {
-            shopService.fileView(nums, response.getOutputStream());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
+		@GetMapping("/shopimg/{num}")
+		public void ImageView(@PathVariable Integer num, HttpServletResponse response) {
+			try {
+				shopService.fileView(num, response.getOutputStream());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 
     //샵이미지 등록
-    @PostMapping("/regshopbgimg")
-    public ResponseEntity<Shop> regShopImg(@RequestPart(value = "file", required = false) List<MultipartFile> file,
-                                           @RequestParam("shopNum") Integer num) {
-        System.out.println("file" + file);
+		@PostMapping("/regshopbgimg")
+		public ResponseEntity<Shop> regShopImg(@RequestPart(value="file", required = false) List<MultipartFile> file,
+				@RequestParam("shopNum") Integer num) {		
+			try {
+					Shop shopInfo = shopRepository.findById(num).get();
+					System.out.println(shopInfo);
+					Shop shop = shopService.addShopImg(shopInfo, file);
+					
+					return new ResponseEntity<Shop>(shop,HttpStatus.OK);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return new ResponseEntity<Shop>(HttpStatus.BAD_REQUEST);
+				}
+					
+		}
 
-        try {
-            Shop shopInfo = shopRepository.findById(num).get();
-            System.out.println(shopInfo);
-            Shop shop = shopService.addShopImg(shopInfo, file);
-
-            return new ResponseEntity<Shop>(shop, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<Shop>(HttpStatus.BAD_REQUEST);
-        }
-
-    }
 
     // 공지사항 등록
     @PostMapping("/regshopnotice")

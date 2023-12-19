@@ -3,6 +3,7 @@ package com.kosta.catdog.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -77,9 +78,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		http
 				.addFilter(new JwtAuthorizationFilter(authenticationManager(), userDslRepository)) //BasicAuthenticationFilter
 				.authorizeRequests()
-				.antMatchers("/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
-				.antMatchers("/shop/**").access("hasRole('ROLE_USER') or hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
-				.antMatchers("/admin/**").access("hasRole('ROLE_SHOP')") // 로그인 & 권한
+				.antMatchers("/catdog/usermy/shopreg").access("hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
+				.antMatchers("/catdog/usermy/shopregform").access("hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
+				.antMatchers("/catdog/usermy/desmodi").access("hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
 				.anyRequest().permitAll(); // 나머지는 허용
 	}
 

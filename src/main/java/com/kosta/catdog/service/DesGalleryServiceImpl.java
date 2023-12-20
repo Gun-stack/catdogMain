@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +34,12 @@ public class DesGalleryServiceImpl implements DesGalleryService {
 	@Override
 	public DesGallery registerDesGallery(DesGallery desGallery ,MultipartFile file) throws Exception {
 		String fileNums="";
-		Date today = Date.valueOf(LocalDate.now());
+		Timestamp day = Timestamp.valueOf(LocalDateTime.now());
 		desGallery.setDir(uploadDir);
 		desGallery.setName(file.getOriginalFilename());
 		desGallery.setSize(file.getSize());
 		desGallery.setType(file.getContentType());
-		desGallery.setDate(today);
+		desGallery.setDate(day);
 		desGalleryRepository.save(desGallery);
 		File uploadFile= new File(uploadDir+desGallery.getNum());
 		file.transferTo(uploadFile);

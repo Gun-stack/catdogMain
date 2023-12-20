@@ -65,6 +65,14 @@ public class UserDslRepository {
         return jpaQueryFactory.selectFrom(user)
                 .where(user.num.eq(num)).fetchOne();
     }
+    
+    public String findByEmail(String email) {
+    	QUser user = QUser.user;
+    	return jpaQueryFactory.select(user.email)
+    			.from(user)
+    			.where(user.email.eq(email))
+    			.fetchOne();
+    }
 
     public User findById_AndPassword(String id, String password) {
         QUser user = QUser.user;
@@ -78,6 +86,14 @@ public class UserDslRepository {
                 .from(user)
                 .where(user.email.eq(email))
                 .fetchOne();
+    }
+    
+    public String findId(String email) {
+    	QUser user = QUser.user;
+    	return jpaQueryFactory.select(user.id)
+    			.from(user)
+    			.where(user.email.eq(email))
+    			.fetchOne();
     }
 
     @Transactional

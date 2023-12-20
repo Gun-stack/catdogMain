@@ -1,6 +1,8 @@
 package com.kosta.catdog.service;
 
 
+import java.util.Optional;
+
 import com.kosta.catdog.entity.User;
 
 public interface UserService {
@@ -16,9 +18,11 @@ public interface UserService {
 	String isUserIdDuplicate(String id) throws Exception;
 	// 닉네임 중복체크
 	String isNicknameDuplicate(String nickname) throws Exception;
+	// 이메일 중복체크
+	String isEmailDuplicate(String email) throws Exception;
 	// 아이디로 회원정보 가져오기
 	User getUserInfoById(String id) throws Exception;
-	// 아이디 찾기
+	// 계정 찾기
 	String findId(String email) throws Exception;
 	// 비밀번호 찾기
 	User findPassword() throws Exception;

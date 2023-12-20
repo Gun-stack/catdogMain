@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -59,12 +60,19 @@ public class DesGalleryController {
 	public ResponseEntity<DesGallery> registerDesGallery(
 			@RequestParam("content") String content,
 			@RequestPart(value="file", required = false) MultipartFile file,
-			@RequestParam("desId") String desId) {
+			@RequestParam("desId") String desId,
+			@RequestParam("tags") List<String> tags		
+			) {
 		try {
+			System.out.println("태그보여줘"+ tags);
+			String tag = String.join(",", tags);
+			System.out.println("파싱한 태그" + tag);
+			
 			DesGallery desGallery = new DesGallery();
 			desGallery.setContent(content);
 			desGallery.setDesId(desId);
 			desGallery.setLikeCnt(0);
+			desGallery.setTag(tag);
 			
 			desGalleryService.registerDesGallery(desGallery,file);
 			
@@ -79,8 +87,12 @@ public class DesGalleryController {
 	public ResponseEntity<DesGallery> modifyDesGallery(
 			@RequestParam("content") String content,
 			@RequestPart(value="file", required = false) MultipartFile file,
-			@RequestParam("desId") String desId) {
+			@RequestParam("desId") String desId,
+			@RequestParam("tags") List<String> tags		
+			) {
 		try {
+			System.out.println(tags);
+			
 			DesGallery desGallery = new DesGallery();
 			desGallery.setContent(content);
 			desGallery.setDesId(desId);
@@ -131,19 +143,7 @@ public class DesGalleryController {
 		}
 	}
 
-	// 디자이너 갤러리 리스트(메인화면 -> 갤러리 구경하기, 한번에 9개씩 호출)
-	@GetMapping("/desgallery")
-	public Slice<DesGallery> desGalleryListMainPage(@RequestParam("page") Integer page,
-			@RequestParam("size") Integer size) {
-		try {
-			Sort sort = Sort.by("date").descending();
-			PageRequest pageRequest = PageRequest.of(page, size, sort);
-			return desGalleryRepository.findAll(pageRequest);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return null;		
-	}	
+	
 	
 	
 	
@@ -200,27 +200,40 @@ public class DesGalleryController {
 			return new ResponseEntity<Boolean> (false,HttpStatus.OK);
 			
 		}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Boolean> (HttpStatus.BAD_REQUEST);
 		}
-		
 	}
-	
-	@GetMapping("/desgallerysearch")
-	public Slice<DesGallery> desGallerySearchList(@RequestParam("page") Integer page, @RequestParam("size") Integer size, @RequestParam("search") String search) {
-		try {
-			Sort sort = Sort.by("date").descending();
-			PageRequest pageRequest = PageRequest.of(page, size, sort);
-			
-//			return desGalleryRepository.findByTagContainingIgnoreCase(search, pageRequest);
-			
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+	// 디자이너 갤러리 리스트(메인화면 -> 갤러리 구경하기, 한번에 9개씩 호출)
+		@GetMapping("/desgallery")
+		public Slice<DesGallery> desGalleryListMainPage(@RequestParam("page") Integer page,
+				@RequestParam("size") Integer size) {
+			try {
+				Sort sort = Sort.by("date").descending();
+				PageRequest pageRequest = PageRequest.of(page, size, sort);
+				return desGalleryRepository.findAll(pageRequest);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+			return null;		
+		}	
+		@GetMapping("/desgallerysearch")
+	    public Slice<DesGallery> desGallerySearchList(@RequestParam("page") Integer page, 	
+	                                                  @RequestParam("size") Integer size,
+	                                                  @RequestParam("search") String search) {
+	        try {
+	        	if(search == null) {
+	        		return null;
+	        	}
+	            Sort sort = Sort.by("date").descending();
+	            Pageable pageable = PageRequest.of(page, size, sort);	
+	            return desGalleryRepository.findByTagContainingIgnoreCase(search, pageable);
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return null;
+	    }
 	
 	
 }

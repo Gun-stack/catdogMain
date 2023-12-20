@@ -287,7 +287,54 @@ public class UserDslRepository {
         return avgStarCount
                 ;
     }
+    
+    
+    
+    
+    
+    //리뷰등록시 샵의 평균별점
+    @Transactional
+    public void updateStarBySId(String sId) {
+        QDesigner designer = QDesigner.designer;
+        QShop shop = QShop.shop;
+        QReview review = QReview.review;
 
+        Long reviewCnt = jpaQueryFactory
+                .select(review)
+                .from(review)
+                .join(designer).on(review.desId.eq(designer.id))
+                .join(shop).on(designer.sId.eq(shop.sId))
+                .where(shop.sId.eq(sId))
+                .fetchCount();
+
+        System.out.println("리뷰카운트 " + reviewCnt);
+
+        if (reviewCnt != 0) {
+            List<Integer> starList = jpaQueryFactory
+                    .select(review.star)
+                    .from(review)
+                    .join(designer).on(review.desId.eq(designer.id))
+                    .join(shop).on(designer.sId.eq(shop.sId))
+                    .where(shop.sId.eq(sId))
+                    .fetch();
+
+            System.out.println(starList);
+
+            if (!starList.isEmpty()) {
+                int sum = starList.stream().mapToInt(Integer::intValue).sum();
+                BigDecimal shopStar = BigDecimal.valueOf(sum).divide(BigDecimal.valueOf(reviewCnt), 2, RoundingMode.HALF_UP);
+                jpaQueryFactory.update(shop).set(shop.star, shopStar).where(shop.sId.eq(sId)).execute();
+            } else {
+                System.out.println("별 목록이 비어 있음");
+                // 별점을 계산할 별이 없는 경우 처리
+            }
+        } else {
+            System.out.println("리뷰 카운트가 0입니다");
+            // 리뷰가 없는 경우 처리
+        }
+    }
+    
+    
     //리뷰 등록시 평균별점
     @Transactional
     public void UpdateStarByDesNumAndReviewStar(Integer desNum, Review review) {
@@ -297,6 +344,7 @@ public class UserDslRepository {
                 .from(designer)
                 .where(designer.num.eq(desNum))
                 .fetchOne();
+        
         Integer revCnt = jpaQueryFactory.select(designer.reviewCnt)
                 .from(designer)
                 .where(designer.num.eq(desNum))

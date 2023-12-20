@@ -60,12 +60,16 @@ public class ReviewServiceImpl implements ReviewService {
 			review.setAfterImg(fileNums);
 		}
 		// 디자이너 넘버찾기
-		Integer desNum = userDslRepository.FindDesignerById(review.getDesId()).getNum();
-		System.out.println(desNum);
+		Designer des = userDslRepository.FindDesignerById(review.getDesId());
+		Integer desNum = des.getNum();
+		String sId = des.getSId();
 		// 리뷰저장
 		reviewRepository.save(review);
 		// 디자이너 넘버와 리뷰 별점으로 디자이너 별점과 리뷰갯수 올려주기
 		userDslRepository.UpdateStarByDesNumAndReviewStar(desNum, review);
+		
+		userDslRepository.updateStarBySId(sId);
+		
 		// 예약에 리뷰 여부 등록
 		userDslRepository.updateReservationIsReview(review.getResNum());
 		return review;

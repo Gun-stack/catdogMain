@@ -66,12 +66,13 @@ public class UserGalleryCommentController {
 	@PostMapping("/usergallerycommentdelete")
 	public ResponseEntity<Boolean> commentDelete(@RequestParam("commentNum") Integer commentNum) 
 	{
-		
 		try {
 			UserGalleryComment comment  = userGalleryCommentRepository.findById(commentNum).get();
+			
 			UserGallery gallery = userGalleryRepository.findById(comment.getGalleryNum()).get();
 			
 			gallery.setCommentCnt(gallery.getCommentCnt()-1);
+			
 			userGalleryCommentRepository.delete(comment);
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		} catch(Exception e) {

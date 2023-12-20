@@ -1,5 +1,6 @@
 package com.kosta.catdog.config.oauth2;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		OAuth2User oAuth2User = super.loadUser(userRequest);
 		System.out.println("oAuth2User1 : " + oAuth2User);
 		System.out.println("oAuth2User2 : "+ oAuth2User.getAttributes());
-		System.out.println("oAuth2User_nickname : "+ oAuth2User.getAttributes().get("nickname"));
 		return pricessOAuth2User(userRequest, oAuth2User);
 	}
 	
@@ -54,7 +54,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		System.out.println("oAuth2UserInfo : " + oAuth2UserInfo);
 		System.out.println("Provider : "+ oAuth2UserInfo.getProvider());
 		System.out.println("ProviderId : "+oAuth2UserInfo.getProviderId());
-		System.out.println("Nickname : "+oAuth2UserInfo.getNickname());
+//		System.out.println("Nickname : "+oAuth2UserInfo.getNickname());
 //		System.out.println("Name : "+oAuth2UserInfo.getName());
 
 		Optional<User> userOptional =
@@ -72,7 +72,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 //				.name(oAuth2UserInfo.getName())
 				.provider(oAuth2UserInfo.getProvider())
 				.providerId(oAuth2UserInfo.getProviderId())
-				.nickname(oAuth2UserInfo.getNickname())
+//				.nickname(oAuth2UserInfo.getNickname())
 //				.tel(oAuth2UserInfo.getTel())
 //				.password(bCryptPasswordEncoder.encode(oauthPassword))
 				.build();

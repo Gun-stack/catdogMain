@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,15 +93,20 @@ public class UserController {
             return new ResponseEntity<String>( HttpStatus.BAD_REQUEST);
         }
     }
-
-    // 계정 찾기
-    public String findid(User user) {
-        System.out.println("findId!!");
-        System.out.println(user.getTel());
-        System.out.println(user.getPassword());
-        return "";
+    
+    // 이메일 중복 체크
+    @GetMapping("/checkemail")
+    public ResponseEntity<String> checkemail(@RequestParam String email) {
+        System.out.println("email : " + email);
+        try {
+            String res = userService.isEmailDuplicate(email);
+            return new ResponseEntity<String>(res, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);
+        }
     }
-
+    
     // 비밀번호 찾기
     public String findpassword(String id, String password) {
         System.out.println("findPassword!!");

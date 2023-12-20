@@ -1,6 +1,8 @@
 package com.kosta.catdog.service;
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 	@Autowired
 	private DesignerRepository designerRepository;
+	
 	@Override
 	public void join(User user) throws Exception {
 		userRepository.save(user);
@@ -66,6 +69,15 @@ public boolean login(String id, String password) {
 		}
 		else return "success";
 	}
+	
+	@Override
+	public String isEmailDuplicate(String email) throws Exception {
+		String existingEmail = userDslRepository.findByEmail(email);
+		if(existingEmail != null) {
+			return "fail";
+		} else
+			return "success";
+	}
 
 	@Override
 	public User getUserInfoById(String id) throws Exception {
@@ -74,7 +86,7 @@ public boolean login(String id, String password) {
 
 	@Override
 	public String findId(String email) throws Exception {
-		return userDslRepository.findIdByEmail(email);
+		return userDslRepository.findId(email);
 	}
 
 	@Override

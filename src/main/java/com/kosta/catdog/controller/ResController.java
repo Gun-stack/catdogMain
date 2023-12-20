@@ -11,12 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.socket.TextMessage;
 
 import com.kosta.catdog.entity.Designer;
 import com.kosta.catdog.entity.Pet;
@@ -39,6 +39,7 @@ public class ResController {
 	
 	
 	
+	
 	@PostMapping("/completereserve")
 	public	ResponseEntity<String> CompleteReservation(
 			@RequestPart(value="file", required = false) MultipartFile file,
@@ -46,12 +47,15 @@ public class ResController {
 			@RequestParam("num") Integer num
 			){
 		System.out.println("text = " +file);
+		 TextMessage message = new TextMessage("예약이 완료됨");
 		
 		try {
 			Reservation resv = reservationRepository.findById(num).get();
 			resv.setStatus("완료");
 			resv.setCompleteText(text);
 			reservationService.CompleteReservation(resv, file);			
+			
+			
 			return new ResponseEntity<String>("1",HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

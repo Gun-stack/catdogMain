@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kosta.catdog.entity.DesGallery;
 import com.kosta.catdog.entity.DesGalleryLike;
 import com.kosta.catdog.entity.Designer;
-import com.kosta.catdog.entity.UserGalleryComment;
+import com.kosta.catdog.entity.Shop;
 import com.kosta.catdog.repository.DesGalleryLikeRepository;
 import com.kosta.catdog.repository.DesGalleryRepository;
 import com.kosta.catdog.repository.UserDslRepository;
@@ -109,7 +109,9 @@ public class DesGalleryController {
 		try {
 			DesGallery desGallery = desGalleryService.findDesGallery(galNum);
 			Designer des = userDslRepository.FindDesignerById(desGallery.getDesId());
+			Shop shop = userDslRepository.FindShopBySid(des.getSId());
 			Boolean isLike = userDslRepository.FindIsDesGalLike(galNum,userNum);
+			
 			
 	
 			
@@ -118,6 +120,7 @@ public class DesGalleryController {
 		        response.put("desGallery", desGallery);
 		        response.put("designer", des);
 		        response.put("isLike", isLike);
+		        response.put("shop", shop);
 		        
 		        
 			
@@ -205,7 +208,19 @@ public class DesGalleryController {
 		
 	}
 	
-	
+	@GetMapping("/desgallerysearch")
+	public Slice<DesGallery> desGallerySearchList(@RequestParam("page") Integer page, @RequestParam("size") Integer size, @RequestParam("search") String search) {
+		try {
+			Sort sort = Sort.by("date").descending();
+			PageRequest pageRequest = PageRequest.of(page, size, sort);
+			
+//			return desGalleryRepository.findByTagContainingIgnoreCase(search, pageRequest);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	
 }

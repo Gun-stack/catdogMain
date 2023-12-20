@@ -11,11 +11,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kosta.catdog.entity.Designer;
 import com.kosta.catdog.entity.Shop;
+import com.kosta.catdog.entity.User;
 import com.kosta.catdog.repository.DesignerRepository;
 import com.kosta.catdog.repository.ShopRepository;
 import com.kosta.catdog.repository.UserDslRepository;
@@ -132,5 +135,21 @@ public class DesController {
 	public void modipro(String info) {
 		System.out.println("modiProfile !!");
 	}
+	
+	 @PostMapping("/modidesinfo")
+	    public ResponseEntity<Designer> modinickname(@RequestParam Integer num,@RequestParam String info,@RequestParam String workTime ) {
+		 	Designer des =  designerRepository.findById(num).get();
+		 	des.setInfo(info);
+		 	des.setWorkTime(workTime);
+
+		 	designerRepository.save(des);
+		 
+	        try{
+	            return new ResponseEntity<Designer>(des, HttpStatus.OK);
+	        } catch(Exception e){
+	            e.printStackTrace();
+	            return new ResponseEntity<Designer>( HttpStatus.BAD_REQUEST);
+	        }
+	    }
 
 }

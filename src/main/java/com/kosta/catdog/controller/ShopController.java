@@ -219,6 +219,7 @@ public class ShopController {
         // 사업자 번호 입력 받기
 
 
+    	BigDecimal zero = new BigDecimal(0);
         try {
             Shop shop = new Shop();
             shop.setId(id);
@@ -229,6 +230,7 @@ public class ShopController {
             shop.setLat(latitude);
             shop.setLon(longitude);
             shop.setId(id);
+            shop.setStar(zero);
 
 
             if (file != null && !file.isEmpty()) {

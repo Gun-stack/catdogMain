@@ -110,7 +110,7 @@ public class ResController {
 	@GetMapping("/reservedetail")
 	public ResponseEntity<Object> findPetByResvNum(@RequestParam("num") Integer num) {
 		try {
-			Reservation resv =reservationRepository.findById(num).get();
+			Reservation resv =reservationRepository.findById(num).get();	
 			User user = userDslRepository.findById(resv.getUserId());
 			Pet pet = userDslRepository.FindPetByuserIdAndPetName(user.getNum(), resv.getPetName());
 			Designer des = userDslRepository.FindDesignerById(resv.getDesId());

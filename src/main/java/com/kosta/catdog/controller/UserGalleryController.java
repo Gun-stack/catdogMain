@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -20,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.kosta.catdog.entity.DesGallery;
-import com.kosta.catdog.entity.DesGalleryLike;
 import com.kosta.catdog.entity.User;
 import com.kosta.catdog.entity.UserGallery;
 import com.kosta.catdog.entity.UserGalleryComment;
@@ -58,13 +57,17 @@ public class UserGalleryController {
 	public ResponseEntity<UserGallery> registerUserGallery(
 			@RequestParam("content") String content,
 			@RequestPart(value="file", required = false) MultipartFile file,
-			@RequestParam("userId") String UserId) {
+			@RequestParam("userId") String UserId,
+			@RequestParam("tags") List<String> tags	
+			) {
 		try {
+			String tag = String.join(",", tags);
 			UserGallery userGallery = new UserGallery();
 			userGallery.setContent(content);
 			userGallery.setUserId(UserId);
 			userGallery.setLikeCnt(0);
 			userGallery.setCommentCnt(0);
+			userGallery.setTag(tag);
 			userGalleryService.registerUserGallery(userGallery,file);
 			return new ResponseEntity<UserGallery>(userGallery, HttpStatus.OK);
 		} catch(Exception e) {
@@ -196,6 +199,23 @@ public class UserGalleryController {
 		}
 		
 	}
+	
+	@GetMapping("/usergallerysearch")
+    public Slice<UserGallery> userGallerySearchList(@RequestParam("page") Integer page, 	
+                                                  @RequestParam("size") Integer size,
+                                                  @RequestParam("search") String search) {
+        try {
+        	if(search == null) {
+        		return null;
+        	}
+            Sort sort = Sort.by("date").descending();
+            Pageable pageable = PageRequest.of(page, size, sort);	
+            return userGalleryRepository.findByTagContainingIgnoreCase(search, pageable);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 	
 	
 	

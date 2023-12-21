@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kosta.catdog.dto.LoginRequestDto;
 import com.kosta.catdog.entity.DesGallery;
 import com.kosta.catdog.entity.DesGalleryLike;
 import com.kosta.catdog.entity.Designer;
@@ -79,6 +80,9 @@ public class UserDslRepository {
 
     public User findById_AndPassword(String id, String password) {
         QUser user = QUser.user;
+        
+        System.out.println(id);
+        System.out.println(password);
         return jpaQueryFactory.selectFrom(user)
                 .where(user.id.eq(id).and(user.password.eq(password))).fetchOne();
     }
@@ -212,7 +216,8 @@ public class UserDslRepository {
                 .limit(limit)
                 .fetch();
     }
-
+    
+  
     // Review
     public Review findReview(Integer num) {
         QReview review = QReview.review;

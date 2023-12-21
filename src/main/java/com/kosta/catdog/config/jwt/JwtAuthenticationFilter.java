@@ -61,7 +61,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		
 			Authentication authentication = authenticationManager.authenticate(authenticationToken);
 			PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
-			System.out.println("UserName0 :" + principalDetails.getUser().getName());
+			System.out.println("UserName0 :" + principalDetails.getUser().getPassword());
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("application/json;charset=UTF-8");
 			return authentication;
@@ -107,7 +107,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	    response.setContentType("application/json;charset=UTF-8");
 
 	    // 예외의 유형을 확인하여 인증 실패의 원인을 결정합니다.
-	    if (failed instanceof BadCredentialsException) {
+	    if (failed instanceof BadCredentialsException) {	
 	        // 제공된 자격 증명이 잘못되었습니다.
 	        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 	        response.getWriter().write("아이디가 없습니다.");

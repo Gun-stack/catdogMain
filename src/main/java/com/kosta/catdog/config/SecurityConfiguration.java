@@ -57,9 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 			.httpBasic().disable()  // httpBasic은 header에 username, password를 암호화하지 않은 상태로 주고 받는다. 이를 사용하지 않겠다.
 			.addFilter(new JwtAuthenticationFilter(authenticationManager())); // UsernamePasswordAuthenticationFilter
 
-
 		System.out.println("SecurityConfiguration 소셜 로그인 =================");
-
 		//oauth2Login
 		http
 				.oauth2Login()

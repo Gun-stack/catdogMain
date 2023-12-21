@@ -11,6 +11,7 @@ import com.kosta.catdog.repository.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -38,6 +39,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 									FilterChain chain) throws IOException, ServletException {
 		System.out.println("JwtAuthorizationFilter doFilterInternal ===========");
 		String header = request.getHeader(JwtProperties.HEADER_STRING);
+//		String uri = request.getRequestURI(); // uri  만 가져오기
+//		System.out.println("Uri : " + uri);
+
 		System.out.println("header Authrization : " +header);
 		
 		if(header==null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) {
@@ -54,6 +58,25 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 			
 			User user = userDslRepository.findById(id);
 			PrincipalDetails principalDetails = new PrincipalDetails(user);
+//			if(uri.contains("/catdog/usermy/shopreg")){
+//				if(!(principalDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_DES"))||
+//						principalDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SHOP")))){
+//				response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"권한 없음");
+//				return;
+//				}
+//			} else if(uri.contains("/catdog/usermy/shopregform")){
+//				if(!(principalDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_DES"))||
+//						principalDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SHOP")))){
+//					response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"권한 없음");
+//					return;
+//				}
+//			} else if (uri.contains("desmodi")){
+//				if(!(principalDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_DES"))||
+//						principalDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SHOP")))){
+//					response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"권한 없음");
+//					return;
+//				}
+//			}
 			Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetails, null, principalDetails.getAuthorities());
 			
 			SecurityContextHolder.getContext().setAuthentication(authentication);

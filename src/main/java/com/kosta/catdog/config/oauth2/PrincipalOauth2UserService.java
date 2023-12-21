@@ -54,32 +54,34 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 		System.out.println("oAuth2UserInfo : " + oAuth2UserInfo);
 		System.out.println("Provider : "+ oAuth2UserInfo.getProvider());
 		System.out.println("ProviderId : "+oAuth2UserInfo.getProviderId());
-//		System.out.println("Nickname : "+oAuth2UserInfo.getNickname());
+		System.out.println("Nickname : "+oAuth2UserInfo.getNickname());
 //		System.out.println("Name : "+oAuth2UserInfo.getName());
 
 		Optional<User> userOptional =
 				userRepository.findByProviderAndProviderId(oAuth2UserInfo.getProvider(), oAuth2UserInfo.getProviderId());
 		User user = null;
 		if(userOptional.isPresent()) { //이미 가입되어 있으면 update
+			System.out.println("유저 정보 있을 경우");
 			user = userOptional.get();
 			user.setEmail(oAuth2UserInfo.getEmail());
 			userRepository.save(user);
-		} else {  //가입되어있지 않으면 insert
+		}
+		else {  //가입되어있지 않으면 insert
+			System.out.println("");
 			user = User.builder().id(oAuth2UserInfo.getProvider()+"_"+oAuth2UserInfo.getProviderId())
 				.email(oAuth2UserInfo.getEmail())
 				.roles("ROLE_USER")
 				.nickname(oAuth2UserInfo.getNickname())
-//				.name(oAuth2UserInfo.getName())
 				.provider(oAuth2UserInfo.getProvider())
 				.providerId(oAuth2UserInfo.getProviderId())
-//				.nickname(oAuth2UserInfo.getNickname())
-//				.tel(oAuth2UserInfo.getTel())
-//				.password(bCryptPasswordEncoder.encode(oauthPassword))
+				.nickname(oAuth2UserInfo.getNickname())
 				.build();
 			System.out.println(user);
-			userRepository.save(user);
+//			userRepository.save(user);
 		}
-		
+
+
+
 		return new PrincipalDetails(user, oAuth2User.getAttributes());
 	}
 }

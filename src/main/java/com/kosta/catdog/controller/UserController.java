@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.kosta.catdog.dto.LoginRequestDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -48,9 +49,10 @@ public class UserController {
     public ResponseEntity<User> user(Authentication authentication) {
         System.out.println("User Controller ===========");
         PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println("User Id  : " + principalDetails.getUser().getId());
-        System.out.println("User Nickname : " + principalDetails.getUser().getNickname());
-        System.out.println("User Role : " + principalDetails.getUser().getRoles());
+        System.out.println("principalDetails : " + principalDetails);
+//        System.out.println("User Id  : " + principalDetails.getUser().getId());
+//        System.out.println("User Nickname : " + principalDetails.getUser().getNickname());
+//        System.out.println("User Role : " + principalDetails.getUser().getRoles());
         return new ResponseEntity<User>(principalDetails.getUser(), HttpStatus.OK);
     }
 
@@ -177,8 +179,13 @@ public class UserController {
     }
 
     // 회원 탈퇴
-    public void exit(String id, String password) {
+    @PostMapping("/exit")
+    public void exit(@RequestBody LoginRequestDto dto) {
         System.out.println("EXIT !!");
+        System.out.println("Id : " + dto.getId());
+        System.out.println("Password : " + dto.getPassword());
+        User user =userDslRepository.findById_AndPassword(dto.getId(), dto.getPassword());
+        System.out.println("Exit User Data : " + user);
     }
 
     //디자이너 등록
@@ -235,5 +242,4 @@ public class UserController {
         }
 
     }
-
 }

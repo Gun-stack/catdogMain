@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kosta.catdog.config.auth.PrincipalDetails;
+import com.kosta.catdog.dto.LoginRequestDto;
 import com.kosta.catdog.entity.Designer;
 import com.kosta.catdog.entity.User;
 import com.kosta.catdog.repository.UserDslRepository;
@@ -61,7 +62,10 @@ public class UserController {
     @PostMapping("/userjoin")
     public String join(@RequestBody User user) {
         try {
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        	System.out.println(user.getPassword().trim());
+        	String encodePassword = bCryptPasswordEncoder.encode(user.getPassword().trim());
+        	System.out.println(encodePassword);
+            user.setPassword(encodePassword);
             userService.join(user);
             return "joinsuccess";
         } catch (Exception e) {
@@ -162,7 +166,6 @@ public class UserController {
 //        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         String password = bCryptPasswordEncoder.encode(requestBody.get("password").toString());
 
-
         System.out.println("Num : " + num);
         System.out.println("password : " + password);
 
@@ -187,6 +190,27 @@ public class UserController {
         User user =userDslRepository.findById_AndPassword(dto.getId(), dto.getPassword());
         System.out.println("Exit User Data : " + user);
     }
+    
+    //비밀번호 체크
+    @PostMapping("/ispassword")
+    public ResponseEntity<Boolean> isPass(@RequestBody LoginRequestDto dto, Authentication authentication){
+    	try {
+    		//입력한 패스워드
+    		String password = bCryptPasswordEncoder.encode(dto.getPassword());
+    		
+    		//dto와 토큰으로 현재 유저정보를 찾아옴 
+    		User user = ((PrincipalDetails)authentication.getPrincipal()).getUser();
+    		
+    		System.out.println(bCryptPasswordEncoder.matches(dto.getPassword(), user.getPassword()));
+    		Boolean isPass = bCryptPasswordEncoder.matches(dto.getPassword(), user.getPassword());
+    		
+    		 return new ResponseEntity<Boolean> (isPass,HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<Boolean> (HttpStatus.BAD_REQUEST);
+		}
+    	
+    } 
 
     //디자이너 등록
     @PostMapping("/desreg")

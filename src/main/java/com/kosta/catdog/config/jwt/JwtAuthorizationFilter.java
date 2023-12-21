@@ -54,10 +54,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter{
 		// 토큰 검증
 		String id = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token).getClaim("id").asString();
 		System.out.println(" Id : " + id );
-		
 		if(id!=null) {
-			User user = userDslRepository.findById(id);
 			
+			User user = userDslRepository.findById(id);
 			PrincipalDetails principalDetails = new PrincipalDetails(user);
 //			if(uri.contains("/catdog/usermy/shopreg")){
 //				if(!(principalDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_DES"))||

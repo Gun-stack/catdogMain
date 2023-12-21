@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +33,12 @@ public class UserGalleryServiceImpl implements UserGalleryService {
 	public void registerUserGallery(UserGallery userGallery ,MultipartFile file) throws Exception {
 		String dir = "c:/kkw/upload/usergallery/";
 		String fileNums="";
-		Date today = Date.valueOf(LocalDate.now());
+		Timestamp day = Timestamp.valueOf(LocalDateTime.now());
 		userGallery.setDir(dir);
 		userGallery.setName(file.getOriginalFilename());
 		userGallery.setSize(file.getSize());
 		userGallery.setType(file.getContentType());
-		userGallery.setDate(today);
+		userGallery.setDate(day);
 		userGalleryRepository.save(userGallery);
 		File uploadFile= new File(dir+userGallery.getNum());
 		file.transferTo(uploadFile);

@@ -124,18 +124,12 @@ public class DesGalleryController {
 			Shop shop = userDslRepository.FindShopBySid(des.getSId());
 			Boolean isLike = userDslRepository.FindIsDesGalLike(galNum,userNum);
 			
-			
-	
-			
-			 
 			Map<String, Object> response = new HashMap<>();
 		        response.put("desGallery", desGallery);
 		        response.put("designer", des);
 		        response.put("isLike", isLike);
 		        response.put("shop", shop);
 		        
-		        
-			
 			return new ResponseEntity<Object>(response, HttpStatus.OK);
 		} catch(Exception e) {
 			e.printStackTrace();

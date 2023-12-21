@@ -1,5 +1,6 @@
 package com.kosta.catdog.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +44,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		return new BCryptPasswordEncoder();
 	}
 
+//	@Bean
+//	public ObjectMapper getObjectMapper(){
+//		return new ObjectMapper();
+//	}
+
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 
@@ -69,7 +75,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 				.and()
 				.userInfoEndpoint().userService(principalOauth2UserService)  // 회원 정보 처리
 				.and()
-				.successHandler(oAuth2LoginSuccessHandler);
+				.successHandler(oAuth2LoginSuccessHandler)
+				.failureHandler(null);
 
 
 		System.out.println("SecurityConfiguration Role =================");
@@ -78,9 +85,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		http
 				.addFilter(new JwtAuthorizationFilter(authenticationManager(), userDslRepository)) //BasicAuthenticationFilter
 				.authorizeRequests()
-				.antMatchers("/catdog/usermy/shopreg").access("hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
-				.antMatchers("/catdog/usermy/shopregform").access("hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
-				.antMatchers("/catdog/usermy/desmodi").access("hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
+//				.antMatchers("/catdog/usermy/shopreg").access("hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
+//				.antMatchers("/catdog/usermy/shopregform").access("hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
+//				.antMatchers("/catdog/usermy/desmodi").access("hasRole('ROLE_DES') or hasRole('ROLE_SHOP')")
 				.anyRequest().permitAll(); // 나머지는 허용
 	}
 

@@ -41,62 +41,86 @@ public class MailController {
 	@Autowired
 	UserDslRepository userDslRepository;
 	
-		// 임시 비밀번호 전송
-		@PostMapping("/temppasswordemail")
-		public void sendTempPasswordEmail(@RequestParam String id, @RequestParam String email) {
-			try {
-				User user = userDslRepository.findById_AndEmail(id, email);
-				String userEmail = user.getEmail();
-				
-				Random random = new Random();
-				Integer tempPassword = random.nextInt(1000000);
-								
-				user.setPassword(bCryptPasswordEncoder.encode(tempPassword.toString()));
-				userRepository.save(user);				
-				
-				NotificationEmail notiEmail = new NotificationEmail(userEmail, "안녕하세요. 댕냥꽁냥입니다.", "임시 비밀번호를 확인해주세요. " + tempPassword);
-				System.out.println(notiEmail);
-				mailService.sendMail(notiEmail);	
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
+	// 임시 비밀번호 전송
+	@PostMapping("/temppasswordemail")
+    public ResponseEntity<String> sendTempPasswordEmail(@RequestParam String id, @RequestParam String email) {
+        try {
+            User user = userDslRepository.findById_AndEmail(id, email);
+            
+            if (user == null) {
+            	System.out.println("사용자를 찾을 수 없습니다.");
+                return new ResponseEntity<>("사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+            }
+
+            String userEmail = user.getEmail();
+            
+            Random random = new Random();
+            Integer tempPassword = random.nextInt(1000000);
+
+            user.setPassword(bCryptPasswordEncoder.encode(tempPassword.toString()));
+            userRepository.save(user);
+
+            NotificationEmail notiEmail = new NotificationEmail(userEmail, "안녕하세요. 댕냥꽁냥입니다.", "임시 비밀번호를 확인해주세요. " + tempPassword);
+            System.out.println(notiEmail);
+            mailService.sendMail(notiEmail);
+
+            System.out.println("이메일이 성공적으로 전송되었습니다.");
+            return new ResponseEntity<>("이메일이 성공적으로 전송되었습니다.", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("서버 오류가 발생했습니다.");
+            return new ResponseEntity<>("서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 	
 	// 계정 찾기 아이디 전송
 	@GetMapping("/findid")
-    public void findid(@RequestParam String email) {
-    	try {
-    		String id = userService.findId(email);
-    		System.out.println(id);
-    		if(id != null) {
-    			NotificationEmail notiEmail = new NotificationEmail(email, "안녕하세요. 댕냥꽁냥입니다.", "아이디를 확인해주세요. " + id);
-    			System.out.println(notiEmail);
-    			mailService.sendMail(notiEmail);    			
-    		} else {
-    			System.out.println("해당 ID가 DB에 없습니다.");
-    		}
-    	} catch(Exception e) {
-    		e.printStackTrace();
-    	}
-    }	
-		
-		// 회원가입 이메일 중복 검사 및 인증 번호 전송
-		@GetMapping("/verify")
-		public Integer sendVerificationCode(@RequestParam String email) {
-			Random random = new Random();
-			Integer verificationCode = random.nextInt(1000000);
-			Optional<User> optionalUser = userRepository.findByEmail(email);
-			try {
-				if(optionalUser.isPresent()) {
-					System.out.println("중복되는 ID가 있습니다.");
-				} else {
-					NotificationEmail notiEmail = new NotificationEmail(email, "안녕하세요. 댕냥꽁냥입니다.", "인증 코드를 확인해주세요. " + verificationCode);
-					System.out.println(notiEmail);
-					mailService.sendMail(notiEmail);
-				}
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-			return verificationCode;
-		}
+    public ResponseEntity<String> findId(@RequestParam String email) {
+        try {
+            String id = userService.findId(email);
+            if (id != null) {
+                NotificationEmail notiEmail = new NotificationEmail(email, "안녕하세요. 댕냥꽁냥입니다.", "아이디를 확인해주세요. " + id);
+                System.out.println(notiEmail);
+                mailService.sendMail(notiEmail);
+
+                System.out.println("이메일이 성공적으로 전송되었습니다.");
+                return new ResponseEntity<>("이메일이 성공적으로 전송되었습니다.", HttpStatus.OK);
+            } else {
+                System.out.println("해당 이메일이 계정에 없습니다.");
+                return new ResponseEntity<>("해당 이메일이 계정에 없습니다.", HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("서버 오류가 발생했습니다.");
+            return new ResponseEntity<>("서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+			
+	// 회원가입 이메일 중복 검사 및 인증 번호 전송
+	@GetMapping("/verify")
+    public ResponseEntity<String> sendVerificationCode(@RequestParam String email) {
+        try {
+            Random random = new Random();
+            Integer verificationCode = random.nextInt(1000000);
+
+            Optional<User> optionalUser = userRepository.findByEmail(email);
+
+            if (optionalUser.isPresent()) {
+            	System.out.println("중복되는 이메일이 이미 등록되어 있습니다.");
+                return new ResponseEntity<>("중복되는 이메일이 이미 등록되어 있습니다.", HttpStatus.CONFLICT);
+            } else {
+                NotificationEmail notiEmail = new NotificationEmail(email, "안녕하세요. 댕냥꽁냥입니다.", "인증 코드를 확인해주세요. " + verificationCode);
+                System.out.println(notiEmail);
+                mailService.sendMail(notiEmail);
+
+                System.out.println("이메일이 성공적으로 전송되었습니다.");
+                return new ResponseEntity<>("이메일이 성공적으로 전송되었습니다.", HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("서버 오류가 발생했습니다.");
+            return new ResponseEntity<>("서버 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+				
 }
